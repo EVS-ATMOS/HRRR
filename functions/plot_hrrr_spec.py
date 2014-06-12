@@ -4,7 +4,7 @@ Created on Tue Jun 10 14:51:46 2014
 
 @author: mattjohnson
 """
-def spec_hrrr_plot(directory,parameter,datetimestart = None,datetimeend = None,contour = False,plot_modelhours = False,hinp = None,hour=0,loc = [-97.485,36.605]):
+def plot_hrrr_spec(directory,parameter,datetimestart = None,datetimeend = None,contour = False,plot_modelhours = False,hinp = None,hour=0,loc = [-97.485,36.605]):
     """
     Plots a given parameter over a given timespan for a given parameter, modelhour, height, location and directory of 
     HRRR files.  Leaving hinp empty will cause it to plot the maximum values over all heights.  
@@ -68,12 +68,12 @@ def spec_hrrr_plot(directory,parameter,datetimestart = None,datetimeend = None,c
     
     for i in range(len(y)):
         if hinp != None:
-            info = read_Hrrr_spec_loc(y[i], [parameter],loc = [-97.485,36.605], max = False)
+            info = read_hrrr_spec(y[i], [parameter],loc = [-97.485,36.605], max = False)
             index = info[2].tolist().index(hinp)
             datart = info[0][0]
             datarts = datart[index]
         else:
-            info = read_Hrrr_spec_loc(y[i], [parameter],loc = [-97.485,36.605], max = True)
+            info = read_hrrr_spec(y[i], [parameter],loc = [-97.485,36.605], max = True)
             datarts = info[0][0]
         values.append(datarts)
         if not plot_modelhours:

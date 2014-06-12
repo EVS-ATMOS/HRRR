@@ -5,7 +5,7 @@ Created on Wed Jun  4 15:58:05 2014
 @author: mattjohnson
 """
 
-def get_netCDF_variables(filename, variablelist = []):
+def get_netcdf_variables(filename, variablelist = []):
     """
     Accesses a specified netCDF file and recovers specified variables (if variablelist is empty will return all variables)
     returns a list of data arrays,  dimensions and units for each variable in a list with the date of the file.  

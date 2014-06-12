@@ -11,7 +11,7 @@ from matplotlib import colors
 import numpy as np
 from mpl_toolkits.basemap import Basemap, addcyclic
 
-def plot_sgp_hrrr(filename,parameter,hinp = '', scaling = 1, final_unit = '', margin = 10, vmax = None, vmin = None):
+def plot_hrrr_sgp(filename,parameter,hinp = '', scaling = 1, final_unit = '', margin = 10, vmax = None, vmin = None):
 
     """
     Plots an hrrr file focused on the SGP site for a given hrrr filename, parameter and height in hPa. 
