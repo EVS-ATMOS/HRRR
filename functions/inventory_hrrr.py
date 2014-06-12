@@ -5,7 +5,7 @@ Created on Fri Jun  6 09:35:18 2014
 @author: mattjohnson
 """
 
-def HRRR_inventory(in_dir):
+def inventory_hrrr(in_dir):
     """
     finds the number of HRRR files in a given directory that correspond to each date
     returns that in a list along with a list of the corresponding dates.  

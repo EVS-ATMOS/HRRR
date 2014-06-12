@@ -10,7 +10,7 @@ import numpy as np
 from mpl_toolkits.basemap import Basemap, addcyclic
 import pygrib
 
-def read_Hrrr_spec_loc(filename, parameters = [''],loc = [-97.485,36.605], max = False):
+def read_hrrr_spec(filename, parameters = [''],loc = [-97.485,36.605], max = False):
     
     """
     With an option for returning just the maximum values of a given list of parameters at a specific location, this 

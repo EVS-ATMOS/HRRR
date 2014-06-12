@@ -11,7 +11,7 @@ import numpy as np
 from mpl_toolkits.basemap import Basemap, addcyclic
 import pygrib
 
-def plothrrrfromfile(filename,parameter,hinp='',scaling=1,final_unit = '',vmax=None,vmin=None): #US
+def plot_hrrr(filename,parameter,hinp='',scaling=1,final_unit = '',vmax=None,vmin=None): #US
     """
     Plots a given HRRR file over a given parameter and height in hPa over the US.  If the height is left blank 
     it will plot the maximum values of the parameter over all locations.  

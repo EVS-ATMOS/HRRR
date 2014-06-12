@@ -25,7 +25,7 @@ def grb_to_grid(grb_obj):
                  'levels' : levels[indexes]}
     return cube_dict
     
-def read_Hrrr(filename, parameters = [''],max = False):
+def read_hrrr(filename, parameters = [''],max = False):
     
     """
     With an option for returning just the maximum values of a given list of parameters at each location, this function 
