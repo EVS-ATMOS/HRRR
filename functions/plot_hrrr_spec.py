@@ -19,7 +19,7 @@ def plot_hrrr_spec(directory,parameter,datetimestart = None,datetimeend = None,c
     import datetime
     
     if contour:
-        return spec_contour_plot(directory,parameter,datetimestart,datetimeend,hour,loc,plot_modelhours)
+        return plot_hrrr_contour_spec(directory,parameter,datetimestart,datetimeend,hour,loc,plot_modelhours)
     if plot_modelhours:
         y = []
         for i in hour:
@@ -82,9 +82,9 @@ def plot_hrrr_spec(directory,parameter,datetimestart = None,datetimeend = None,c
     units = info[-1]
     
     plt.plot(times, values)
-    
-    plt.xlabel('Time')
-    plt.ylabel(parameter+units[0])
+    plt.colorbar(label = units)
+    plt.xlabel('Time hrs')
+    plt.ylabel(parameter+' '+units[0])
     
     os.chdir(wkdir)
     

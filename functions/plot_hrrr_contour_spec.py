@@ -9,10 +9,13 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,hour,l
     """
     Creates a contour plot of a parameter over the hrrr files in a given directory at a specific location
     over a given time period at a set model hour or a series of model hours, 
+    
+    issues when crossing month boundary for modelhour plots
     """
     import os
     import numpy as np
     import matplotlib
+    import matplotlib.dates
     import matplotlib.pyplot as plt
     import datetime
 
@@ -32,8 +35,10 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,hour,l
                 string = string+'0'
             string = string+str(i)+'.grib2'
             y.append(string)
-                
-            times = [datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day,datetimestart.hour+i) for i in hour]
+            
+        times = []    
+        x = matplotlib.dates.date2num(datetimestart)
+        times = [matplotlib.dates.num2date(x+float(i)/24) for i in hour]
     else:
         x = gather_hrrr_files(directory)
         y = np.array(x[0])
@@ -54,37 +59,36 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,hour,l
         y = y[startindex:endindex]
         times = []
         
-    wkdir = os.getcwd()
-    os.chdir(directory)
+
         
     values = []
         
     for i in range(len(y)):
-        info = read_hrrr_spec(y[i], [parameter],loc = [-97.485,36.605], max = False)
+        info = read_hrrr_spec(y[i], [parameter],directory = directory,loc = [-97.485,36.605], max = False)
         values.append(info[0][0])
         if not plot_modelhours:
             times.append(x[1][i])
             
             
-
     times = [(i-times[0]).total_seconds()/60/60 for i in times]
     times = np.array(times)
-    
+
     hinp = np.array(info[2])
-    
+
     values = np.array(values)
-    
+
     units = info[-1]
 
     pc = plt.pcolormesh(times,hinp,values.transpose())
     
-    plt.colorbar(mappable = pc)
-        
-    plt.xlabel('Time')
-    plt.ylabel(info[1][0]+' '+units[0])
+    ax = plt.gca()
+    ax.set_ylim([0,max(hinp)])
+    ax.set_xlim([0,max(times)])
     
-        
-    os.chdir(wkdir)
+    plt.colorbar(mappable = pc,label=parameter+' '+units[0])
+    plt.xlabel('Time in hrs')
+    plt.ylabel('Height in hPa')
+    
     
     return
     
