@@ -85,7 +85,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,hour,l
     ax.set_ylim([0,max(hinp)])
     ax.set_xlim([0,max(times)])
     
-    plt.colorbar(mappable = pc,label=parameter+''+units[0])
+    plt.colorbar(mappable = pc,label=parameter+' '+units[0])
     plt.xlabel('Time in hrs')
     plt.ylabel('Height in hPa')
     

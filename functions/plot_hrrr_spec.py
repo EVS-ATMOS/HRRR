@@ -83,8 +83,8 @@ def plot_hrrr_spec(directory,parameter,datetimestart = None,datetimeend = None,c
     
     plt.plot(times, values)
     plt.colorbar(label = units)
-    plt.xlabel('Time')
-    plt.ylabel(parameter+units[0])
+    plt.xlabel('Time hrs')
+    plt.ylabel(parameter+' '+units[0])
     
     os.chdir(wkdir)
     
