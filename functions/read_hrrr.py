@@ -25,7 +25,7 @@ def grb_to_grid(grb_obj):
                  'levels' : levels[indexes]}
     return cube_dict
     
-def read_hrrr(filename, parameters = [''],max = False):
+def read_hrrr(filename, parameters = [''],directory = os.getcwd(),max = False):
     
     """
     With an option for returning just the maximum values of a given list of parameters at each location, this function 
@@ -33,6 +33,9 @@ def read_hrrr(filename, parameters = [''],max = False):
     of parameters, list of heights in hPa, ndarray of locations and the list of units corresponding to each parameter
     in a list.  
     """
+    
+    wkdir = os.getcwd()
+    os.chdir(directory)
     
     myfile = pygrib.open(filename) 
     parameterlist = ['Geopotential Height','Temperature','Relative humidity','Dew point temperature',
@@ -65,6 +68,8 @@ def read_hrrr(filename, parameters = [''],max = False):
         else:
             data.append(grb_cube['data'].max(axis=0))
         units.append(grb_cube['units'])
+
+    os.chdir(wkdir)
     
     return [data,parameterlist,datah,dataloc,units]
     

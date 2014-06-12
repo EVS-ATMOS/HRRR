@@ -82,7 +82,7 @@ def plot_hrrr_spec(directory,parameter,datetimestart = None,datetimeend = None,c
     units = info[-1]
     
     plt.plot(times, values)
-    
+    plt.colorbar(label = units)
     plt.xlabel('Time')
     plt.ylabel(parameter+units[0])
     

@@ -59,13 +59,12 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,hour,l
         y = y[startindex:endindex]
         times = []
         
-    wkdir = os.getcwd()
-    os.chdir(directory)
+
         
     values = []
         
     for i in range(len(y)):
-        info = read_hrrr_spec(y[i], [parameter],loc = [-97.485,36.605], max = False)
+        info = read_hrrr_spec(y[i], [parameter],directory = directory,loc = [-97.485,36.605], max = False)
         values.append(info[0][0])
         if not plot_modelhours:
             times.append(x[1][i])
@@ -73,7 +72,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,hour,l
             
     times = [(i-times[0]).total_seconds()/60/60 for i in times]
     times = np.array(times)
-    print times
+
     hinp = np.array(info[2])
 
     values = np.array(values)
@@ -86,13 +85,10 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,hour,l
     ax.set_ylim([0,max(hinp)])
     ax.set_xlim([0,max(times)])
     
-    plt.colorbar(mappable = pc)
-    
+    plt.colorbar(mappable = pc,label=parameter+''+units[0])
     plt.xlabel('Time in hrs')
     plt.ylabel('Height in hPa')
     
-        
-    os.chdir(wkdir)
     
     return
     

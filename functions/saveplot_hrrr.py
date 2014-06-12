@@ -12,7 +12,7 @@ from mpl_toolkits.basemap import Basemap, addcyclic
 import pygrib
 import os
 
-def saveplot_hrrr(filename,parameter,fdirectory = os.getcwd()+'/images',imname = 'img1',filetype = '.png',size = (5,5),dpi = 600,hinp='',scaling=1,final_unit = '',vmax=None,vmin=None): #US
+def saveplot_hrrr(filename,parameter,directory = os.getcwd(),fdirectory = os.getcwd()+'/images',imname = 'img1',filetype = '.png',size = (5,5),dpi = 600,hinp='',scaling=1,final_unit = '',vmax=None,vmin=None): #US
     """
     Plots and saves a given HRRR file over a given parameter and height in hPa over the US.  If the height is left blank 
     it will plot the maximum values of the parameter over all locations.  
@@ -21,6 +21,9 @@ def saveplot_hrrr(filename,parameter,fdirectory = os.getcwd()+'/images',imname =
     
     A .png file is saved in the folder existing or created that corresponds to fdirectory and named imname.  
     """
+    wkdir = os.getcwd()
+    os.chdir(directory)
+    
     
     if not os.path.exists(fdirectory):
         os.makedirs(fdirectory)
@@ -63,5 +66,7 @@ def saveplot_hrrr(filename,parameter,fdirectory = os.getcwd()+'/images',imname =
     
     
     plt.savefig(fdirectory+'/'+imname+filetype,figsize = size,dpi=dpi)
+
+    os.chdir(wkdir)
     
     return (imname+filetype)

@@ -7,11 +7,12 @@ Created on Wed Jun  4 14:03:36 2014
 
 from matplotlib import pyplot as plt
 from matplotlib import colors
+import os
 import numpy as np
 from mpl_toolkits.basemap import Basemap, addcyclic
 import pygrib
 
-def plot_hrrr(filename,parameter,hinp='',scaling=1,final_unit = '',vmax=None,vmin=None): #US
+def plot_hrrr(filename,parameter,directory=os.getcwd(),hinp='',scaling=1,final_unit = '',vmax=None,vmin=None): #US
     """
     Plots a given HRRR file over a given parameter and height in hPa over the US.  If the height is left blank 
     it will plot the maximum values of the parameter over all locations.  
@@ -19,10 +20,14 @@ def plot_hrrr(filename,parameter,hinp='',scaling=1,final_unit = '',vmax=None,vmi
     The scaling, final_unit vmax and vmin parameters allow fine tuning of the plot to make differences more visible.  
     """
     
+    wkdir = os.getcwd()
+    os.chdir(directory)
+    
+    
     if hinp != '':
-        [data,parameterlist,datah,dataloc,units] = read_Hrrr(filename,[parameter])
+        [data,parameterlist,datah,dataloc,units] = read_hrrr(filename,[parameter])
     else:
-        [data,parameterlist,datah,dataloc,units] = read_Hrrr(filename,[parameter],max=True)
+        [data,parameterlist,datah,dataloc,units] = read_hrrr(filename,[parameter],max=True)
     
     if hinp !='':
         datah = datah.tolist()
@@ -53,5 +58,8 @@ def plot_hrrr(filename,parameter,hinp='',scaling=1,final_unit = '',vmax=None,vmi
     
     plt.colorbar(label=final_unit)
     plt.show()
+
+    os.chdir(wkdir)
+
     return 0
     
