@@ -9,15 +9,7 @@ import os
 import math
 import numpy as np
 
-global HRRR_PS
-HRRR_PS = np.array([1013, 1000,  975,  950,  925,  900,  875,  850,  825,  800,  775,
-        750,  725,  700,  675,  650,  625,  600,  575,  550,  525,  500,
-        475,  450,  425,  400,  375,  350,  325,  300,  275,  250,  225,
-        200,  175,  150,  125,  100,   75,   50])
-        
-        
-
-def convert_press2height(temps,z0,press = HRRR_PS):
+def convert_press2height(temps,z0=0,press = HRRR_PS):
     """
     conversion from hPa to m assuming ideal gas law using the ideal gas law equation
     """
@@ -30,8 +22,7 @@ def convert_press2height(temps,z0,press = HRRR_PS):
 
 def convert_height2press(z,z0=0,T0=298.15,p0=1013.25,n = 1.4):
     """
-    assumes heating in the atmosphere is polytropic with index n
-    assumes atmosphere is at equilibirum
+    assumes heat loss going up in the atmosphere is polytropic with index n
     converts m to hPa
     """
     p = []
