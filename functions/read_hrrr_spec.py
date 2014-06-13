@@ -22,7 +22,8 @@ def read_hrrr_spec(filename, parameters = [''],directory = os.getcwd(),loc = [-9
     
     wkdir = os.getcwd()
     os.chdir(directory)
-    
+
+
     myfile = pygrib.open(filename) 
     parameterlist = ['Geopotential Height','Temperature','Relative humidity','Dew point temperature',
             'Specific humidity','Vertical velocity','U component of wind','V component of wind',
