@@ -5,7 +5,7 @@ Created on Wed Jun 11 16:10:08 2014
 @author: mattjohnson
 """
 
-def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,hour,loc,plot_modelhours):
+def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,scaling = 1,final_unit = '',hour = 0,loc = [-97.485,36.605],plot_modelhours = False, vmin = None, vmax = None):
     """
     Creates a contour plot of a parameter over the hrrr files in a given directory at a specific location
     over a given time period at a set model hour or a series of model hours, 
@@ -77,7 +77,8 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,hour,l
 
     values = np.array(values)
 
-    units = info[-1]
+    if final_unit == '':
+        final_unit = info[-1]
 
     pc = plt.pcolormesh(times,hinp,values.transpose())
     
@@ -85,10 +86,9 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,hour,l
     ax.set_ylim([0,max(hinp)])
     ax.set_xlim([0,max(times)])
     
-    plt.colorbar(mappable = pc,label=parameter+' '+units[0])
+    plt.colorbar(mappable = pc,label=parameter+' '+final_unit[0])
     plt.xlabel('Time in hrs')
     plt.ylabel('Height in hPa')
-    
-    
+
     return
     

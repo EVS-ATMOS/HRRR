@@ -4,7 +4,7 @@ Created on Tue Jun 10 14:51:46 2014
 
 @author: mattjohnson
 """
-def plot_hrrr_spec(directory,parameter,datetimestart = None,datetimeend = None,contour = False,plot_modelhours = False,hinp = None,hour=0,loc = [-97.485,36.605]):
+def plot_hrrr_spec(directory,parameter,datetimestart = None,datetimeend = None,contour = False,plot_modelhours = False,scaling = 1,final_unit = '',hinp = None,hour=0,loc = [-97.485,36.605],vmin = None, vmax = None):
     """
     Plots a given parameter over a given timespan for a given parameter, modelhour, height, location and directory of 
     HRRR files.  Leaving hinp empty will cause it to plot the maximum values over all heights.  
@@ -19,7 +19,7 @@ def plot_hrrr_spec(directory,parameter,datetimestart = None,datetimeend = None,c
     import datetime
     
     if contour:
-        return plot_hrrr_contour_spec(directory,parameter,datetimestart,datetimeend,hour,loc,plot_modelhours)
+        return plot_hrrr_contour_spec(directory=directory,parameter=parameter,datetimestart = datetimestart,datetimeend=datetimeend,scaling = scaling,hour = hour,loc = loc,plot_modelhours = plot_modelhours,vmin = vmin, vmax = vmax)
     if plot_modelhours:
         y = []
         for i in hour:
@@ -79,12 +79,13 @@ def plot_hrrr_spec(directory,parameter,datetimestart = None,datetimeend = None,c
         if not plot_modelhours:
             times.append(x[1][i])
     
-    units = info[-1]
+    if final_unit == '':
+        final_unit = info[-1]
     
     plt.plot(times, values)
     plt.colorbar(label = units)
     plt.xlabel('Time hrs')
-    plt.ylabel(parameter+' '+units[0])
+    plt.ylabel(parameter+' '+final_unit[0])
     
     os.chdir(wkdir)
     
