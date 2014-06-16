@@ -34,8 +34,9 @@ def read_hrrr(filename, parameters = [''],directory = os.getcwd(),max = False):
     in a list.  
     """
     
-    wkdir = os.getcwd()
-    os.chdir(directory)
+    if directory != None:
+        wkdir = os.getcwd()
+        os.chdir(directory)
     
     myfile = pygrib.open(filename) 
     parameterlist = ['Geopotential Height','Temperature','Relative humidity','Dew point temperature',
@@ -54,10 +55,6 @@ def read_hrrr(filename, parameters = [''],directory = os.getcwd(),max = False):
             
                 
     data = []
-    grb = myfile.select(name = parameterlist[0]) 
-    grb_cube = grb_to_grid(grb)
-    dataloc =  np.array(grb[0].latlons())
-    datah = grb_cube['levels']
     units = []
     
     for p in parameterlist:
@@ -69,7 +66,14 @@ def read_hrrr(filename, parameters = [''],directory = os.getcwd(),max = False):
             data.append(grb_cube['data'].max(axis=0))
         units.append(grb_cube['units'])
 
-    os.chdir(wkdir)
+    dataloc =  np.array(grb[0].latlons())
+    datah = grb_cube['levels']
+    
+    
+    myfile.close()
+
+    if directory != None:
+        os.chdir(wkdir)
     
     return [data,parameterlist,datah,dataloc,units]
     

@@ -64,7 +64,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,scalin
     values = []
         
     for i in range(len(y)):
-        info = read_hrrr_spec(y[i], [parameter],directory = directory,loc = [-97.485,36.605], max = False)
+        info = read_hrrr_spec(y[i], [parameter],directory = directory,loc = loc, max = False)
         values.append(info[0][0])
         if not plot_modelhours:
             times.append(x[1][i])

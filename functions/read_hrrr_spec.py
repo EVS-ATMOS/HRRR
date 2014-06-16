@@ -11,7 +11,7 @@ import os
 from mpl_toolkits.basemap import Basemap, addcyclic
 import pygrib
 
-def read_hrrr_spec(filename, parameters = [''],directory = os.getcwd(),loc = [-97.485,36.605], max = False):
+def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [-97.485,36.605], max = False):
     
     """
     With an option for returning just the maximum values of a given list of parameters at a specific location, this 
@@ -19,9 +19,9 @@ def read_hrrr_spec(filename, parameters = [''],directory = os.getcwd(),loc = [-9
     the list of parameters, list of heights in hPa, location in latitude, longitude and the list of units 
     corresponding to each parameter in a list.  
     """
-    
-    wkdir = os.getcwd()
-    os.chdir(directory)
+    if directory != None:
+        wkdir = os.getcwd()
+        os.chdir(directory)
 
 
     myfile = pygrib.open(filename) 
@@ -61,13 +61,16 @@ def read_hrrr_spec(filename, parameters = [''],directory = os.getcwd(),loc = [-9
         grb = myfile.select(name = p)
         grb_cube = grb_to_grid(grb)
         if not max:
-            newshape = grb_cube['data'].reshape([ysize,xsize,zsize])
-            data.append(newshape[xyindex[0]][xyindex[1]][:])
+            newshape = grb_cube['data'].transpose
+            data.append(newshape[xyindex[1]][xyindex[0]][:])
         else:
-            newshape = grb_cube['data'].reshape([ysize,xsize,zsize])
-            data.append(newshape[xyindex[0]][xyindex[1]][:].max(axis=0))
+            newshape = grb_cube['data'].transpose
+            data.append(newshape[xyindex[1]][xyindex[0]][:].max(axis=0))
         units.append(grb_cube['units'])
-   
-    os.chdir(wkdir)
+
+    myfile.close()
+
+    if directory !=  None:
+        os.chdir(wkdir)
        
     return [data,parameterlist,datah,loc,units]
