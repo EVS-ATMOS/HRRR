@@ -7,10 +7,11 @@ Created on Fri Jun  6 09:43:46 2014
 from matplotlib import pyplot as plt
 from matplotlib import colors
 import numpy as np
+import os
 from mpl_toolkits.basemap import Basemap, addcyclic
 import pygrib
 
-def read_hrrr_spec(filename, parameters = [''],loc = [-97.485,36.605], max = False):
+def read_hrrr_spec(filename, parameters = [''],directory = os.getcwd(),loc = [-97.485,36.605], max = False):
     
     """
     With an option for returning just the maximum values of a given list of parameters at a specific location, this 
@@ -19,6 +20,10 @@ def read_hrrr_spec(filename, parameters = [''],loc = [-97.485,36.605], max = Fal
     corresponding to each parameter in a list.  
     """
     
+    wkdir = os.getcwd()
+    os.chdir(directory)
+
+
     myfile = pygrib.open(filename) 
     parameterlist = ['Geopotential Height','Temperature','Relative humidity','Dew point temperature',
             'Specific humidity','Vertical velocity','U component of wind','V component of wind',
@@ -63,5 +68,6 @@ def read_hrrr_spec(filename, parameters = [''],loc = [-97.485,36.605], max = Fal
             data.append(newshape[xyindex[0]][xyindex[1]][:].max(axis=0))
         units.append(grb_cube['units'])
    
+    os.chdir(wkdir)
        
     return [data,parameterlist,datah,loc,units]
