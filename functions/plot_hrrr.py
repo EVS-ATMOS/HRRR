@@ -12,22 +12,23 @@ import numpy as np
 from mpl_toolkits.basemap import Basemap, addcyclic
 import pygrib
 
-def plot_hrrr(filename,parameter,directory=os.getcwd(),hinp='',scaling=1,final_unit = '',vmax=None,vmin=None): #US
+def plot_hrrr(filename,parameter,directory=None,hinp='',scaling=1,final_unit = '',vmax=None,vmin=None): #US
     """
     Plots a given HRRR file over a given parameter and height in hPa over the US.  If the height is left blank 
     it will plot the maximum values of the parameter over all locations.  
     
     The scaling, final_unit vmax and vmin parameters allow fine tuning of the plot to make differences more visible.  
     """
+    if directory != None:
+        wkdir = os.getcwd()
+        os.chdir(directory)
     
-    wkdir = os.getcwd()
-    os.chdir(directory)
-    
-    
+    print os.getcwd()
+
     if hinp != '':
-        [data,parameterlist,datah,dataloc,units] = read_hrrr(filename,[parameter])
+        [data,parameterlist,datah,dataloc,units] = read_hrrr(filename,[parameter],directory = directory)
     else:
-        [data,parameterlist,datah,dataloc,units] = read_hrrr(filename,[parameter],max=True)
+        [data,parameterlist,datah,dataloc,units] = read_hrrr(filename,[parameter],directory = directory,max=True)
     
     if hinp !='':
         datah = datah.tolist()
@@ -59,7 +60,8 @@ def plot_hrrr(filename,parameter,directory=os.getcwd(),hinp='',scaling=1,final_u
     plt.colorbar(label=final_unit)
     plt.show()
 
-    os.chdir(wkdir)
+    if directory != None:
+        os.chdir(wkdir)
 
     return 0
     

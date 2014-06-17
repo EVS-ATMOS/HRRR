@@ -64,7 +64,9 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,scalin
     values = []
         
     for i in range(len(y)):
-        info = read_hrrr_spec(y[i], [parameter],directory = directory,loc = [-97.485,36.605], max = False)
+        if y[i] == None:
+            continue
+        info = read_hrrr_spec(y[i], [parameter],directory = directory,loc = loc, max = False)
         values.append(info[0][0])
         if not plot_modelhours:
             times.append(x[1][i])
@@ -80,11 +82,11 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,scalin
     if final_unit == '':
         final_unit = info[-1]
 
-    pc = plt.pcolormesh(times,hinp,values.transpose())
-    
-    ax = plt.gca()
-    ax.set_ylim([0,max(hinp)])
-    ax.set_xlim([0,max(times)])
+    pc = plt.pcolormesh(times,hinp,scaling*values.transpose())
+
+    plt.gca().set_ylim([0,max(hinp)])
+    plt.gca().set_xlim([0,max(times)])
+    plt.gca().invert_yaxis()
     
     plt.colorbar(mappable = pc,label=parameter+' '+final_unit[0])
     plt.xlabel('Time in hrs')
