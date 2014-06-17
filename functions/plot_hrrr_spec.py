@@ -4,7 +4,7 @@ Created on Tue Jun 10 14:51:46 2014
 
 @author: mattjohnson
 """
-def plot_hrrr_spec(directory,parameter,datetimestart = None,datetimeend = None,contour = False,plot_modelhours = False,scaling = 1,final_unit = '',hinp = None,hour=0,loc = [-97.485,36.605],vmin = None, vmax = None):
+def plot_hrrr_spec(parameter,directory = os.getcwd(),datetimestart = None,datetimeend = None,contour = False,plot_modelhours = False,scaling = 1,final_unit = '',hinp = None,hour=0,loc = [-97.485,36.605],vmin = None, vmax = None):
     """
     Plots a given parameter over a given timespan for a given parameter, modelhour, height, location and directory of 
     HRRR files.  Leaving hinp empty will cause it to plot the maximum values over all heights.  
@@ -17,6 +17,7 @@ def plot_hrrr_spec(directory,parameter,datetimestart = None,datetimeend = None,c
     import os
     import matplotlib.pyplot as plt
     import datetime
+    
     
     if contour:
         return plot_hrrr_contour_spec(directory=directory,parameter=parameter,datetimestart = datetimestart,datetimeend=datetimeend,scaling = scaling,hour = hour,loc = loc,plot_modelhours = plot_modelhours,vmin = vmin, vmax = vmax)
@@ -43,7 +44,7 @@ def plot_hrrr_spec(directory,parameter,datetimestart = None,datetimeend = None,c
         y = np.array(x[0])
         y = y.transpose()
         y = y[hour]
-
+        
         dates = x[1]
 
         if datetimestart == None != datetimeend:
@@ -55,11 +56,10 @@ def plot_hrrr_spec(directory,parameter,datetimestart = None,datetimeend = None,c
         else:
             startindex = dates.index(datetimestart)
             endindex = dates.index(datetimeend) 
-
-        
-
         y = y[startindex:endindex]
+        
         times = []
+        
     
     wkdir = os.getcwd()
     os.chdir(directory)
@@ -67,25 +67,31 @@ def plot_hrrr_spec(directory,parameter,datetimestart = None,datetimeend = None,c
     values = []
     
     for i in range(len(y)):
-        if hinp != None:
-            info = read_hrrr_spec(y[i], [parameter],loc = [-97.485,36.605], max = False)
-            index = info[2].tolist().index(hinp)
-            datart = info[0][0]
-            datarts = datart[index]
+        if y[i] == None:
+            continue
         else:
-            info = read_hrrr_spec(y[i], [parameter],loc = [-97.485,36.605], max = True)
-            datarts = info[0][0]
+            if hinp != None:
+                info = read_hrrr_spec(y[i], [parameter],loc = [-97.485,36.605], max = False)
+                index = info[2].tolist().index(hinp)
+                datart = info[0][0]
+                datarts = datart[index]*float(scaling)
+            else:
+                info = read_hrrr_spec(y[i], [parameter],loc = [-97.485,36.605], max = True)
+                datarts = info[0][0]*float(scaling)
         values.append(datarts)
         if not plot_modelhours:
             times.append(x[1][i])
     
     if final_unit == '':
         final_unit = info[-1]
-    
-    plt.plot(times, values)
-    plt.colorbar(label = units)
+    print type(values[0])
+    values = np.array(values)
+    print max(values)
+    plt.plot(times,values)
     plt.xlabel('Time hrs')
     plt.ylabel(parameter+' '+final_unit[0])
+    
+    
     
     os.chdir(wkdir)
     
