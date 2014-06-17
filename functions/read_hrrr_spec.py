@@ -11,8 +11,7 @@ import os
 from mpl_toolkits.basemap import Basemap, addcyclic
 import pygrib
 
-def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [-97.485,36.605], max = False):
-    
+def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [36.605,-97.485], coords=None, max = False):   
     """
     With an option for returning just the maximum values of a given list of parameters at a specific location, this 
     function takes in a filename, list of parameters (all parameters if left blank) and returns the ndarray of data, 
@@ -22,14 +21,13 @@ def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [-97.485,3
     if directory != None:
         wkdir = os.getcwd()
         os.chdir(directory)
-
-
+        
     myfile = pygrib.open(filename) 
     parameterlist = ['Geopotential Height','Temperature','Relative humidity','Dew point temperature',
             'Specific humidity','Vertical velocity','U component of wind','V component of wind',
             'Absolute vorticity','Cloud mixing ratio','Cloud Ice','Rain mixing ratio','Snow mixing ratio',
-            'Graupel (snow pellets)']    
-           
+            'Graupel (snow pellets)']  
+            
     if parameters != ['']:
         for i in range(len(parameters)):
             x = parameterlist.count(parameters[i])
@@ -37,8 +35,7 @@ def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [-97.485,3
                 print 'requested parameter not in list'
                 print parameters[i]  
         parameterlist = parameters[:]
-                
-                    
+        
     data = []
     grb = myfile.select(name = parameterlist[0]) 
     grb_cube = grb_to_grid(grb)
@@ -46,31 +43,26 @@ def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [-97.485,3
     datah = grb_cube['levels']
     units = []
     
-    x = abs(dataloc[0]-loc[0])
-    y = abs(dataloc[1]-loc[1])
-    xy = x+y
-    xymin = min(xy.flatten())
-    xy2 = xy.flatten().tolist()
-    xyflatindex = xy2.index(xymin)
-    [ysize,xsize] = dataloc[0].shape
-    zsize = len(grb_cube['levels'])
-    xyindex = [xyflatindex/xsize, xyflatindex%xsize]
-    
-        
+    if coords == None:
+        xyindex = convert_latlon2coords(loc,dataloc)
+        loc = convert_coords2latlon(xyindex,dataloc)
+    else:
+        xyindex = coords
+        loc = convert_coords2latlon(xyindex,dataloc)
+
     for p in parameterlist:
         grb = myfile.select(name = p)
         grb_cube = grb_to_grid(grb)
         if not max:
-            newshape = grb_cube['data'].transpose
-            data.append(newshape[xyindex[1]][xyindex[0]][:])
+            data.append(grb_cube['data'].T[xyindex[1]][xyindex[0]][:])
         else:
-            newshape = grb_cube['data'].transpose
-            data.append(newshape[xyindex[1]][xyindex[0]][:].max(axis=0))
+            data.append(grb_cube['data'].T[xyindex[1]][xyindex[0]][:].max(axis=0))
         units.append(grb_cube['units'])
 
+        
     myfile.close()
-
+    
     if directory !=  None:
         os.chdir(wkdir)
-       
-    return [data,parameterlist,datah,loc,units]
+        
+    return [data,parameterlist,datah,loc,xyindex,units]

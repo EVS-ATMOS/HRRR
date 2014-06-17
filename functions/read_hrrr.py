@@ -56,6 +56,7 @@ def read_hrrr(filename, parameters = [''],directory = os.getcwd(),max = False):
                 
     data = []
     units = []
+    count = 0
     
     for p in parameterlist:
         grb = myfile.select(name = p)
@@ -65,6 +66,7 @@ def read_hrrr(filename, parameters = [''],directory = os.getcwd(),max = False):
         else:
             data.append(grb_cube['data'].max(axis=0))
         units.append(grb_cube['units'])
+        
 
     dataloc =  np.array(grb[0].latlons())
     datah = grb_cube['levels']
