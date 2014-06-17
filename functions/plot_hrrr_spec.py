@@ -32,7 +32,14 @@ def plot_hrrr_spec(parameter,directory = os.getcwd(),datetimestart = None,dateti
             if datetimestart.day<10:
                 string =string+'0'
             string = string+str(datetimestart.day)
-            string = string +str(datetimestart.hour)+'00f0'
+
+            if datetimestart.hour<10:
+                string = string+'0'
+
+            string = string +str(datetimestart.hour)
+
+            string = string+'00f0'
+
             if i<10:
                 string = string+'0'
             string = string+str(i)+'.grib2'
@@ -65,7 +72,7 @@ def plot_hrrr_spec(parameter,directory = os.getcwd(),datetimestart = None,dateti
     os.chdir(directory)
     
     values = []
-    
+
     for i in range(len(y)):
         if y[i] == None:
             continue
@@ -84,13 +91,13 @@ def plot_hrrr_spec(parameter,directory = os.getcwd(),datetimestart = None,dateti
     
     if final_unit == '':
         final_unit = info[-1]
-    print type(values[0])
+
     values = np.array(values)
-    print max(values)
+
     plt.plot(times,values)
     plt.xlabel('Time hrs')
     plt.ylabel(parameter+' '+final_unit[0])
-    
+    plt.tight_layout()
     
     
     os.chdir(wkdir)
