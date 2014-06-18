@@ -41,7 +41,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
         x = matplotlib.dates.date2num(datetimestart)
         times = [matplotlib.dates.num2date(x+float(i)/24) for i in hour]
     else:
-        x = pyhrrr.gather_hrrr_files(directory)
+        x = gather_hrrr_files(directory)
         y = np.array(x[0])
         y = y.transpose()
         y = y[hour]
@@ -66,18 +66,18 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     
     for i in range(len(y)):
         if y[i] == None:
+            times.remove(times[i])
             count = count+1
             continue
-        info = pyhrrr.read_hrrr_spec(y[i], [parameter],directory = directory,loc = loc, max = False)
+        info = read_hrrr_spec(y[i], [parameter],directory = directory,loc = loc, max = False)
         values.append(info[0][0])
         #times.append(count)
         if not plot_modelhours:
             times.append(x[1][i])
         count = count+1
             
-            
-    times = [(i-float(times[0].total_seconds()/60/60)) for i in times]
-    print type(times)
+    times = [((((times[i].year-times[0].year)*365)+(times[i].day-times[0].day)*24)+times[i].hour-times[0].hour) for i in range(len(times))]        
+    
     times = np.array(times)
     
     hinp = np.array(info[2])
@@ -87,9 +87,6 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     if final_unit == '':
         final_unit = info[-1]
         
-    print type(times[0])
-    print type(hinp[0])
-    print type(values[0][0])
     
     pc = plt.pcolormesh(times,hinp,np.transpose(values))
 
