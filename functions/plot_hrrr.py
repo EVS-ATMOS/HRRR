@@ -64,5 +64,5 @@ def plot_hrrr(filename,parameter,directory=None,hinp='',scaling=1,final_unit = '
     if directory != None:
         os.chdir(wkdir)
 
-    return 0
+    return
     

@@ -39,7 +39,8 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             
         times = []    
         x = matplotlib.dates.date2num(datetimestart)
-        times = [matplotlib.dates.num2date(x+float(i)/24) for i in hour]
+        times = [datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day,datetimestart.hour+i) for i in hour]
+ 
     else:
         x = gather_hrrr_files(directory)
         y = np.array(x[0])
@@ -58,7 +59,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             endindex = dates.index(datetimeend) 
     
         y = y[startindex:endindex]
-        times = []
+        times = dates
         
         
     values = []
@@ -76,9 +77,9 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             times.append(x[1][i])
         count = count+1
             
-    times = [((((times[i].year-times[0].year)*365)+(times[i].day-times[0].day)*24)+times[i].hour-times[0].hour) for i in range(len(times))]        
+    #times = [((((times[i].year-times[0].year)*365)+(times[i].day-times[0].day)*24)+times[i].hour-times[0].hour) for i in range(len(times))]        
     
-    times = np.array(times)
+    #times = np.array(times)
     
     hinp = np.array(info[2])
 
@@ -86,7 +87,17 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     
     if final_unit == '':
         final_unit = info[-1]
+    
+    
+   
         
+    datesun = set()
+    
+    for i in dates:
+        datesun = datesun.union(i.date())
+    datelists = [i.datetime() for i in datesun]
+    
+    
     
     pc = plt.pcolormesh(times,hinp,np.transpose(values))
 
@@ -95,6 +106,14 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     plt.gca().invert_yaxis()
     
     plt.colorbar(mappable = pc,label=parameter+' '+final_unit[0])
+    
+    for i in datelists:
+        [[u,v][sunrise,sunset]] = get_sun(i,loc)
+        plt.gca().axvline(sunrise, linestyle = '--', color='k')
+        plt.gca().axvline(sunset, linestyle = '--', color='k')
+        plt.gca().text(sunrise, 100, 'Sunrise')
+        plt.gca().text(sunset,100,'Sunset')
+        
     plt.xlabel('Time in hrs')
     plt.ylabel('Height in hPa')
     plt.tight_layout()

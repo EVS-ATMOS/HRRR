@@ -88,17 +88,32 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend,directory = os.getcwd(),c
         values.append(datarts)
         if not plot_modelhours:
             times.append(x[1][i])
-            
+    
+    if plot_modelhours:
+        dates = times[:]
+    
+    datesun = set()
+    
+    for i in dates:
+        datesun = datesun.union(i.date())
+    datelists = [i.datetime() for i in datesun]
     
     if final_unit == '':
         final_unit = info[-1]
 
     values = np.array(values)
-
+    
     plt.plot(times,values)
     plt.xlabel('Time hrs')
     plt.ylabel(parameter+' '+final_unit[0])
     plt.tight_layout()
+    
+    for i in datelists:
+        [[u,v][sunrise,sunset]] = get_sun(i,loc)
+        plt.gca().axvline(sunrise, linestyle = '--', color='k')
+        plt.gca().axvline(sunset, linestyle = '--', color='k')
+        plt.gca().text(sunrise, 100, 'Sunrise')
+        plt.gca().text(sunset,100,'Sunset')
     
     
     os.chdir(wkdir)
