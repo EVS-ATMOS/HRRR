@@ -13,7 +13,6 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     
     issues when crossing month boundary for modelhour plots
     """
-    import os
     import numpy as np
     import matplotlib
     import matplotlib.dates

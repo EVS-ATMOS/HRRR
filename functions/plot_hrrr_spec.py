@@ -113,7 +113,6 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
     plt.plot(times,values)
     plt.xlabel('Time hrs')
     plt.ylabel(parameter+' '+final_unit[0])
-    plt.tight_layout()
     
     count = 0
     for i in range(len(dates)):

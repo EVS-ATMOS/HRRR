@@ -58,7 +58,6 @@ def plot_hrrr(filename,parameter,directory=None,hinp='',scaling=1,final_unit = '
     
     plt.colorbar(label=final_unit)
     plt.show()
-    plt.tight_layout()
     
     if directory != None:
         os.chdir(wkdir)
