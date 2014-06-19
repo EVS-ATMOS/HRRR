@@ -47,7 +47,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
                 times.append(datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day,datetimestart.hour+i))
             else:
                 times.append(datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day+1,datetimestart.hour+i-24))
-        dates = times[:] 
+            dates = times[:] 
     else:
         x = gather_hrrr_files(directory)
         y = np.array(x[0])
@@ -102,17 +102,19 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     
     plt.colorbar(mappable = pc,label=parameter+' '+final_unit[0])
     
+    count = 0
     for i in range(len(dates)):
         if i == 1 or dates[i].day-dates[i-1].day != 0:
             if i==1:
                 date2 = dates[0]
             else:
                 date2 = dates[i-1]
-            [[u,v][sunrise,sunset]] = get_sun(dates[i]-date2,loc)
-            plt.gca().axvline(u, linestyle = '--', color='k')
-            plt.gca().axvline(v, linestyle = '--', color='k')
-            plt.gca().text(u, 100, 'Sunrise')
-            plt.gca().text(v,100,'Sunset')
+            [[u,v][sunrise,sunset]] = get_sun(dates[i],loc)
+            plt.gca().axvline(u+24*count, linestyle = '--', color='k')
+            plt.gca().axvline(v+24*count, linestyle = '--', color='k')
+            plt.gca().text(u+24*count, 100, 'Sunrise')
+            plt.gca().text(v+24*count,100,'Sunset')
+            count = count+1
         
     plt.xlabel('Time in hrs')
     plt.ylabel('Height in hPa')

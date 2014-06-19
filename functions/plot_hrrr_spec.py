@@ -52,7 +52,7 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
                     times.append(datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day,datetimestart.hour+i))
                 else:
                     times.append(datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day+1,datetimestart.hour+i-24))
-                
+            dates = times[:]
     else:
         x = gather_hrrr_files(directory)
         y = np.array(x[0])
@@ -71,7 +71,7 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
             startindex = dates.index(datetimestart)
             endindex = dates.index(datetimeend) 
         y = y[startindex:endindex]
-        
+
         times = []
         
     
@@ -111,13 +111,19 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
     plt.ylabel(parameter+' '+final_unit[0])
     plt.tight_layout()
     
+    count = 0
     for i in range(len(dates)):
         if i == 1 or dates[i].day-dates[i-1].day != 0:
-            [[u,v][sunrise,sunset]] = get_sun(i,loc)
-            plt.gca().axvline(sunrise, linestyle = '--', color='k')
-            plt.gca().axvline(sunset, linestyle = '--', color='k')
-            plt.gca().text(sunrise, 100, 'Sunrise')
-            plt.gca().text(sunset,100,'Sunset')
+            if i==1:
+                date2 = dates[0]
+            else:
+                date2 = dates[i-1]
+            [[u,v][sunrise,sunset]] = get_sun(dates[i],loc)
+            plt.gca().axvline(u+24*count, linestyle = '--', color='k')
+            plt.gca().axvline(v+24*count, linestyle = '--', color='k')
+            plt.gca().text(u+24*count, 100, 'Sunrise')
+            plt.gca().text(v+24*count,100,'Sunset')
+            count = count+1
     
     
     os.chdir(wkdir)
