@@ -79,10 +79,10 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             
     #times = [((((times[i].year-times[0].year)*365)+(times[i].day-times[0].day)*24)+times[i].hour-times[0].hour) for i in range(len(times))]        
     
-    #times = np.array(times)
+    times = np.array(times)
     
     hinp = np.array(info[2])
-
+    
     values = np.array(values)
     
     if final_unit == '':

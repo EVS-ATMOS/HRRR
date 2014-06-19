@@ -95,7 +95,8 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend,directory = os.getcwd(),c
     
     if final_unit == '':
         final_unit = info[-1]
-
+        
+    times = np.array(times)
     values = np.array(values)
     
     plt.plot(times,values)
