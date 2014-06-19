@@ -35,7 +35,9 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift 
     
     ha = np.arccos((np.cos(90.833*2*np.pi/360.0)/(np.cos(loc[0]*np.pi*2/360.0)*np.cos(decl)))-np.tan(loc[0]*2*np.pi/360)*
                np.tan(decl))
-    
+    if ha == float('nan'):
+        print 'nans in ha'
+        
     sunrise = 720+4*(loc[1]-ha*360/(2*np.pi))-eqtime
     sunset = 720+4*(loc[1]+ha*360/(2*np.pi))-eqtime
     
