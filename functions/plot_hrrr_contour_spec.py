@@ -5,7 +5,8 @@ Created on Wed Jun 11 16:10:08 2014
 @author: mattjohnson
 """
 
-def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,scaling = 1,final_unit = '',hour = 0,loc = [-97.485,36.605],plot_modelhours = False, vmin = None, vmax = None):
+def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=None,scaling = 1,final_unit = '',hour = 0,
+                           loc = [-97.485,36.605],plot_modelhours = False, vmin = None, vmax = None):
     """
     Creates a contour plot of a parameter over the hrrr files in a given directory at a specific location
     over a given time period at a set model hour or a series of model hours, 
@@ -59,30 +60,35 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,scalin
         y = y[startindex:endindex]
         times = []
         
-
         
     values = []
-        
+    count = 0
+    
     for i in range(len(y)):
         if y[i] == None:
+            times.remove(times[i])
+            count = count+1
             continue
         info = read_hrrr_spec(y[i], [parameter],directory = directory,loc = loc, max = False)
         values.append(info[0][0])
+        #times.append(count)
         if not plot_modelhours:
             times.append(x[1][i])
+        count = count+1
             
-            
-    times = [(i-times[0]).total_seconds()/60/60 for i in times]
+    times = [((((times[i].year-times[0].year)*365)+(times[i].day-times[0].day)*24)+times[i].hour-times[0].hour) for i in range(len(times))]        
+    
     times = np.array(times)
-
+    
     hinp = np.array(info[2])
 
     values = np.array(values)
-
+    
     if final_unit == '':
         final_unit = info[-1]
-
-    pc = plt.pcolormesh(times,hinp,scaling*values.transpose())
+        
+    
+    pc = plt.pcolormesh(times,hinp,np.transpose(values))
 
     plt.gca().set_ylim([0,max(hinp)])
     plt.gca().set_xlim([0,max(times)])
@@ -91,6 +97,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart,datetimeend,scalin
     plt.colorbar(mappable = pc,label=parameter+' '+final_unit[0])
     plt.xlabel('Time in hrs')
     plt.ylabel('Height in hPa')
+    plt.tight_layout()
 
-    return
+    return   
     
