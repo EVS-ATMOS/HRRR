@@ -31,6 +31,8 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             if datetimestart.day<10:
                string =string+'0'
             string = string+str(datetimestart.day)
+            if datetimestart.hour<10:
+                string = string+'0'
             string = string +str(datetimestart.hour)+'00f0'
             if i<10:
                 string = string+'0'
@@ -39,8 +41,13 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             
         times = []    
         x = matplotlib.dates.date2num(datetimestart)
-        times = [datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day,datetimestart.hour+i) for i in hour]
- 
+        
+        for i in hour:
+            if datetimestart.hour+i<24:
+                times.append(datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day,datetimestart.hour+i))
+            else:
+                times.append(datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day+1,datetimestart.hour+i-24))
+        dates = times[:] 
     else:
         x = gather_hrrr_files(directory)
         y = np.array(x[0])
@@ -59,7 +66,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             endindex = dates.index(datetimeend) 
     
         y = y[startindex:endindex]
-        times = dates
+        times = dates[:]
         
         
     values = []
@@ -77,12 +84,11 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             times.append(x[1][i])
         count = count+1
             
-    #times = [((((times[i].year-times[0].year)*365)+(times[i].day-times[0].day)*24)+times[i].hour-times[0].hour) for i in range(len(times))]        
+    times = [((((times[i].year-times[0].year)*365)+(times[i].day-times[0].day)*24)+times[i].hour-times[0].hour) for i in range(len(times))]        
     
-    times = np.array(times)
-    
+        
     hinp = np.array(info[2])
-    
+    times = np.array(times)
     values = np.array(values)
     
     if final_unit == '':
@@ -98,11 +104,15 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     
     for i in range(len(dates)):
         if i == 1 or dates[i].day-dates[i-1].day != 0:
-            [[u,v][sunrise,sunset]] = get_sun(i,loc)
-            plt.gca().axvline(sunrise, linestyle = '--', color='k')
-            plt.gca().axvline(sunset, linestyle = '--', color='k')
-            plt.gca().text(sunrise, 100, 'Sunrise')
-            plt.gca().text(sunset,100,'Sunset')
+            if i==1:
+                date2 = dates[0]
+            else:
+                date2 = dates[i-1]
+            [[u,v][sunrise,sunset]] = get_sun(dates[i]-date2,loc)
+            plt.gca().axvline(u, linestyle = '--', color='k')
+            plt.gca().axvline(v, linestyle = '--', color='k')
+            plt.gca().text(u, 100, 'Sunrise')
+            plt.gca().text(v,100,'Sunset')
         
     plt.xlabel('Time in hrs')
     plt.ylabel('Height in hPa')

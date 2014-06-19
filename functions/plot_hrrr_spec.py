@@ -4,7 +4,7 @@ Created on Tue Jun 10 14:51:46 2014
 
 @author: mattjohnson
 """
-def plot_hrrr_spec(parameter,datetimestart,datetimeend,directory = os.getcwd(),contour = False,plot_modelhours = False,scaling = 1,final_unit = '',hinp = None,hour=0,loc = [-97.485,36.605],vmin = None, vmax = None):
+def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcwd(),contour = False,plot_modelhours = False,scaling = 1,final_unit = '',hinp = None,hour=0,loc = [-97.485,36.605],vmin = None, vmax = None):
     """
     Plots a given parameter over a given timespan for a given parameter, modelhour, height, location and directory of 
     HRRR files.  Leaving hinp empty will cause it to plot the maximum values over all heights.  
@@ -45,7 +45,14 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend,directory = os.getcwd(),c
             string = string+str(i)+'.grib2'
             y.append(string)
             
-        times = [datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day,datetimestart.hour+i) for i in hour]
+            times = []
+            
+            for i in hour:
+                if datetimestart.hour+i<24:
+                    times.append(datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day,datetimestart.hour+i))
+                else:
+                    times.append(datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day+1,datetimestart.hour+i-24))
+                
     else:
         x = gather_hrrr_files(directory)
         y = np.array(x[0])
