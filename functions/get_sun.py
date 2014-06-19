@@ -58,8 +58,8 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timeshift = No
             dst = 0
             
     
-    sunrise = sunrise/60+timeshift+dst-1
-    sunset = sunset/60+timeshift+dst-1
+    sunrise = sunrise/60+timeshift+dst
+    sunset = sunset/60+timeshift+dst
     
     daychangerise = int(np.floor(sunrise/24))
     daychangeset = int(np.floor(sunset/24))
