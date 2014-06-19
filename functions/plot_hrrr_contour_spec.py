@@ -88,17 +88,6 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     if final_unit == '':
         final_unit = info[-1]
     
-    
-   
-        
-    datesun = set()
-    
-    for i in dates:
-        datesun = datesun.union(i.date())
-    datelists = [i.datetime() for i in datesun]
-    
-    
-    
     pc = plt.pcolormesh(times,hinp,np.transpose(values))
 
     plt.gca().set_ylim([0,max(hinp)])
@@ -107,12 +96,13 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     
     plt.colorbar(mappable = pc,label=parameter+' '+final_unit[0])
     
-    for i in datelists:
-        [[u,v][sunrise,sunset]] = get_sun(i,loc)
-        plt.gca().axvline(sunrise, linestyle = '--', color='k')
-        plt.gca().axvline(sunset, linestyle = '--', color='k')
-        plt.gca().text(sunrise, 100, 'Sunrise')
-        plt.gca().text(sunset,100,'Sunset')
+    for i in range(len(dates)):
+        if i == 1 or dates[i].day-dates[i-1].day != 0:
+            [[u,v][sunrise,sunset]] = get_sun(i,loc)
+            plt.gca().axvline(sunrise, linestyle = '--', color='k')
+            plt.gca().axvline(sunset, linestyle = '--', color='k')
+            plt.gca().text(sunrise, 100, 'Sunrise')
+            plt.gca().text(sunset,100,'Sunset')
         
     plt.xlabel('Time in hrs')
     plt.ylabel('Height in hPa')
