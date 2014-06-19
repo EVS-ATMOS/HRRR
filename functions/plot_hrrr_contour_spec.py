@@ -107,10 +107,10 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             f = get_sun(dates[i],loc)
             u = f[0][0]
             v = f[0][1]
-            if u != None:
+            if u != None and u+24*count<max(times):
                 plt.gca().axvline(u+24*count, linestyle = '--', color='k')
                 plt.gca().text(u+24*count, 100, 'Sunrise')
-            if v != None:
+            if v != None and v+24*count<max(times):
                 plt.gca().axvline(v+24*count, linestyle = '--', color='k')
                 plt.gca().text(v+24*count,100,'Sunset')
             count = count+1
