@@ -98,6 +98,8 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
         if not plot_modelhours:
             times.append(x[1][i])
     
+    times = [((((times[i].year-times[0].year)*365)+(times[i].day-times[0].day)*24)+times[i].hour-times[0].hour) for i in range(len(times))]        
+    
     if plot_modelhours:
         dates = times[:]
     
