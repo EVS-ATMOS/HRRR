@@ -9,8 +9,10 @@ import datetime
 """
 Warning the dst if statements have not been extensively tested as they aren't vital to our project
 """
-def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timeshift = None):
+def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift = 0,estimate_timezone = False):
     """
+    equations from:   http://www.esrl.noaa.gov/gmd/grad/solcalc/solareqns.PDF
+    
     takes in the date, location, daylight savings time boolean and the timeshift for the timezone
     returns the fractional hour of sunrise and sunset and the datetimes of sunrise and sunset accurate to a minute
     
@@ -18,8 +20,8 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timeshift = No
     for example chicago, IL, US will be put in the wrong timezone by this function
     """
     #approximation of timezone by longitude
-    if timeshift == None:
-        timeshift = -np.floor(abs(loc[1]/15))
+    if estimate_timezone:
+        timezoneshift = -np.floor(abs(loc[1]/15))
         
     hour = 0
     day_of_year = date.timetuple().tm_yday
@@ -58,8 +60,8 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timeshift = No
             dst = 0
             
     
-    sunrise = sunrise/60+timeshift+dst-1
-    sunset = sunset/60+timeshift+dst-1
+    sunrise = sunrise/60+timezoneshift+dst
+    sunset = sunset/60+timezoneshift+dst
     
     daychangerise = int(np.floor(sunrise/24))
     daychangeset = int(np.floor(sunset/24))
