@@ -23,7 +23,6 @@ def plot_hrrr(filename,parameter,directory=None,hinp='',scaling=1,final_unit = '
         wkdir = os.getcwd()
         os.chdir(directory)
     
-    print os.getcwd()
 
     if hinp != '':
         [data,parameterlist,datah,dataloc,units] = read_hrrr(filename,[parameter],directory = directory)

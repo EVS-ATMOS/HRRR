@@ -4,20 +4,22 @@ Created on Tue Jun 10 14:51:46 2014
 
 @author: mattjohnson
 """
-def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcwd(),contour = False,plot_modelhours = False,scaling = 1,final_unit = '',hinp = None,hour=0,loc = [-97.485,36.605],vmin = None, vmax = None):
+import numpy as np
+import os
+import matplotlib.pyplot as plt
+import datetime
+
+def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcwd(),contour = False,plot_modelhours = False,scaling = 1,final_unit = '',hinp = None,hour=0,loc = [36.605,-97.485],vmin = None, vmax = None):
     """
     Plots a given parameter over a given timespan for a given parameter, modelhour, height, location and directory of 
     HRRR files.  Leaving hinp empty will cause it to plot the maximum values over all heights.  
     
     Alternatively if plot_modelhours = True, it will graph the given parameter against time for the selcted model hours
     contained in hours.  
-    """
-    import numpy as np
-    import matplotlib
-    import os
-    import matplotlib.pyplot as plt
-    import datetime
-    
+    """ 
+    if ((type(hour) == list) and not plot_modelhours):
+        print 'error, can only plot one model hour at a time if plot_modelhours = False'
+        return
     
     if contour:
         return plot_hrrr_contour_spec(directory=directory,parameter=parameter,datetimestart = datetimestart,datetimeend=datetimeend,scaling = scaling,hour = hour,loc = loc,plot_modelhours = plot_modelhours,vmin = vmin, vmax = vmax)
@@ -114,15 +116,15 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
     count = 0
     for i in range(len(dates)):
         if i == 1 or dates[i].day-dates[i-1].day != 0:
-            if i==1:
-                date2 = dates[0]
-            else:
-                date2 = dates[i-1]
-            [[u,v][sunrise,sunset]] = get_sun(dates[i],loc)
-            plt.gca().axvline(u+24*count, linestyle = '--', color='k')
-            plt.gca().axvline(v+24*count, linestyle = '--', color='k')
-            plt.gca().text(u+24*count, 100, 'Sunrise')
-            plt.gca().text(v+24*count,100,'Sunset')
+            f = get_sun(dates[i],loc)
+            u = f[0][0]
+            v = f[0][1]
+            if u != None:
+                plt.gca().axvline(u+24*count, linestyle = '--', color='k')
+                plt.gca().text(u+24*count, 100, 'Sunrise')
+            if v != None:
+                plt.gca().axvline(v+24*count, linestyle = '--', color='k')
+                plt.gca().text(v+24*count,100,'Sunset')
             count = count+1
     
     

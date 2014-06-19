@@ -47,13 +47,11 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
                 times.append(datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day,datetimestart.hour+i))
             else:
                 times.append(datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day+1,datetimestart.hour+i-24))
-            dates = times[:] 
     else:
         x = gather_hrrr_files(directory)
         y = np.array(x[0])
         y = y.transpose()
         y = y[hour]
-    
         dates = x[1]
     
         if datetimestart == None != datetimeend:
@@ -66,7 +64,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             endindex = dates.index(datetimeend) 
     
         y = y[startindex:endindex]
-        times = dates[:]
+        times = []
         
         
     values = []
@@ -83,7 +81,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
         if not plot_modelhours:
             times.append(x[1][i])
         count = count+1
-            
+    dates = times[:]        
     times = [((((times[i].year-times[0].year)*365)+(times[i].day-times[0].day)*24)+times[i].hour-times[0].hour) for i in range(len(times))]        
     
         
@@ -91,11 +89,12 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     times = np.array(times)
     values = np.array(values)
     
+    
     if final_unit == '':
         final_unit = info[-1]
     
     pc = plt.pcolormesh(times,hinp,np.transpose(values))
-
+    
     plt.gca().set_ylim([0,max(hinp)])
     plt.gca().set_xlim([0,max(times)])
     plt.gca().invert_yaxis()
@@ -105,15 +104,15 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     count = 0
     for i in range(len(dates)):
         if i == 1 or dates[i].day-dates[i-1].day != 0:
-            if i==1:
-                date2 = dates[0]
-            else:
-                date2 = dates[i-1]
-            [[u,v][sunrise,sunset]] = get_sun(dates[i],loc)
-            plt.gca().axvline(u+24*count, linestyle = '--', color='k')
-            plt.gca().axvline(v+24*count, linestyle = '--', color='k')
-            plt.gca().text(u+24*count, 100, 'Sunrise')
-            plt.gca().text(v+24*count,100,'Sunset')
+            f = get_sun(dates[i],loc)
+            u = f[0][0]
+            v = f[0][1]
+            if u != None:
+                plt.gca().axvline(u+24*count, linestyle = '--', color='k')
+                plt.gca().text(u+24*count, 100, 'Sunrise')
+            if v != None:
+                plt.gca().axvline(v+24*count, linestyle = '--', color='k')
+                plt.gca().text(v+24*count,100,'Sunset')
             count = count+1
         
     plt.xlabel('Time in hrs')

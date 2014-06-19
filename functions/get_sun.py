@@ -33,10 +33,9 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift 
     eqtime=229.18*(0.000075+0.001868*np.cos(gamma)-0.032077*np.sin(gamma)-0.014615*np.cos(2*gamma)-0.040849*np.sin(2*gamma))
     decl = .006918-.399912*np.cos(gamma)+.070257*np.sin(gamma)-.006758*np.cos(2*gamma)+.000907*np.sin(2*gamma)-.0026967*np.cos(3*gamma)+.00148*np.sin(3*gamma)
     
-    ha = np.arccos((np.cos(90.833*2*np.pi/360.0)/(np.cos(loc[0]*np.pi*2/360.0)*np.cos(decl)))-np.tan(loc[0]*2*np.pi/360)*
-               np.tan(decl))
-    if ha == float('nan'):
-        print 'nans in ha'
+    ha = np.arccos((np.cos(90.833*2*np.pi/360.0)/(np.cos(loc[0]*np.pi*2/360.0)*np.cos(decl)))-np.tan(loc[0]*2*np.pi/360)*np.tan(decl))
+    
+    
         
     sunrise = 720+4*(loc[1]-ha*360/(2*np.pi))-eqtime
     sunset = 720+4*(loc[1]+ha*360/(2*np.pi))-eqtime
@@ -65,15 +64,21 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift 
     sunrise = sunrise/60+timezoneshift+dst
     sunset = sunset/60+timezoneshift+dst
     
-    daychangerise = int(np.floor(sunrise/24))
-    daychangeset = int(np.floor(sunset/24))
+    if not np.isnan(sunrise):
+        daychangerise = int(np.floor(sunrise/24))
+        sunrise = sunrise - daychangerise*24
+        sunrisedate = datetime.datetime(2014,6,19+daychangerise,int(sunrise),int((sunrise-int(sunrise))*60))
+    else:
+        sunrise = None
+        sunrisedate = None
     
-    sunrise = sunrise - daychangerise*24
-    sunset = sunset - daychangeset*24
-    
-    sunrisedate = datetime.datetime(2014,6,19+daychangerise,int(sunrise),int((sunrise-int(sunrise))*60))
-    sunsetdate = datetime.datetime(2014,6,19+daychangeset,int(sunset),int((sunset-int(sunset))*60))
-    
+    if not np.isnan(sunset):
+        daychangeset = int(np.floor(sunset/24))
+        sunset = sunset - daychangeset*24
+        sunsetdate = datetime.datetime(2014,6,19+daychangeset,int(sunset),int((sunset-int(sunset))*60))
+    else:
+        sunset = None
+        sunsetdate = None
 
     
     return[[sunrise,sunset],[sunrisedate,sunsetdate]]
