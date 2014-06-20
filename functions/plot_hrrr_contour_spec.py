@@ -46,6 +46,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
                 times.append(datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day,datetimestart.hour+i))
             else:
                 times.append(datetime.datetime(datetimestart.year,datetimestart.month,datetimestart.day+1,datetimestart.hour+i-24))
+        dates = times[:]
     else:
         x = gather_hrrr_files(directory)
         y = np.array(x[0])
@@ -91,32 +92,45 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     
     if final_unit == '':
         final_unit = info[-1]
+    if type(final_unit) == list:
+        final_unit = final_unit[0]
+    u = []
+    v = []
+    
+    for i in range(len(dates)):
+        if i == 0 or dates[i].day-dates[i-1].day != 0:
+            f = get_sun(dates[i],loc)
+            u.append(f[0][0])
+            v.append(f[0][1])
+        
+            
+    count = 0    
+    print times
+    plt.figure(figsize = [8,8])
+    ax = plt.gca()
     
     pc = plt.pcolormesh(times,hinp,np.transpose(values))
-    
-    plt.gca().set_ylim([0,max(hinp)])
-    plt.gca().set_xlim([0,max(times)])
-    plt.gca().invert_yaxis()
-    
-    plt.colorbar(mappable = pc,label=parameter+' '+final_unit[0])
-    
-    count = 0
-    for i in range(len(dates)):
-        if i == 1 or dates[i].day-dates[i-1].day != 0:
-            f = get_sun(dates[i],loc)
-            u = f[0][0]
-            v = f[0][1]
-            if u != None and u+24*count<max(times):
-                plt.gca().axvline(u+24*count, linestyle = '--', color='k')
-                plt.gca().text(u+24*count, 100, 'Sunrise')
-            if v != None and v+24*count<max(times):
-                plt.gca().axvline(v+24*count, linestyle = '--', color='k')
-                plt.gca().text(v+24*count,100,'Sunset')
-            count = count+1
-        
+    ax.set_ylim([0,max(hinp)])
+    ax.set_xlim([0,max(times)])
+    ax.invert_yaxis()
+    plt.colorbar(mappable = pc,label=parameter+' '+final_unit)    
     plt.xlabel('Time in hrs')
     plt.ylabel('Height in hPa')
-    plt.tight_layout()
+    
+    yval = (max(hinp)+min(hinp))/2
+    
+    for i in range(len(u)):
+        if u[i] != None and u[i]+24*i<max(times):
+            ax.text(u[i]+24*i,yval, 'Sunrise')
+            ax.axvline(u[i]+24*i, linestyle = '--', color='k')          
+        if v[i] != None and v[i]+24*i<max(times):
+            ax.axvline(v[i]+24*i, linestyle = '--', color='k')
+            ax.text(v[i]+24*i,yval,'Sunset')
+            
 
+            
+    
+
+    plt.show()
     return   
     
