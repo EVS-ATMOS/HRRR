@@ -82,7 +82,6 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             times.append(dates[i+startindex])
         count = count+1
         
-    print max(values.tolist())
 
     dates = times[:]        
     times = [((((times[i].year-times[0].year)*365)+(times[i].day-times[0].day)*24)+times[i].hour-times[0].hour) for i in range(len(times))]        
