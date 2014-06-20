@@ -9,7 +9,7 @@ import datetime
 """
 Warning the dst if statements have not been extensively tested as they aren't vital to our project
 """
-def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift = 0,estimate_timezone = False):
+def get_sun(date = datetime.datetime.now(),loc = [-97.485,36.605],timezoneshift = 0,estimate_timezone = False):
     """
     equations from:   http://www.esrl.noaa.gov/gmd/grad/solcalc/solareqns.PDF
     
@@ -26,17 +26,23 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift 
     hour = 0
     day_of_year = date.timetuple().tm_yday
     loc = np.array(loc[:])
-    loc[1] = -loc[1]
+
     
-    gamma = np.pi*2/365*(day_of_year-1+(hour-12)/24)
+    gamma = np.pi*2./365.*(day_of_year-1.+(hour-12)/24.)
     
     eqtime=229.18*(0.000075+0.001868*np.cos(gamma)-0.032077*np.sin(gamma)-0.014615*np.cos(2*gamma)-0.040849*np.sin(2*gamma))
     decl = .006918-.399912*np.cos(gamma)+.070257*np.sin(gamma)-.006758*np.cos(2*gamma)+.000907*np.sin(2*gamma)-.0026967*np.cos(3*gamma)+.00148*np.sin(3*gamma)
     
-    ha = np.arccos((np.cos(90.833*2*np.pi/360.0)/(np.cos(loc[0]*np.pi*2/360.0)*np.cos(decl)))-np.tan(loc[0]*2*np.pi/360)*np.tan(decl))
+    
+    prearccos = (np.cos(90.833*2.*np.pi/360.0)/(np.cos(loc[0]*np.pi*2./360.0)*np.cos(decl)))-np.tan(loc[0]*2*np.pi/360)*np.tan(decl)
+    
+    if abs(prearccos)>1:
+        return [[None,None],[None,None]]
+    
+    ha = np.arccos(prearccos)
     
     
-        
+    snoon = 720+4*loc[1]-eqtime
     sunrise = 720+4*(loc[1]-ha*360/(2*np.pi))-eqtime
     sunset = 720+4*(loc[1]+ha*360/(2*np.pi))-eqtime
     
@@ -61,6 +67,7 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift 
             dst = 0
             
     
+    snoon = snoon/60
     sunrise = sunrise/60+timezoneshift+dst
     sunset = sunset/60+timezoneshift+dst
     

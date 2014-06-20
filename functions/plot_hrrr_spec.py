@@ -96,7 +96,7 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
                 datarts = np.array(info[0])*float(scaling)
         values.append(datarts)
         if not plot_modelhours:
-            times.append(x[1][i])
+            times.append(x[1][i+startindex])
     
     times = [((((times[i].year-times[0].year)*365)+(times[i].day-times[0].day)*24)+times[i].hour-times[0].hour) for i in range(len(times))]        
     
@@ -141,8 +141,6 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
         if v[i] != None and v[i]+24*i<max(times):
             ax.text(v[i]+24*i,yval,'Sunset')
             ax.axvline(v[i]+24*i, linestyle = '--', color='k')
-            
-
                    
     os.chdir(wkdir)
     
