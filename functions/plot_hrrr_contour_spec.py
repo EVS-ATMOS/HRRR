@@ -64,7 +64,9 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             endindex = dates.index(datetimeend) 
             print startindex
             print endindex
-    
+            
+        print dates[startindex]
+        print dates[endindex]
         y = y[startindex:endindex]
         times = []
         
