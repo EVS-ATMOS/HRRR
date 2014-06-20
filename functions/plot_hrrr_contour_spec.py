@@ -84,8 +84,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             times.append(x[1][i])
         count = count+1
         
-    print x[1][:]
-    print len(x[1][:])
+
     print times
     print len(times)
     dates = times[:]        
@@ -111,7 +110,8 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             v.append(f[0][1])
         
             
-    count = 0    
+    count = 0
+    print len(times)    
     print times
     plt.figure(figsize = [8,8])
     ax = plt.gca()
