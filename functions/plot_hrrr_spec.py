@@ -107,28 +107,43 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
     if final_unit == '':
         final_unit = info[-1]
         
+    if(type(final_unit) == list):
+        final_unit = final_unit[0]
+        
     times = np.array(times)
     values = np.array(values)
     
+    u = []
+    v = []
+    for i in range(len(dates)):
+        if i == 0 or dates[i].day-dates[i-1].day != 0:
+            f = get_sun(dates[i],loc)
+            u.append(f[0][0])
+            v.append(f[0][1])
+        
+            
+    count = 0 
+    print times
+    
+    plt.figure(figsize = [8,8])
+    ax = plt.gca()
     plt.plot(times,values)
     plt.xlabel('Time hrs')
-    plt.ylabel(parameter+' '+final_unit[0])
+        
+    plt.ylabel(parameter+' '+final_unit)
     
-    count = 0
-    for i in range(len(dates)):
-        if i == 1 or dates[i].day-dates[i-1].day != 0:
-            f = get_sun(dates[i],loc)
-            u = f[0][0]
-            v = f[0][1]
-            if u != None and u+24*count<max(times):
-                plt.gca().axvline(u+24*count, linestyle = '--', color='k')
-                plt.gca().text(u+24*count, 100, 'Sunrise')
-            if v != None and v+24*count<max(times):
-                plt.gca().axvline(v+24*count, linestyle = '--', color='k')
-                plt.gca().text(v+24*count,100,'Sunset')
-            count = count+1
-    
-    
+    yval = (max(values)+min(values))/2
+  
+    for i in range(len(u)):
+        if u[i] != None and u[i]+24*i<max(times):
+            ax.text(u[i]+24*i, yval,'Sunrise')
+            ax.axvline(u[i]+24*i, linestyle = '--', color='k')
+        if v[i] != None and v[i]+24*i<max(times):
+            ax.text(v[i]+24*i,yval,'Sunset')
+            ax.axvline(v[i]+24*i, linestyle = '--', color='k')
+            
+
+                   
     os.chdir(wkdir)
     
     return
