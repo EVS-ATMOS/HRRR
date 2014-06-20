@@ -129,10 +129,6 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
         if v[i] != None and v[i]+24*i<max(times):
             ax.axvline(v[i]+24*i, linestyle = '--', color='k')
             ax.text(v[i]+24*i,yval,'Sunset')
-            
-
-            
-    
 
     plt.show()
     return   
