@@ -22,7 +22,7 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
         return
     
     if contour:
-        return plot_hrrr_contour_spec(directory=directory,parameter=parameter,datetimestart = datetimestart,datetimeend=datetimeend,scaling = scaling,hour = hour,loc = loc,plot_modelhours = plot_modelhours,vmin = vmin, vmax = vmax)
+        return plot_hrrr_contour_spec(directory=directory,parameter=parameter,datetimestart = datetimestart,datetimeend=datetimeend,scaling = scaling,hour = hour,loc = loc,plot_modelhours = plot_modelhours,final_unit = final_unit,vmin = vmin, vmax = vmax)
     if plot_modelhours:
         y = []
         for i in hour:
