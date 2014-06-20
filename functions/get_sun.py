@@ -37,7 +37,9 @@ def get_sun(date = datetime.datetime.now(),loc = [-97.485,36.605],timezoneshift 
     prearccos = (np.cos(90.833*2.*np.pi/360.0)/(np.cos(loc[0]*np.pi*2./360.0)*np.cos(decl)))-np.tan(loc[0]*2*np.pi/360)*np.tan(decl)
     
     if abs(prearccos)>1:
-        return [[None,None],[None,None]]
+        prearccos = np.arccos(-1*np.tan(loc[0]*np.pi/180.)*np.tan(decl))
+        if abs(prearccos)>1:
+            return [[None,None],[None,None]]
     
     ha = np.arccos(prearccos)
     
