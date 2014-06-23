@@ -55,7 +55,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
         y = y.transpose()
         y = y[hour]
         dates = x[1]
-        print dates
+
         if datetimestart == None != datetimeend:
             print 'error datetimestart and datetime end must both not be or both be none'
         elif datetimestart == None:
@@ -63,7 +63,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             endindex = len(dates)
         else:
             startindex = dates.index(datetimestart)-hour
-            endindex = dates.index(datetimeend)+1-hour
+            endindex = dates.index(datetimeend)-hour
             if startindex<0:
                 print 'missing early HRRR files'
                 startindex = 0
@@ -74,7 +74,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
         y = y[startindex:endindex]
         
         times = []
-        
+    print y  
     values = []
     count = 0
     
@@ -96,6 +96,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     
         
     hinp = HRRR_PS
+    times.append(times[-1]+1)
     times = np.array(times)
     values = np.array(values)
     
