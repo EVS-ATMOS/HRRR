@@ -61,8 +61,8 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             startindex = 0
             endindex = len(dates)
         else:
-            startindex = dates.index(datetimestart)
-            endindex = dates.index(datetimeend) 
+            startindex = dates.index(datetimestart)-1
+            endindex = dates.index(datetimeend)
 
         y = y[startindex:endindex]
         times = []
@@ -126,7 +126,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     
     pc = plt.pcolormesh(times,hinp,np.transpose(values))
     ax.set_ylim([0,max(hinp)])
-    ax.set_xlim([0,max(times)])
+    ax.set_xlim([min(times),max(times)])
     ax.invert_yaxis()
     plt.colorbar(mappable = pc,label=parameter+' '+final_unit)    
     plt.xlabel('Time in hrs')

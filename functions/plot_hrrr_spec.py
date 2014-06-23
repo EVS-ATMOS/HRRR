@@ -71,7 +71,7 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
             startindex = 0
             endindex = len(dates)
         else:
-            startindex = dates.index(datetimestart)
+            startindex = dates.index(datetimestart)-1
             endindex = dates.index(datetimeend) 
         y = y[startindex:endindex]
 
@@ -128,6 +128,7 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
     ax = plt.gca()
 
     ax.set_yscale('log')
+    
      # x axis
     xmajorLocator = MultipleLocator(1)
     ax.xaxis.set_major_locator(xmajorLocator)
@@ -139,7 +140,10 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
     ax.yaxis.set_major_locator(ymajorLocator)
     ymajorFormatter = FormatStrFormatter('%d')
     ax.yaxis.set_major_formatter(ymajorFormatter)
+    
     plt.plot(times,values)
+    ax.set_ylim([0,max(hinp)])
+    ax.set_xlim([min(times),max(times)])
     plt.xlabel('Time hrs')
         
     plt.ylabel(parameter+' '+final_unit)
