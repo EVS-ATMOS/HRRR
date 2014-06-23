@@ -6,7 +6,7 @@ Created on Wed Jun 11 16:10:08 2014
 """
 
 def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=None,scaling = 1,final_unit = None,hour = 0,
-                           loc = [-97.485,36.605],plot_modelhours = False, vmin = None, vmax = None):
+                           loc = [36.605,-97.485],plot_modelhours = False, vmin = None, vmax = None):
     """
     Creates a contour plot of a parameter over the hrrr files in a given directory at a specific location
     over a given time period at a set model hour or a series of model hours, 
@@ -107,8 +107,6 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
         
             
     count = 0
-    print len(times)    
-    print times
     plt.figure(figsize = [8,8])
     ax = plt.gca()
     

@@ -9,7 +9,7 @@ import os
 import matplotlib.pyplot as plt
 import datetime
 
-def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcwd(),contour = False,plot_modelhours = False,scaling = 1,final_unit = None,hinp = None,hour=0,loc = [-97.485,36.605],vmin = None, vmax = None):
+def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcwd(),contour = False,plot_modelhours = False,scaling = 1,final_unit = None,hinp = None,hour=0,loc = [36.605,-97.485],vmin = None, vmax = None):
     """
     Plots a given parameter over a given timespan for a given parameter, modelhour, height, location and directory of 
     HRRR files.  Leaving hinp empty will cause it to plot the maximum values over all heights.  
@@ -117,13 +117,13 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
     v = []
     for i in range(len(dates)):
         if i == 0 or dates[i].day-dates[i-1].day != 0:
-            f = get_sun(dates[i],loc)
+            f = get_sun(dates[i],loc = loc)
             u.append(f[0][0])
             v.append(f[0][1])
         
             
     count = 0 
-    print times
+
     
     plt.figure(figsize = [8,8])
     ax = plt.gca()
