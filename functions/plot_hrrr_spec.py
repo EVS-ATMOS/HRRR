@@ -71,8 +71,15 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
             startindex = 0
             endindex = len(dates)
         else:
-            startindex = dates.index(datetimestart)-1
-            endindex = dates.index(datetimeend) 
+            startindex = dates.index(datetimestart)-hour
+            endindex = dates.index(datetimeend)+1-hour
+            if startindex<0:
+                print 'missing early HRRR files'
+                startindex = 0
+            if endindex>len(dates)-1:
+                print 'missing late HRRR files'
+                endindex = len(dates)-1
+                
         y = y[startindex:endindex]
 
         times = []
