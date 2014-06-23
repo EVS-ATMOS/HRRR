@@ -123,7 +123,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
         if u[i] != None and u[i]+24*i<max(times) and u[i]+24*i>min(times):
             ax.text(u[i]+24*i,yval, 'Sunrise')
             ax.axvline(u[i]+24*i, linestyle = '--', color='k')          
-        if v[i] != None and v[i]+24*i<max(times):
+        if v[i] != None and v[i]+24*i<max(times) and v[i]+24*i>min(times):
             ax.axvline(v[i]+24*i, linestyle = '--', color='k')
             ax.text(v[i]+24*i,yval,'Sunset')
 
