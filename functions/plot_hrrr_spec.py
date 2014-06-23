@@ -117,12 +117,11 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
     v = []
     for i in range(len(dates)):
         if i == 0 or dates[i].day-dates[i-1].day != 0:
-            f = get_sun(dates[i],loc = loc)
+            f = get_sun(dates[i],loc = loc,no_dst = True)
             u.append(f[0][0])
             v.append(f[0][1])
         
             
-    count = 0 
 
     plt.figure(figsize =figsize)
     ax = plt.gca()
@@ -134,7 +133,7 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
     yval = (max(values)+min(values))/2
   
     for i in range(len(u)):
-        if u[i] != None and u[i]+24*i<max(times):
+        if u[i] != None and u[i]+24*i<max(times) and u[i]+24*i>min(times):
             ax.text(u[i]+24*i, yval,'Sunrise')
             ax.axvline(u[i]+24*i, linestyle = '--', color='k')
         if v[i] != None and v[i]+24*i<max(times):
