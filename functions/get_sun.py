@@ -9,7 +9,7 @@ import datetime
 """
 Warning the dst if statements have not been extensively tested as they aren't vital to our project
 """
-def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift = 0,estimate_timezone = False):
+def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift = 0,estimate_timezone = False, no_dst = False):
     """
     equations from:   http://www.esrl.noaa.gov/gmd/grad/solcalc/solareqns.PDF
     
@@ -50,43 +50,42 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift 
     snoon = 720+4*loc[1]-eqtime
     sunrise = 720+4*(loc[1]-ha*360/(2*np.pi))-eqtime
     sunset = 720+4*(loc[1]+ha*360/(2*np.pi))-eqtime
-    
-    if date.month>3 and date.month<11:
-        dst = 1
-    elif date.month<3 or date.month == 12:
+    if not no_dst:
+        if date.month>3 and date.month<11:
+            dst = 1
+        elif date.month<3 or date.month == 12:
+            dst = 0
+        elif date.month == 3:
+            day = date.day
+            dayssincesun = date.isoweekday()
+            week = day/7
+            dayofweek = day%7
+            if week == 1:
+                dst = 0
+            elif week >2:
+                dst = 1
+            elif dayssincesun == 7:
+                dst = 1
+            elif dayofweek-dayssincesun>0:
+                dst = 1
+            else:
+                dst = 0
+    else:
         dst = 0
-    elif date.month == 3:
-        day = date.day
-        dayssincesun = date.isoweekday()
-        week = day/7
-        dayofweek = day%7
-        if week == 1:
-            dst = 0
-        elif week >2:
-            dst = 1
-        elif dayssincesun == 7:
-            dst = 1
-        elif dayofweek-dayssincesun>0:
-            dst = 1
-        else:
-            dst = 0
-            
-    
+
     snoon = snoon/60+timezoneshift+dst
     sunrise = sunrise/60+timezoneshift+dst
     sunset = sunset/60+timezoneshift+dst
-    print snoon
-    print sunrise
-    print sunset
-    transtime = max([snoon-sunrise,sunset-snoon])
+
+#    transtime = max([snoon-sunrise,sunset-snoon])
     
-    sunrise = snoon-transtime
-    sunset = snoon+transtime
+#    sunrise = snoon-transtime
+#    sunset = snoon+transtime
     
 
     daychangerise = int(np.floor(sunrise/24))
-    sunriset = sunrise - daychangerise*24
-    sunrisedate = datetime.datetime(2014,6,19+daychangerise,int(sunriset),int((sunriset-int(sunriset))*60))
+    sunrise = sunrise - daychangerise*24
+    sunrisedate = datetime.datetime(2014,6,19+daychangerise,int(sunrise),int((sunrise-int(sunrise))*60))
 
     #daychangenoon = int(np.floor(snoon/24))
     #snoon = snoon - daychangenoon*24
@@ -94,8 +93,8 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift 
     
 
     daychangeset = int(np.floor(sunset/24))
-    sunsett = sunset - daychangeset*24
-    sunsetdate = datetime.datetime(2014,6,19+daychangeset,int(sunsett),int((sunsett-int(sunsett))*60))
+    sunset = sunset - daychangeset*24
+    sunsetdate = datetime.datetime(2014,6,19+daychangeset,int(sunset),int((sunset-int(sunset))*60))
 
     
     return[[sunrise,sunset],[sunrisedate,sunsetdate]]
