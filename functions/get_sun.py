@@ -25,7 +25,6 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift 
     
 
     hour = 0
-    print date.timetuple().tm_yday
     day_of_year = np.floor(date.timetuple().tm_yday)
     loc = np.array(loc[:])
 
@@ -73,25 +72,30 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift 
             dst = 0
             
     
-    snoon = snoon/60
+    snoon = snoon/60+timezoneshift+dst
     sunrise = sunrise/60+timezoneshift+dst
     sunset = sunset/60+timezoneshift+dst
+    print snoon
+    print sunrise
+    print sunset
+    transtime = max([snoon-sunrise,sunset-snoon])
     
-    if not np.isnan(sunrise):
-        daychangerise = int(np.floor(sunrise/24))
-        sunrise = sunrise - daychangerise*24
-        sunrisedate = datetime.datetime(2014,6,19+daychangerise,int(sunrise),int((sunrise-int(sunrise))*60))
-    else:
-        sunrise = None
-        sunrisedate = None
+    sunrise = snoon-transtime
+    sunset = snoon+transtime
     
-    if not np.isnan(sunset):
-        daychangeset = int(np.floor(sunset/24))
-        sunset = sunset - daychangeset*24
-        sunsetdate = datetime.datetime(2014,6,19+daychangeset,int(sunset),int((sunset-int(sunset))*60))
-    else:
-        sunset = None
-        sunsetdate = None
+
+    daychangerise = int(np.floor(sunrise/24))
+    sunriset = sunrise - daychangerise*24
+    sunrisedate = datetime.datetime(2014,6,19+daychangerise,int(sunriset),int((sunriset-int(sunriset))*60))
+
+    #daychangenoon = int(np.floor(snoon/24))
+    #snoon = snoon - daychangenoon*24
+    #snoondate = datetime.datetime(2014,6,19+daychangenoon,int(snoon),int((snoon-int(snoon))*60))
+    
+
+    daychangeset = int(np.floor(sunset/24))
+    sunsett = sunset - daychangeset*24
+    sunsetdate = datetime.datetime(2014,6,19+daychangeset,int(sunsett),int((sunsett-int(sunsett))*60))
 
     
     return[[sunrise,sunset],[sunrisedate,sunsetdate]]
