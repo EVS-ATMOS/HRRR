@@ -4,11 +4,9 @@ Created on Fri Jun  6 09:43:46 2014
 
 @author: mattjohnson
 """
-from matplotlib import pyplot as plt
-from matplotlib import colors
+
 import numpy as np
 import os
-from mpl_toolkits.basemap import Basemap, addcyclic
 import pygrib
 
 def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [36.605,-97.485], coords=None, max = False):   

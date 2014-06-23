@@ -6,11 +6,10 @@ Created on Wed Jun  4 14:03:36 2014
 """
 
 from matplotlib import pyplot as plt
-from matplotlib import colors
 import os
 import numpy as np
-from mpl_toolkits.basemap import Basemap, addcyclic
-import pygrib
+from mpl_toolkits.basemap import Basemap
+
 
 def plot_hrrr(filename,parameter,directory=None,hinp='',scaling=1,final_unit = '',vmax=None,vmin=None): #US
     """
@@ -23,7 +22,6 @@ def plot_hrrr(filename,parameter,directory=None,hinp='',scaling=1,final_unit = '
         wkdir = os.getcwd()
         os.chdir(directory)
     
-    print os.getcwd()
 
     if hinp != '':
         [data,parameterlist,datah,dataloc,units] = read_hrrr(filename,[parameter],directory = directory)
@@ -59,10 +57,9 @@ def plot_hrrr(filename,parameter,directory=None,hinp='',scaling=1,final_unit = '
     
     plt.colorbar(label=final_unit)
     plt.show()
-    plt.tight_layout()
     
     if directory != None:
         os.chdir(wkdir)
 
-    return 0
+    return
     
