@@ -125,11 +125,13 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
 
     plt.figure(figsize =figsize)
     ax = plt.gca()
+    ax.set_yscale('log')
+    ax.yticks([100,200,300,400,500,600,700,800,900,1000])
     plt.plot(times,values)
     plt.xlabel('Time hrs')
         
     plt.ylabel(parameter+' '+final_unit)
-    ax.set_yscale('log')
+
     
     yval = (max(values)+min(values))/2
   

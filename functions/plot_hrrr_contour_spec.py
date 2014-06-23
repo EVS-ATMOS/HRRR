@@ -91,6 +91,8 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     times = np.array(times)
     values = np.array(values)
     
+    print hinp
+    print values
     
     if final_unit == None:
         final_unit = info[-1]
@@ -108,7 +110,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             
     plt.figure(figsize = figsize)
     ax = plt.gca()
-    
+    ax.set_yscale('log')
     pc = plt.pcolormesh(times,hinp,np.transpose(values))
     ax.set_ylim([0,max(hinp)])
     ax.set_xlim([0,max(times)])
@@ -116,7 +118,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     plt.colorbar(mappable = pc,label=parameter+' '+final_unit)    
     plt.xlabel('Time in hrs')
     plt.ylabel('Height in hPa')
-    ax.set_yscale('log')
+
     
     yval = (max(hinp)+min(hinp))/2
     
