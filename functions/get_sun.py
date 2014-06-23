@@ -22,9 +22,11 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift 
     #approximation of timezone by longitude
     if estimate_timezone:
         timezoneshift = -np.floor(abs(loc[1]/15))
-        
+    
+
     hour = 0
-    day_of_year = date.timetuple().tm_yday
+    print date.timetuple().tm_yday
+    day_of_year = np.floor(date.timetuple().tm_yday)
     loc = np.array(loc[:])
 
     
@@ -33,11 +35,11 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift 
     eqtime=229.18*(0.000075+0.001868*np.cos(gamma)-0.032077*np.sin(gamma)-0.014615*np.cos(2*gamma)-0.040849*np.sin(2*gamma))
     decl = .006918-.399912*np.cos(gamma)+.070257*np.sin(gamma)-.006758*np.cos(2*gamma)+.000907*np.sin(2*gamma)-.0026967*np.cos(3*gamma)+.00148*np.sin(3*gamma)
     
-    print decl
-    
     prearccos = (np.cos(90.833*2.*np.pi/360.0)/(np.cos(loc[0]*np.pi*2./360.0)*np.cos(decl)))-np.tan(loc[0]*2*np.pi/360)*np.tan(decl)
     
     if abs(prearccos)>1:
+        print 'trying simplified surise/sunset calculations for:'
+        print date
         prearccos =-1*np.tan(loc[0]*np.pi/180.)*np.tan(decl)
         if abs(prearccos)>1:
             print 'sunrise/sunset equation calculation failed'
