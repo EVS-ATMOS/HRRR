@@ -63,7 +63,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             endindex = len(dates)
         else:
             startindex = dates.index(datetimestart)-hour
-            endindex = dates.index(datetimeend)-hour
+            endindex = dates.index(datetimeend)+1-hour
             if startindex<0:
                 print 'missing early HRRR files'
                 startindex = 0
@@ -74,7 +74,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
         y = y[startindex:endindex]
         
         times = []
-    print y  
+
     values = []
     count = 0
     
@@ -109,10 +109,14 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     v = []
     
     for i in range(len(dates)):
+        if i == 0:
+            k = get_sun(datetime.datetime(dates[0].year, dates[0].month,dates[0].day-1),loc=loc,no_dst=True)
         if i == 0 or dates[i].day-dates[i-1].day != 0:
             f = get_sun(dates[i],loc = loc,no_dst = True)
             u.append(f[0][0])
             v.append(f[0][1])
+        if i == range(len(dates)):
+            k = get_sun(datetime.datetime(dates[i].year, dates[0].month,dates[0].day+1),loc=loc,no_dst=True)
         
             
     plt.figure(figsize = figsize)
