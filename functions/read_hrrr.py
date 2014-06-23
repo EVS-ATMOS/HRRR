@@ -5,10 +5,9 @@ Created on Tue Jun  3 13:33:41 2014
 @author: mattjohnson
 """
 
-from matplotlib import pyplot as plt
-from matplotlib import colors
+
 import numpy as np
-from mpl_toolkits.basemap import Basemap, addcyclic
+import os
 import pygrib
 
 def grb_to_grid(grb_obj):

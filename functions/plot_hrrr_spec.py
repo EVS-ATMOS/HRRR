@@ -8,6 +8,7 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 import datetime
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
 def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcwd(),contour = False,plot_modelhours = False,scaling = 1,final_unit = None,hinp = None,hour=0,loc = [36.605,-97.485],figsize = [15,8],vmin = None, vmax = None):
     """
@@ -125,8 +126,19 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
 
     plt.figure(figsize =figsize)
     ax = plt.gca()
+
     ax.set_yscale('log')
-    ax.yticks([100,200,300,400,500,600,700,800,900,1000])
+     # x axis
+    xmajorLocator = MultipleLocator(1)
+    ax.xaxis.set_major_locator(xmajorLocator)
+    xmajorFormatter = FormatStrFormatter('%d')
+    ax.xaxis.set_major_formatter(xmajorFormatter)
+
+    # y axis
+    ymajorLocator = MultipleLocator(100)
+    ax.yaxis.set_major_locator(ymajorLocator)
+    ymajorFormatter = FormatStrFormatter('%d')
+    ax.yaxis.set_major_formatter(ymajorFormatter)
     plt.plot(times,values)
     plt.xlabel('Time hrs')
         

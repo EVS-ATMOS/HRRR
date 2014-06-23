@@ -5,6 +5,11 @@ Created on Wed Jun 11 16:10:08 2014
 @author: mattjohnson
 """
 
+import numpy as np
+import matplotlib.pyplot as plt
+import datetime
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter
+    
 def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=None,scaling = 1,final_unit = None,hour = 0,
                            loc = [36.605,-97.485],plot_modelhours = False, figsize = [15,8],vmin = None, vmax = None):
     """
@@ -13,11 +18,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     
     issues when crossing month boundary for modelhour plots
     """
-    import numpy as np
-    import matplotlib
-    import matplotlib.dates
-    import matplotlib.pyplot as plt
-    import datetime
+    
 
     if plot_modelhours:
         y = []
@@ -91,8 +92,6 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     times = np.array(times)
     values = np.array(values)
     
-    print hinp
-    print values
     
     if final_unit == None:
         final_unit = info[-1]
@@ -110,7 +109,21 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             
     plt.figure(figsize = figsize)
     ax = plt.gca()
+    
     ax.set_yscale('log')
+    
+    # x axis
+    xmajorLocator = MultipleLocator(1)
+    ax.xaxis.set_major_locator(xmajorLocator)
+    xmajorFormatter = FormatStrFormatter('%d')
+    ax.xaxis.set_major_formatter(xmajorFormatter)
+
+    # y axis
+    ymajorLocator = MultipleLocator(100)
+    ax.yaxis.set_major_locator(ymajorLocator)
+    ymajorFormatter = FormatStrFormatter('%d')
+    ax.yaxis.set_major_formatter(ymajorFormatter)
+    
     pc = plt.pcolormesh(times,hinp,np.transpose(values))
     ax.set_ylim([0,max(hinp)])
     ax.set_xlim([0,max(times)])

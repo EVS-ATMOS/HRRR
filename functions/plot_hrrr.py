@@ -6,11 +6,10 @@ Created on Wed Jun  4 14:03:36 2014
 """
 
 from matplotlib import pyplot as plt
-from matplotlib import colors
 import os
 import numpy as np
-from mpl_toolkits.basemap import Basemap, addcyclic
-import pygrib
+from mpl_toolkits.basemap import Basemap
+
 
 def plot_hrrr(filename,parameter,directory=None,hinp='',scaling=1,final_unit = '',vmax=None,vmin=None): #US
     """
