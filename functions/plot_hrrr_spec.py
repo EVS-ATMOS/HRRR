@@ -136,7 +136,7 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
         if u[i] != None and u[i]+24*i<max(times) and u[i]+24*i>min(times):
             ax.text(u[i]+24*i, yval,'Sunrise')
             ax.axvline(u[i]+24*i, linestyle = '--', color='k')
-        if v[i] != None and v[i]+24*i<max(times):
+        if v[i] != None and v[i]+24*i<max(times) and v[i]+24*i>min(times):
             ax.text(v[i]+24*i,yval,'Sunset')
             ax.axvline(v[i]+24*i, linestyle = '--', color='k')
                    
