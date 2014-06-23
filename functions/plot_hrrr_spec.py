@@ -9,7 +9,7 @@ import os
 import matplotlib.pyplot as plt
 import datetime
 
-def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcwd(),contour = False,plot_modelhours = False,scaling = 1,final_unit = None,hinp = None,hour=0,loc = [36.605,-97.485],vmin = None, vmax = None):
+def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcwd(),contour = False,plot_modelhours = False,scaling = 1,final_unit = None,hinp = None,hour=0,loc = [36.605,-97.485],figsize = [15,8],vmin = None, vmax = None):
     """
     Plots a given parameter over a given timespan for a given parameter, modelhour, height, location and directory of 
     HRRR files.  Leaving hinp empty will cause it to plot the maximum values over all heights.  
@@ -22,7 +22,7 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
         return
     
     if contour:
-        return plot_hrrr_contour_spec(directory=directory,parameter=parameter,datetimestart = datetimestart,datetimeend=datetimeend,scaling = scaling,hour = hour,loc = loc,plot_modelhours = plot_modelhours,final_unit = final_unit,vmin = vmin, vmax = vmax)
+        return plot_hrrr_contour_spec(directory=directory,parameter=parameter,datetimestart = datetimestart,datetimeend=datetimeend,scaling = scaling,hour = hour,loc = loc,plot_modelhours = plot_modelhours,figsize = [15,8],final_unit = final_unit,vmin = vmin, vmax = vmax)
     if plot_modelhours:
         y = []
         for i in hour:
@@ -124,8 +124,7 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
             
     count = 0 
 
-    
-    plt.figure(figsize = [8,8])
+    plt.figure(figsize =figsize)
     ax = plt.gca()
     plt.plot(times,values)
     plt.xlabel('Time hrs')
