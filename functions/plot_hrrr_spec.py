@@ -124,11 +124,20 @@ def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcw
     
     u = []
     v = []
-    for i in range(len(dates)):
-        if i == 0 or dates[i].day-dates[i-1].day != 0:
-            f = get_sun(dates[i],loc = loc,no_dst = True)
-            u.append(f[0][0])
-            v.append(f[0][1])
+    dateset = np.unique(np.array([i.date() for i in dates])).tolist()
+    dateset = [datetime.datetime(i.year,i.month,i.day) for i in dateset]
+    
+    if len(dateset)>1:
+        dateset[len(dateset):] = dateset[0]-datetime.timedelta(days = 1)
+        dateset[len(dateset):] = dateset[-1]+datetime.timedelta(days = 1)
+    else:
+        dateset = [dateset[0]-datetime.timedelta(days = 1),dateset[0],dateset[-1]+datetime.timedelta(days = 1)]
+
+    
+    for i in dateset:
+        f = get_sun(i,loc = loc,no_dst = True)
+        u.append(f[0][0])
+        v.append(f[0][1])
         
             
 

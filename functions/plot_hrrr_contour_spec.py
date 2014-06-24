@@ -63,7 +63,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             endindex = len(dates)
         else:
             startindex = dates.index(datetimestart)-hour
-            endindex = dates.index(datetimeend)+1-hour
+            endindex = dates.index(datetimeend)-hour
             if startindex<0:
                 print 'missing early HRRR files'
                 startindex = 0
@@ -107,16 +107,22 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
         final_unit = final_unit[0]
     u = []
     v = []
+
+    dateset = np.unique(np.array([i.date() for i in dates])).tolist()
+    dateset = [datetime.datetime(i.year,i.month,i.day) for i in dateset]
     
-    for i in range(len(dates)):
-        if i == 0:
-            k = get_sun(datetime.datetime(dates[0].year, dates[0].month,dates[0].day-1),loc=loc,no_dst=True)
-        if i == 0 or dates[i].day-dates[i-1].day != 0:
-            f = get_sun(dates[i],loc = loc,no_dst = True)
-            u.append(f[0][0])
-            v.append(f[0][1])
-        if i == range(len(dates)):
-            k = get_sun(datetime.datetime(dates[i].year, dates[0].month,dates[0].day+1),loc=loc,no_dst=True)
+    if len(dateset)>1:
+        dateset[len(dateset):] = dateset[0]-datetime.timedelta(days = 1)
+        dateset[len(dateset):] = dateset[-1]+datetime.timedelta(days = 1)
+    else:
+        dateset = [dateset[0]-datetime.timedelta(days = 1),dateset[0],dateset[-1]+datetime.timedelta(days = 1)]
+
+    
+    for i in dateset:
+        f = get_sun(i,loc = loc,no_dst = True)
+        u.append(f[0][0])
+        v.append(f[0][1])
+
         
             
     plt.figure(figsize = figsize)
