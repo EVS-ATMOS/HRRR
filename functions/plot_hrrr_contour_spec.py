@@ -111,17 +111,17 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     dateset = np.unique(np.array([i.date() for i in dates])).tolist()
     dateset = [datetime.datetime(i.year,i.month,i.day) for i in dateset]
     
-    if len(dateset)>1:
-        dateset[len(dateset):] = dateset[0]-datetime.timedelta(days = 1)
-        dateset[len(dateset):] = dateset[-1]+datetime.timedelta(days = 1)
-    else:
-        dateset = [dateset[0]-datetime.timedelta(days = 1),dateset[0],dateset[-1]+datetime.timedelta(days = 1)]
+#    if len(dateset)>1:
+    dateset.append(dateset[0]-datetime.timedelta(days = 1))
+    dateset.insert(0,dateset[-1]+datetime.timedelta(days = 1))
+#    else:
+#        dateset = [dateset[0]-datetime.timedelta(days = 1),dateset[0],dateset[-1]+datetime.timedelta(days = 1)]
 
     
     for i in dateset:
         f = get_sun(i,loc = loc,no_dst = True)
-        u.append(f[0][0])
-        v.append(f[0][1])
+        u.append((f[1][0]-datetimestart).total_seconds()/(60*60))
+        v.append((f[1][1]-datetimestart).total_seconds()/(60*60))
 
         
             
@@ -154,12 +154,12 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     yval = (max(hinp)+min(hinp))/2
     
     for i in range(len(u)):
-        if u[i] != None and u[i]+24*i<max(times) and u[i]+24*i>min(times):
-            ax.text(u[i]+24*i,yval, 'Sunrise')
-            ax.axvline(u[i]+24*i, linestyle = '--', color='k')          
-        if v[i] != None and v[i]+24*i<max(times) and v[i]+24*i>min(times):
-            ax.axvline(v[i]+24*i, linestyle = '--', color='k')
-            ax.text(v[i]+24*i,yval,'Sunset')
+        if u[i] != None and u[i]<max(times) and u[i]>min(times):
+            ax.text(u[i],yval, 'Sunrise')
+            ax.axvline(u[i], linestyle = '--', color='k')          
+        if v[i] != None and v[i]<max(times) and v[i]>min(times):
+            ax.axvline(v[i], linestyle = '--', color='k')
+            ax.text(v[i],yval,'Sunset')
 
     plt.show()
     return   
