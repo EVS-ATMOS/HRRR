@@ -12,6 +12,7 @@ HRRR directory.
 
 import os
 import numpy as np
+import json
 
 global HRRR_PS
 HRRR_PS = np.array([1013, 1000,  975,  950,  925,  900,  875,  850,  825,  800,  775,
@@ -24,6 +25,11 @@ HRRR_VARS =['Geopotential Height','Temperature','Relative humidity','Dew point t
         'Specific humidity','Vertical velocity','U component of wind','V component of wind',
         'Absolute vorticity','Cloud mixing ratio','Cloud Ice','Rain mixing ratio','Snow mixing ratio',
         'Graupel (snow pellets)']
+        
+global HRRR_DATALOC
+f = open('dataloc','r')
+HRRR_DATALOC = np.array(json.load(f))
+f.close()
 
 wkdir = os.getcwd()
 

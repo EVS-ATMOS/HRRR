@@ -15,8 +15,6 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     """
     Creates a contour plot of a parameter over the hrrr files in a given directory at a specific location
     over a given time period at a set model hour or a series of model hours, 
-    
-    issues when crossing month boundary for modelhour plots
     """
     
 
@@ -111,13 +109,9 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     dateset = np.unique(np.array([i.date() for i in dates])).tolist()
     dateset = [datetime.datetime(i.year,i.month,i.day) for i in dateset]
     
-#    if len(dateset)>1:
-    dateset.append(dateset[0]-datetime.timedelta(days = 1))
-    dateset.insert(0,dateset[-1]+datetime.timedelta(days = 1))
-#    else:
-#        dateset = [dateset[0]-datetime.timedelta(days = 1),dateset[0],dateset[-1]+datetime.timedelta(days = 1)]
+    dateset.insert(0,dateset[0]-datetime.timedelta(days = 1))
+    dateset.append(dateset[-1]+datetime.timedelta(days = 1))
 
-    
     for i in dateset:
         f = get_sun(i,loc = loc,no_dst = True)
         u.append((f[1][0]-datetimestart).total_seconds()/(60*60))
@@ -148,7 +142,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     ax.invert_yaxis()
     plt.colorbar(mappable = pc,label=parameter+' '+final_unit)    
     plt.xlabel('Time in hrs')
-    plt.ylabel('Height in hPa')
+    plt.ylabel('Pressure Level in hPa')
 
     
     yval = (max(hinp)+min(hinp))/2
