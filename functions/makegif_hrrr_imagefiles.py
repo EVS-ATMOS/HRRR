@@ -18,8 +18,19 @@ def makegif_hrrr_imagefiles(imagefilelist,directory = os.getcwd(),name = 'video'
     
     wkdir = os.getcwd()
     os.chdir(directory)
+    
     name = name+outputtype
-    string = 'convert *'+inputtype+' '+name
+    
+    namet = name
+    
+    i = 0
+    
+    while namet in os.listdir(directory):
+        namet = name+str(i)
+        i = i+1
+    
+    string = 'convert *'+inputtype+' '+namet
+    
     os.system(string)
     os.chdir(wkdir)
     

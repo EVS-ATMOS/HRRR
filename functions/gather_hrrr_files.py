@@ -20,11 +20,9 @@ def gather_hrrr_files(path, datestrings = [], hourslists = []):
     be sequential. 
     """
     
-    import numpy as np
+
     import matplotlib
-    import matplotlib.pyplot as plt
     import os
-    import glob
     import matplotlib.dates
     import datetime
     

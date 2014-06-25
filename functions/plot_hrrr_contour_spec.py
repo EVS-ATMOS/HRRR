@@ -15,8 +15,6 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     """
     Creates a contour plot of a parameter over the hrrr files in a given directory at a specific location
     over a given time period at a set model hour or a series of model hours, 
-    
-    issues when crossing month boundary for modelhour plots
     """
     
 
@@ -63,7 +61,7 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
             endindex = len(dates)
         else:
             startindex = dates.index(datetimestart)-hour
-            endindex = dates.index(datetimeend)+1-hour
+            endindex = dates.index(datetimeend)-hour
             if startindex<0:
                 print 'missing early HRRR files'
                 startindex = 0
@@ -107,16 +105,18 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
         final_unit = final_unit[0]
     u = []
     v = []
+
+    dateset = np.unique(np.array([i.date() for i in dates])).tolist()
+    dateset = [datetime.datetime(i.year,i.month,i.day) for i in dateset]
     
-    for i in range(len(dates)):
-        if i == 0:
-            k = get_sun(datetime.datetime(dates[0].year, dates[0].month,dates[0].day-1),loc=loc,no_dst=True)
-        if i == 0 or dates[i].day-dates[i-1].day != 0:
-            f = get_sun(dates[i],loc = loc,no_dst = True)
-            u.append(f[0][0])
-            v.append(f[0][1])
-        if i == range(len(dates)):
-            k = get_sun(datetime.datetime(dates[i].year, dates[0].month,dates[0].day+1),loc=loc,no_dst=True)
+    dateset.insert(0,dateset[0]-datetime.timedelta(days = 1))
+    dateset.append(dateset[-1]+datetime.timedelta(days = 1))
+
+    for i in dateset:
+        f = get_sun(i,loc = loc,no_dst = True)
+        u.append((f[1][0]-datetimestart).total_seconds()/(60*60))
+        v.append((f[1][1]-datetimestart).total_seconds()/(60*60))
+
         
             
     plt.figure(figsize = figsize)
@@ -142,18 +142,18 @@ def plot_hrrr_contour_spec(directory, parameter,datetimestart=None,datetimeend=N
     ax.invert_yaxis()
     plt.colorbar(mappable = pc,label=parameter+' '+final_unit)    
     plt.xlabel('Time in hrs')
-    plt.ylabel('Height in hPa')
+    plt.ylabel('Pressure Level in hPa')
 
     
     yval = (max(hinp)+min(hinp))/2
     
     for i in range(len(u)):
-        if u[i] != None and u[i]+24*i<max(times) and u[i]+24*i>min(times):
-            ax.text(u[i]+24*i,yval, 'Sunrise')
-            ax.axvline(u[i]+24*i, linestyle = '--', color='k')          
-        if v[i] != None and v[i]+24*i<max(times) and v[i]+24*i>min(times):
-            ax.axvline(v[i]+24*i, linestyle = '--', color='k')
-            ax.text(v[i]+24*i,yval,'Sunset')
+        if u[i] != None and u[i]<max(times) and u[i]>min(times):
+            ax.text(u[i],yval, 'Sunrise')
+            ax.axvline(u[i], linestyle = '--', color='k')          
+        if v[i] != None and v[i]<max(times) and v[i]>min(times):
+            ax.axvline(v[i], linestyle = '--', color='k')
+            ax.text(v[i],yval,'Sunset')
 
     plt.show()
     return   

@@ -81,22 +81,4 @@ def get_sun(date = datetime.datetime.now(),loc = [36.605,-97.485],timezoneshift 
 
 #    transtime = max([snoon-sunrise,sunset-snoon])
     
-#    sunrise = snoon-transtime
-#    sunset = snoon+transtime
-    
-
-    daychangerise = int(np.floor(sunrise/24))
-    sunriset = sunrise - daychangerise*24
-    sunrisedate = datetime.datetime(date.year,date.month,date.day+daychangerise,int(sunriset),int((sunriset-int(sunriset))*60))
-
-    #daychangenoon = int(np.floor(snoon/24))
-    #snoon = snoon - daychangenoon*24
-    #snoondate = datetime.datetime(2014,6,19+daychangenoon,int(snoon),int((snoon-int(snoon))*60))
-    
-
-    daychangeset = int(np.floor(sunset/24))
-    sunsett = sunset - daychangeset*24
-    sunsetdate = datetime.datetime(date.year,date.month,date.day+daychangeset,int(sunsett),int((sunsett-int(sunsett))*60))
-
-    
-    return[[sunrise,sunset],[sunrisedate,sunsetdate]]
+    return[[sunrise,sunset],[datetime.timedelta(hours = sunrise)+date,datetime.timedelta(hours = sunset)+date]]
