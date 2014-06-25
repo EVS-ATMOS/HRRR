@@ -5,7 +5,7 @@ Created on Tue Jun 17 10:31:42 2014
 @author: mattjohnson
 """
 
-def convert_latlon2coords(loc, dataloc):
+def convert_latlon2coords(loc, dataloc = HRRR_DATALOC):
     """
     finds coordinates of closest coordinates in dataloc to loc in (lat,lon)
     in (x,y)
