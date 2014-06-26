@@ -31,7 +31,7 @@ def massconvert_hrrr_grib2txt(startdate = None, enddate = None, hours = 0,models
         
         
     if not modelhours:
-        datestrings = [startdate+datetime.timedelta(days = i) for i in range((enddate-startdate).total_seconds()/(60*60*24))]
+        datestrings = [startdate+datetime.timedelta(days = i) for i in range(int((enddate-startdate).total_seconds()/(60*60*24)))]
         
         for i in datestrings:
             for j in hours:
