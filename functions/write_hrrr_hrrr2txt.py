@@ -69,6 +69,8 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
     
     json.dump([data,dates,parameterlist,loc,indexes,units],f)
     
+    f.close()
+    
     os.chdir(wkdir)
     
     return newfilename

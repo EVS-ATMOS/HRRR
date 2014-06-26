@@ -36,6 +36,8 @@ def read_hrrr_txt(date=datetime.datetime.now(),hour=1,filenum = 24,directory=Non
     f = open(filename, 'r')
     [data,dates,parameterlist,loc,indexes,units] = json.load(f)
     
+    f.close()
+    
     if directory != None:
         os.chdir(wkdir)
     
