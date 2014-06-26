@@ -25,44 +25,47 @@ def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [36.605,-9
 
     hour_spec = int(filename[16:18])
     
-    try:
-        [data,dates,parameterlist,loc,indexes,units] = read_hrrr_txt(date=date,hour=modelh,loc=loc,directory=directory,read_modelhours = False)
-        times = [int((i-dates[0]).total_seconds()/(60*60)) for i in dates]
-        if not (hour_spec in times):
-            print 'hour'
-            print hour_spec
-            print 'for date'
-            print date[0]
-            print 'not present in txt file'
-            raise IOError
-        if parameters == ['']:
-            return [data[hour_spec],parameterlist,loc,indexes,units]
-        else:
-            inds = []
-            for i in parameters:
-                inds.append(parameterlist.index(i))
-            return [data[hour_spec][inds],parameterlist[inds],loc,indexes,units[inds]]
+    
+    [data,dates,parameterlist,loc,indexes,units] = read_hrrr_txt(date=date,hour=modelh,loc=loc,directory=directory,read_modelhours = False)
+    times = [int((i-dates[0]).total_seconds()/(60*60)) for i in dates]
+    if not (hour_spec in times):
+        print 'hour'
+        print hour_spec
+        print 'for date'
+        print date[0]
+        print 'not present in txt file'
+    elif parameters == ['']:
+        return [data[hour_spec],parameterlist,loc,indexes,units]
+    else:
+        inds = []
+        for i in parameters:
+            inds.append(parameterlist.index(i))
+        return [data[hour_spec][inds],parameterlist[inds],loc,indexes,units[inds]]
             
-    except IOError:
-        if directory != None:
-            wkdir = os.getcwd()
-            os.chdir(directory)
-            
-        myfile = pygrib.open(filename) 
-        parameterlist = ['Geopotential Height','Temperature','Relative humidity','Dew point temperature',
+
+    if directory != None:
+        wkdir = os.getcwd()
+        os.chdir(directory)
+    if not (filename in os.listdir(directory)):
+        print filename
+        print 'not in directory'
+        return
+        
+    myfile = pygrib.open(filename) 
+    parameterlist = ['Geopotential Height','Temperature','Relative humidity','Dew point temperature',
                 'Specific humidity','Vertical velocity','U component of wind','V component of wind',
                 'Absolute vorticity','Cloud mixing ratio','Cloud Ice','Rain mixing ratio','Snow mixing ratio',
                 'Graupel (snow pellets)']  
                 
-        if parameters != ['']:
-            for i in range(len(parameters)):
-                x = parameterlist.count(parameters[i])
-                if x == 0:                    
-                    print 'requested parameter not in list'
-                    print parameters[i]  
-            parameterlist = parameters[:]
+    if parameters != ['']:
+        for i in range(len(parameters)):
+            x = parameterlist.count(parameters[i])
+            if x == 0:                    
+                print 'requested parameter not in list'
+                print parameters[i]  
+        parameterlist = parameters[:]
             
-        data = []
+    data = []
         
 #        removed for speed purposes
 #        grb = myfile.select(name = parameterlist[0]) 
@@ -71,28 +74,28 @@ def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [36.605,-9
 #        datah = grb_cube['levels']
         
         
-        units = []
+    units = []
         
-        if coords == None:
-            xyindex = convert_latlon2coords(loc)
-            loc = convert_coords2latlon(xyindex)
+    if coords == None:
+        xyindex = convert_latlon2coords(loc)
+        loc = convert_coords2latlon(xyindex)
+    else:
+        xyindex = coords
+        loc = convert_coords2latlon(xyindex)
+    
+    for p in parameterlist:
+        grb = myfile.select(name = p)
+        grb_cube = grb_to_grid(grb)
+        if not max:
+            data.append(grb_cube['data'].T[xyindex[1]][xyindex[0]][:])
         else:
-            xyindex = coords
-            loc = convert_coords2latlon(xyindex)
-    
-        for p in parameterlist:
-            grb = myfile.select(name = p)
-            grb_cube = grb_to_grid(grb)
-            if not max:
-                data.append(grb_cube['data'].T[xyindex[1]][xyindex[0]][:])
-            else:
-                data.append(grb_cube['data'].T[xyindex[1]][xyindex[0]][:].max(axis=0))
-            units.append(grb_cube['units'])
+            data.append(grb_cube['data'].T[xyindex[1]][xyindex[0]][:].max(axis=0))
+        units.append(grb_cube['units'])
     
             
-        myfile.close()
+    myfile.close()
         
-        if directory !=  None:
-            os.chdir(wkdir)
+    if directory !=  None:
+        os.chdir(wkdir)
             
-        return [data,parameterlist,loc,xyindex,units]
+    return [data,parameterlist,loc,xyindex,units]
