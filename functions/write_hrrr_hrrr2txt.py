@@ -55,7 +55,7 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
     
     for i in range(len(filelists)-1):
         if filelists[i+1] in os.listdir(directory):
-            x = read_hrrr_spec(filename = filelists[i+1], directory = directory,coords=indexes)
+            x = read_hrrr_spec(filename = filelists[i+1], directory = directory,no_txt = True,coords=indexes)
             if x == None:
                 continue
             x[0] = np.array(x[0])
