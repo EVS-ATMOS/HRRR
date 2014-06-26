@@ -25,7 +25,7 @@ def massconvert_hrrr_grib2txt(startdate = None, enddate = None, hours = 0,models
     if enddate == None:
         index2 = len(datestrings)
     else:
-        index2 = datestrings.index(enddate) 
+        index2 = datestrings.index(enddate-datetime.timedelta(day=1)) 
         
         
         filelists = filelists[index1:index2]
