@@ -4,7 +4,7 @@ Created on Wed Jun 25 15:54:28 2014
 
 @author: mattjohnson
 """
-import numpy as np
+
 import datetime
 
 def massconvert_hrrr_grib2txt(startdate = None, enddate = None, hours = 0,modelstartindex = 0,directory = None, enddirectory = None, loc = [36.605, -97.485], indexes = None,modelhours = False):
@@ -14,8 +14,8 @@ def massconvert_hrrr_grib2txt(startdate = None, enddate = None, hours = 0,models
     .txt file
     """
     datestrings = [startdate+datetime.timedelta(days=i) for i in range((enddate-startdate).days)]
-    hourslists = [hours for i in range(len(dates))]
-    filelists = produce_hrrr_grib2strings(dates,hourslists)
+    hourslists = [hours for i in range(len(datestrings))]
+    filelists = produce_hrrr_grib2strings(datestrings,hourslists)
     
     if startdate == None:
         index1 = 0
