@@ -10,7 +10,7 @@ import os
 import json
 import datetime
 import matplotlib.dates
-import time
+
 
 def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,directory=os.getcwd(),enddirectory=os.getcwd(),loc=[36.605, -97.485], indexes = None,write_modelhours = False):
     """
@@ -46,7 +46,7 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
         datestrings = [date]
         hourslists = [range(hour[0],hour[1]+1)]
         
-    filelists = produce_hrrr_grib2strings(datestrings,hourlists)
+    filelists = produce_hrrr_grib2strings(datestrings,hourslists)
 
     [data,parameterlist,loc,indexes,units] = read_hrrr_spec(filename = filelists[0], directory = directory,loc=loc,coords=indexes)
     data = np.array(data)
