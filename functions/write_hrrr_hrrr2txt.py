@@ -47,7 +47,7 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
         
     filelists = produce_hrrr_grib2strings(datestrings,hourslists)
 
-    [data,parameterlist,loc,indexes,units] = read_hrrr_spec(filename = filelists[0], directory = directory,loc=loc,coords=indexes)
+    [data,parameterlist,loc,indexes,units] = read_hrrr_spec(filename = filelists[0], directory = directory,loc=loc,no_txt = True,coords=indexes)
     data = np.array(data)
     data = data.tolist()
     
