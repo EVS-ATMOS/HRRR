@@ -16,7 +16,7 @@ def read_hrrr_txt(date=datetime.datetime.now(),hour=1,filenum = 24,directory=Non
     if directory != None:
         wkdir = os.getcwd()
         os.chdir(directory)
-        print directory
+
     
     if ((type(hour) == list) and not read_modelhours):
         print 'error, can only read one model hour at a time if write_modelhours = False'
