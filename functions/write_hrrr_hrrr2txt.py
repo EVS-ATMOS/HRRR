@@ -44,25 +44,28 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
         
         datestrings = [date]
         hourslists = [range(hour[0],hour[1]+1)]
-        
+        filelists = produce_hrrr_grib2strings(datestrings,hourlists)
         
             
-    [filelists, datestrings] = gather_hrrr_files(directory,datestrings = datestrings,hourslists = hourslists)
-    print filelists
-    print datestrings
-    [data,parameterlist,datah,loc,indexes,units] = read_hrrr_spec(filename = filelists[0][0], directory = directory)
+    
+    
+    [data,parameterlist,loc,indexes,units] = read_hrrr_spec(filename = filelists[0], directory = directory,loc=loc,coords=indexes)
     data = np.array(data)
     data = data.tolist()
     
     dates = []
     
     for i in range(len(filelists)-1):
-        x = read_hrrr_spec(filename = filelists[i+1][0], directory = directory,coords=indexes)
-        x[0] = np.array(x[0])
-        x[0] = x[0].tolist()
-        data.append(x[0])
-        dates.append(matplotlib.dates.date2num(datestrings[i]))
-        
+        try:
+            x = read_hrrr_spec(filename = filelists[i+1], directory = directory,coords=indexes)
+            x[0] = np.array(x[0])
+            x[0] = x[0].tolist()
+            data.append(x[0])
+            dates.append(matplotlib.dates.date2num(datestrings[i]))
+        except IOError:
+            print 'file not found:'
+            print filelists[i]
+            continue
     
     os.chdir(enddirectory)
     
