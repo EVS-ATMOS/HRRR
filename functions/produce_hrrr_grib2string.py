@@ -15,13 +15,13 @@ def produce_hrrr_grib2strings(dates,hourlists):
     for i in range(len(dates)):
         for j in hourlists[i]:
             string = 'hrrr.3d.'+str(dates[i].year)
-            if i.month<10:
+            if dates[i].month<10:
                 string = string+'0'
             string = string+str(dates[i].month)
-            if i.day<10:
+            if dates[i].day<10:
                 string = string+'0'
             string = string+str(dates[i].day)
-            if i.hour<10:
+            if dates[i].hour<10:
                 string = string+'0'
             string = string+str(dates[i].hour)
             string = string+'00f0'
