@@ -17,6 +17,7 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
     grabs the hrrr file corresponding to date and filenum-1 files after that for a given hour or the model predictions so many hours out at a specified time
     reads and compiles the data for a specific location and writes it to a json file
     """
+    wkdir = os.getcwd()
     
     if ((type(hour) == list) and not write_modelhours):
         print 'error, can only write one model hour at a time if write_modelhours = False'
@@ -48,6 +49,7 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
     filelists = produce_hrrr_grib2strings(datestrings,hourslists)
 
     [data,parameterlist,loc,indexes,units] = read_hrrr_spec(filename = filelists[0], directory = directory,loc=loc,no_txt = True,coords=indexes)
+    print filelists[0]
     data = np.array(data)
     data = data.tolist()
     
@@ -56,6 +58,7 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
     for i in range(len(filelists)-1):
         if filelists[i+1] in os.listdir(directory):
             x = read_hrrr_spec(filename = filelists[i+1], directory = directory,no_txt = True,coords=indexes)
+            print filelists[i+1]
             if x == None:
                 continue
             x[0] = np.array(x[0])
