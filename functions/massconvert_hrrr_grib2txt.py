@@ -13,9 +13,9 @@ def massconvert_hrrr_grib2txt(startdate = None, enddate = None, hours = 0,models
     model style-> combines the output from all files from the same date starting with the modelstartindex modelhour at that date and converts it into one
     .txt file
     """
-    dates = [startdate+datetime.timedelta(days=i) for i in range((enddate-startdate).days)]
+    datestrings = [startdate+datetime.timedelta(days=i) for i in range((enddate-startdate).days)]
     hourslists = [hours for i in range(len(dates))]
-    [filelists, datestrings] = produce_hrrr_grib2strings(dates,hourslists)
+    filelists = produce_hrrr_grib2strings(dates,hourslists)
     
     if startdate == None:
         index1 = 0
@@ -33,7 +33,6 @@ def massconvert_hrrr_grib2txt(startdate = None, enddate = None, hours = 0,models
         
         
     if not modelhours:
-        datestrings = [startdate+datetime.timedelta(days = i) for i in range(int((enddate-startdate).total_seconds()/(60*60*24)))]
         
         for i in datestrings:
             for j in hours:
