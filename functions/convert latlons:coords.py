@@ -21,7 +21,7 @@ def convert_latlon2coords(loc, dataloc = HRRR_DATALOC):
     
     return xyindex
     
-def convert_coords2latlon(coords,dataloc):
+def convert_coords2latlon(coords,dataloc=HRRR_DATALOC):
     """
     converts the coordinates to their (lat,lon) in dataloc
     """
