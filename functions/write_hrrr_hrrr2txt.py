@@ -10,7 +10,7 @@ import os
 import json
 import datetime
 import matplotlib.dates
-import time
+
 
 def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,directory=os.getcwd(),enddirectory=os.getcwd(),loc=[36.605, -97.485], indexes = None,write_modelhours = False):
     """
@@ -37,6 +37,7 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
             datestrings.append(datetime.datetime(date.year,date.month,date.day,date.hour+i)-datetime.timedelta(hours = hour))
             
         hourslists = [[hour] for i in range(filenum)]
+        
                
     else:
         date = date-datetime.timedelta(hours=min(hour))
@@ -45,30 +46,36 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
         datestrings = [date]
         hourslists = [range(hour[0],hour[1]+1)]
         
-        
-            
-    [filelists, datestrings] = gather_hrrr_files(directory,datestrings = datestrings,hourslists = hourslists)
-    print filelists
-    print datestrings
-    [data,parameterlist,datah,loc,indexes,units] = read_hrrr_spec(filename = filelists[0][0], directory = directory)
-    data = np.array(data)
-    data = data.tolist()
+    filelists = produce_hrrr_grib2strings(datestrings,hourslists)
+
+    data = []
+
     
     dates = []
     
-    for i in range(len(filelists)-1):
-        x = read_hrrr_spec(filename = filelists[i+1][0], directory = directory)
-        x[0] = np.array(x[0])
-        x[0] = x[0].tolist()
-        data.append(x[0])
-        dates.append(matplotlib.dates.date2num(datestrings[i]))
-        
+    for i in range(len(filelists)):
+        if filelists[i] in os.listdir(directory):
+            x = read_hrrr_spec(filename = filelists[i], directory = directory,no_txt = True,coords=indexes)
+            print filelists[i]
+            if x == None:
+                continue
+            x[0] = np.array(x[0])
+            x[0] = x[0].tolist()
+            data.append(x[0])
+            dates.append(matplotlib.dates.date2num(datestrings[i]))
+            
+    parameterlist = x[1]
+    loc = x[2]
+    indexes = x[3]
+    units = x[4]
     
     os.chdir(enddirectory)
     
     f = open(newfilename, 'w')
     
     json.dump([data,dates,parameterlist,loc,indexes,units],f)
+    
+    f.close()
     
     os.chdir(wkdir)
     
