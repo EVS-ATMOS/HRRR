@@ -26,10 +26,7 @@ HRRR_VARS =['Geopotential Height','Temperature','Relative humidity','Dew point t
         'Absolute vorticity','Cloud mixing ratio','Cloud Ice','Rain mixing ratio','Snow mixing ratio',
         'Graupel (snow pellets)']
         
-global HRRR_DATALOC
-f = open('dataloc','r')
-HRRR_DATALOC = np.array(json.load(f))
-f.close()
+
 
 wkdir = os.getcwd()
 
@@ -38,6 +35,11 @@ directory = wkdir[:]
 while "HRRR" in directory:
     os.chdir(os.path.abspath('..'))
     directory = os.getcwd()
+
+global HRRR_DATALOC
+f = open('dataloc','r')
+HRRR_DATALOC = np.array(json.load(f))
+f.close()
 
 dirpath = os.path.abspath("HRRR")
 
