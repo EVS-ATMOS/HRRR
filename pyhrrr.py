@@ -41,7 +41,7 @@ dirpath = directory+'/HRRR/'
 
 os.chdir(dirpath)
 global HRRR_DATALOC
-f = open(dirpath+'/dataloc','r')
+f = open('dataloc','r')
 HRRR_DATALOC = np.array(json.load(f))
 f.close()
 
