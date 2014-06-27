@@ -28,6 +28,7 @@ HRRR_VARS =['Geopotential Height','Temperature','Relative humidity','Dew point t
         
 
 
+
 wkdir = os.getcwd()
 
 directory = wkdir[:]
@@ -36,9 +37,7 @@ while "HRRR" in directory:
     os.chdir(os.path.abspath('..'))
     directory = os.getcwd()
 
-
-dirpath = os.path.abspath("HRRR")
-
+dirpath = directory+'/HRRR/'
 
 os.chdir(dirpath)
 global HRRR_DATALOC
