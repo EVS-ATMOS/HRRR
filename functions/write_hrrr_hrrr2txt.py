@@ -47,7 +47,10 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
         hourslists = [range(hour[0],hour[1]+1)]
         
     filelists = produce_hrrr_grib2strings(datestrings,hourslists)
-
+    
+    if filelists == []:
+        return
+        
     data = []
 
     
