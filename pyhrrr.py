@@ -35,6 +35,8 @@ directory = wkdir[:]
 while "HRRR" in directory:
     os.chdir(os.path.abspath('..'))
     directory = os.getcwd()
+    
+os.chdir(directory+'/HRRR')
 
 global HRRR_DATALOC
 f = open('dataloc','r')
