@@ -74,7 +74,7 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
             data.append(x[0])
             dates.append(matplotlib.dates.date2num(datestrings[i]))
             
-    if not (parameterlist in vars()):
+    if not ('parameterlist' in vars().keys()):
         return
     
     os.chdir(enddirectory)
