@@ -38,6 +38,8 @@ while "HRRR" in directory:
     
 os.chdir(directory+'/HRRR')
 
+print os.getcwd()
+
 global HRRR_DATALOC
 f = open('dataloc','r')
 HRRR_DATALOC = np.array(json.load(f))
