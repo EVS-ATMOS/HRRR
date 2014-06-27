@@ -8,7 +8,7 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 import datetime
-from matplotlib.ticker import MultipleLocator, FormatStrFormatter
+
 
 def plot_hrrr_spec(parameter,datetimestart,datetimeend=None,directory = os.getcwd(),contour = False,plot_modelhours = False,scaling = 1,final_unit = None,hinp = None,hour=0,loc = [36.605,-97.485],figsize = [15,8],vmin = None, vmax = None):
     """
