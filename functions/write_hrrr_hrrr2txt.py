@@ -55,11 +55,18 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
 
     
     dates = []
+    k = -1
     
     for i in range(len(filelists)):
         if filelists[i] in os.listdir(directory):
             x = read_hrrr_spec(filename = filelists[i], directory = directory,no_txt = True,coords=indexes)
             print filelists[i]
+            if x != None and i>k:
+                k = len(filelists)+1
+                parameterlist = x[1]
+                loc = x[2]
+                indexes = x[3]
+                units = x[4]
             if x == None:
                 continue
             x[0] = np.array(x[0])
@@ -67,10 +74,7 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
             data.append(x[0])
             dates.append(matplotlib.dates.date2num(datestrings[i]))
             
-    parameterlist = x[1]
-    loc = x[2]
-    indexes = x[3]
-    units = x[4]
+    
     
     os.chdir(enddirectory)
     
