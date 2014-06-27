@@ -17,7 +17,7 @@ strings.append("directory = '/data/san_store/HRRR'")
 
 import datetime
 
-n = 4
+n = 3
 
 startdate = datetime.datetime(2014,3,15)
 
