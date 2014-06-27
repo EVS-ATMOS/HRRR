@@ -45,7 +45,7 @@ for i in range(n):
     newstrings.append('enddate = '+'datetime.datetime('+str(edatepair.year)+','+str(edatepair.month)+','+str(edatepair.day)+')')
     newstrings.append('pyhrrr.massconvert_hrrr_grib2txt(startdate=startdate,enddate=enddate,hours = [0,1,2,3,4],directory=directory,enddirectory=enddirectory)')
     
-    f = open('process'+str(i)+'.py','w')
+    f = open('process'+str(i),'w')
     
     for j in newstrings:
         f.write(j+'\n')
