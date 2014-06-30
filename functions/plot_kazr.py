@@ -28,6 +28,10 @@ def plot_kazr(date,radar_dir,sound_dir,ceil_dir):
     c = netcdf.netcdf_file(ceil, 'r')
     os.chdir(path)
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> d24965904c18ef155f0efae00b6932571fa5cdf0
     # Read in data
     fcbh = c.variables['first_cbh'].data
     rng = f.variables['range'].data
