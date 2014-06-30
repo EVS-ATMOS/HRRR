@@ -21,7 +21,6 @@ def plot_kazr(radar_dir,sound_dir,ceil_dir):
     s = netcdf.netcdf_file(sounding, 'r')
     c = netcdf.netcdf_file(ceilometer, 'r')
 
-    %matplotlib inline
 
     # Read in data
     fcbh = c.variables['first_cbh'].data
