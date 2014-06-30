@@ -1,14 +1,20 @@
 #! /usr/bin/env python
 
+'''
+This function takes in radar, sounding, and ceilometer files from their directory, organizes them by date and creates a figure with three plots. The first plot is copolar reflectivity with masked backround noise, the second plot is vertical velocity, and the third plot is spectral width. 
+
+Authors: Grant McKercher & Matt Johnson
+'''
+
 import numpy as np
 from scipy.io import netcdf
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy.ma as ma
 
-def plot_kazr(radar_dir,sounding_dir,ceilometer_dir):
+def plot_kazr(radar_dir,sound_dir,ceil_dir):
 
-    [radar,sounding,ceilometer] = gather_exp_files(date,radar_dir,sounding_dir,ceilometer_dir)
+    [radar,sound,ceil] = gather_exp_files(date,radar_dir,sound_dir,ceil_dir)
 
     # Gather files
     f = netcdf.netcdf_file(radar, 'r')
