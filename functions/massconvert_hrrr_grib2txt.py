@@ -31,6 +31,7 @@ def massconvert_hrrr_grib2txt(startdate = None, enddate = None, hours = 0,models
         filelists = filelists[index1:index2]
         datestrings = datestrings[index1:index2]
         
+        hours = range(min(hours),max(hours)+1)
         
     if not modelhours:
         
