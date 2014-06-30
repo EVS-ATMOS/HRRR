@@ -19,7 +19,6 @@ def analyze_hrrr(dates,analysis_day = 'data',analysis_hour = 'analysis',analysis
     
     for j in hourlists:
         for i in dates:
-            filestring = produce_hrrr_grib2strings([i],[j])
             [data,dates,parameterlist,loc,indexes,units] = read_hrrr_txt(date=i,hour=j,filenum = 24,directory=directory,filename = None,loc=loc,indexes=indexes, read_modelhours = False)
             analysisd.append(eval(analysis_day))
         analysish.append(eval(analysis_hour))
