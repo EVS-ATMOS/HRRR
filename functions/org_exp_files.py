@@ -10,9 +10,7 @@ import os
 import datetime
 
 
-def org_exp_files(radar_dir,sound_dir,ceil_dir):
-
-    wkdir = os.getcwd()  
+def org_exp_files(radar_dir,sound_dir,ceil_dir): 
 
     filename_radar = os.listdir(radar_dir)
     filename_sound = os.listdir(sound_dir)
@@ -34,6 +32,8 @@ def org_exp_files(radar_dir,sound_dir,ceil_dir):
     index = 18
     for i in filename_ceil:
       dates_ceil.append(datetime.datetime(int(i[index:index+4]),int(i[(index+4):(index+6)]),int(i[(index+6):(index+8)]))) 
+
+    
 
     return [[dates_radar,dates_sound,dates_ceil],[filename_radar,filename_sound,filename_ceil]]
 

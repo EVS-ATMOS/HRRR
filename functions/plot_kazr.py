@@ -11,20 +11,27 @@ from scipy.io import netcdf
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy.ma as ma
+import os
 
-def plot_kazr(radar_dir,sound_dir,ceil_dir):
+def plot_kazr(date,radar_dir,sound_dir,ceil_dir):
+
+    path = os.getcwd()
 
     [radar,sound,ceil] = gather_exp_files(date,radar_dir,sound_dir,ceil_dir)
 
     # Gather files
+    os.chdir(radar_dir)
     f = netcdf.netcdf_file(radar, 'r')
-    s = netcdf.netcdf_file(sounding, 'r')
-    c = netcdf.netcdf_file(ceilometer, 'r')
+    os.chdir(sound_dir)
+    s = netcdf.netcdf_file(sound, 'r')
+    os.chdir(ceil_dir)
+    c = netcdf.netcdf_file(ceil, 'r')
+    os.chdir(path)
 
     # Read in data
     fcbh = c.variables['first_cbh'].data
     rng = f.variables['range'].data
-    refx = f.variables['range'].data
+    #refx = f.variables['range'].data
     refc = f.variables['reflectivity_copol'].data
     mdvc = f.variables['mean_doppler_velocity_copol'].data
     swc = f.variables['spectral_width_copol'].data
@@ -54,7 +61,7 @@ def plot_kazr(radar_dir,sound_dir,ceil_dir):
     stnrc = f.variables['signal_to_noise_ratio_copol'].data
     refc = ma.masked_where((stnrc <= -14),refc)
     # Calculate Linear Depolarization Ratio
-    ldr = (refx-refc)
+    #ldr = (refx-refc)
     # Plot radar reflectivity
     t = f.variables['time'][:]
     day = [t[i]/3600 for i in range(len(t))]
@@ -118,4 +125,6 @@ def plot_kazr(radar_dir,sound_dir,ceil_dir):
     cb = plt.colorbar(ax=ax3,mappable=pc3,orientation='vertical')
     cb.set_label(r'Velocity (m/s)')
 
-
+    f.close()
+    s.close()
+    c.close()
