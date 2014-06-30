@@ -90,6 +90,7 @@ def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [36.605,-9
         grb_cube = grb_to_grid(grb)
         if not max:
             data.append(grb_cube['data'].T[xyindex[1]][xyindex[0]][:])
+            
         else:
             data.append(grb_cube['data'].T[xyindex[1]][xyindex[0]][:].max(axis=0))
         units.append(grb_cube['units'])
