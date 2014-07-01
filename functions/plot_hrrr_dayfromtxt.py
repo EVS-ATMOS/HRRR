@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 
 
-def plot_hrrr_dayfromtxt(parameter,date=datetime.datetime.now(), hour=1,hinp = None,directory=os.getcwd(),filename = None,loc=[36.605, -97.485],indexes=None,contour = False):
+def plot_hrrr_dayfromtxt(parameter,date=datetime.datetime.now(), hour=1,hinp = None,scaling = 1, final_unit = None,figsize = [15,8],directory=os.getcwd(),filename = None,loc=[36.605, -97.485],indexes=None,contour = False):
     
     
     [data,dates,parameterlist,loc,indexes,units] = read_hrrr_txt(date=date,hour=hour,directory=directory,filename = filename,loc=loc,indexes=indexes, read_modelhours = False)
@@ -31,7 +31,7 @@ def plot_hrrr_dayfromtxt(parameter,date=datetime.datetime.now(), hour=1,hinp = N
         values = np.array(data)
         
         if final_unit == None:
-            final_unit = info[-1]
+            final_unit = units[ind]
         if type(final_unit) == list:
             final_unit = final_unit[0]
         u = []
