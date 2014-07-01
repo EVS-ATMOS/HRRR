@@ -12,9 +12,9 @@ import datetime
 
 def org_exp_files(radar_dir,sound_dir,ceil_dir): 
 
-    filename_radar = os.listdir(radar_dir)
-    filename_sound = os.listdir(sound_dir)
-    filename_ceil = os.listdir(ceil_dir)
+    filename_radar = os.listdir('/home/gmckercher/evs/PrecipTest/HRRR/notebooks')
+    filename_sound = os.listdir('/home/gmckercher/evs/PrecipTest/HRRR/notebooks')
+    filename_ceil = os.listdir('/home/gmckercher/evs/PrecipTest/HRRR/notebooks')
 
 
     dates_radar = []
@@ -23,15 +23,15 @@ def org_exp_files(radar_dir,sound_dir,ceil_dir):
     
     index = 15
     for i in filename_radar:
-      dates_radar.append(datetime.datetime(int(i[index:index+4]),int(i[(index+4):(index+6)]),int(i[(index+6):(index+8)])))
+        dates_radar.append(datetime.datetime(int(i[index:index+4]),int(i[(index+4):(index+6)]),int(i[(index+6):(index+8)])))
 
     index = 18
     for i in filename_sound:
-      dates_sound.append(datetime.datetime(int(i[index:index+4]),int(i[(index+4):(index+6)]),int(i[(index+6):(index+8)]))) 
+        dates_sound.append(datetime.datetime(int(i[index:index+4]),int(i[(index+4):(index+6)]),int(i[(index+6):(index+8)]))) 
 
     index = 18
     for i in filename_ceil:
-      dates_ceil.append(datetime.datetime(int(i[index:index+4]),int(i[(index+4):(index+6)]),int(i[(index+6):(index+8)]))) 
+        dates_ceil.append(datetime.datetime(int(i[index:index+4]),int(i[(index+4):(index+6)]),int(i[(index+6):(index+8)]))) 
 
     
 
