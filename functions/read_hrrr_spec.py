@@ -52,8 +52,11 @@ def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [36.605,-9
         print filename
         print 'not in directory'
         return
-        
-    myfile = pygrib.open(filename) 
+    try:
+        myfile = pygrib.open(filename)
+    except IOError:
+        return None
+    
     parameterlist = ['Geopotential Height','Temperature','Relative humidity','Dew point temperature',
                 'Specific humidity','Vertical velocity','U component of wind','V component of wind',
                 'Absolute vorticity','Cloud mixing ratio','Cloud Ice','Rain mixing ratio','Snow mixing ratio',
