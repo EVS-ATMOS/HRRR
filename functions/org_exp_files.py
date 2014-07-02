@@ -9,7 +9,6 @@ Authors: Grant McKercher & Matt Johnson
 import os
 import datetime
 
-
 def org_exp_files(radar_dir,sound_dir,ceil_dir): 
 
     filename_radar = os.listdir(radar_dir)
@@ -29,19 +28,13 @@ def org_exp_files(radar_dir,sound_dir,ceil_dir):
     for i in filename_sound:
       dates_sound.append(datetime.datetime(int(i[index:index+4]),int(i[(index+4):(index+6)]),int(i[(index+6):(index+8)]))) 
 
-    index = 18
+    index = 17
     for i in filename_ceil:
       dates_ceil.append(datetime.datetime(int(i[index:index+4]),int(i[(index+4):(index+6)]),int(i[(index+6):(index+8)]))) 
 
     
 
     return [[dates_radar,dates_sound,dates_ceil],[filename_radar,filename_sound,filename_ceil]]
-
-
-
-#radar = 'sgpkazrgeC1.a1.20140527.000002.cdf'
-#sounding = 'sgpsondewnpnC1.b1.20140527.052800.custom.cdf'
-#ceilometer = 'sgpvceil25kC1.b1.20140527.000007.cdf'
 
 
 

@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+
 '''
 This function takes in radar, sounding, and ceilometer files from their directory, organizes them by date and creates a figure with three plots. The first plot is copolar reflectivity with masked backround noise, the second plot is vertical velocity, and the third plot is spectral width. 
 
@@ -13,12 +14,14 @@ from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy.ma as ma
 import os
 
+
+
 def plot_kazr(date,radar_dir,sound_dir,ceil_dir):
 
     path = os.getcwd()
 
     [radar,sound,ceil] = gather_exp_files(date,radar_dir,sound_dir,ceil_dir)
-
+    
     # Gather files
     os.chdir(radar_dir)
     f = netcdf.netcdf_file(radar, 'r')
@@ -28,7 +31,6 @@ def plot_kazr(date,radar_dir,sound_dir,ceil_dir):
     c = netcdf.netcdf_file(ceil, 'r')
     os.chdir(path)
 
-
     # Read in data
     fcbh = c.variables['first_cbh'].data
     rng = f.variables['range'].data
@@ -36,8 +38,8 @@ def plot_kazr(date,radar_dir,sound_dir,ceil_dir):
     refc = f.variables['reflectivity_copol'].data
     mdvc = f.variables['mean_doppler_velocity_copol'].data
     swc = f.variables['spectral_width_copol'].data
-
-    fig = plt.figure(figsize = [20,16])
+    
+    fig = plt.figure(figsize = [25,18])
 
     # First Figure
 
