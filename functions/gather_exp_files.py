@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+
 '''
 This function calls the org_exp_files function (which organizes the files by date) and returns the first file by date. 
 
@@ -15,8 +16,5 @@ def gather_exp_files(date,radar_dir,sound_dir,ceil_dir):
     index_sound = dates_sound.index(date)
     index_ceil = dates_ceil.index(date)
 
-    return [filename_radar[index_radar],filename_sound[index_sound],filename_ceil[index_ceil]]    
-
-
-
+    return [filename_radar[index_radar],filename_sound[index_sound],filename_ceil[index_ceil]]
 
