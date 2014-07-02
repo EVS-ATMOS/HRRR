@@ -49,7 +49,7 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
     filelists = produce_hrrr_grib2strings(datestrings,hourslists)
     
     if filelists == []:
-        return
+        return ''
         
     data = []
 
@@ -81,8 +81,12 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
     os.chdir(enddirectory)
     
     f = open(newfilename, 'w')
-    
-    json.dump([data,dates,parameterlist,loc,indexes,units],f)
+    try:
+        json.dump([data,dates,parameterlist,loc,indexes,units],f)
+    except TypeError:
+        print "array found in json export error"
+        return ''
+        
     
     f.close()
     
