@@ -5,6 +5,7 @@ Created on Wed Jun  4 15:58:05 2014
 @author: mattjohnson
 """
 
+
 import os
 
 def get_netcdf_variables(filename, variablelist = [], directory = os.getcwd()):
@@ -16,7 +17,7 @@ def get_netcdf_variables(filename, variablelist = [], directory = os.getcwd()):
     wkdir = os.getcwd()
     os.chdir(directory)
     
-    import numpy as np
+
     import datetime
     from scipy.io import netcdf
     f = netcdf.netcdf_file(filename, 'r')
@@ -24,16 +25,16 @@ def get_netcdf_variables(filename, variablelist = [], directory = os.getcwd()):
     if variablelist == []:
         variablelist = f.variables
     
-    date = datetime(filename[-19:-15],filename[-15:-13],filename[-13:-11])
+    date = datetime.datetime(int(filename[-19:-15]),int(filename[-15:-13]),int(filename[-13:-11]))
     
     data = []
     units = []
     dim = []
     
     for i in range(len(variablelist)):
-        data.append(f.variables(variablelist[i]).data)
-        units.append(f.variables(variablelist[i]).units)
-        dim.append(f.variables(variablelist[i]).dimensions)
+        data.append(f.variables[variablelist[i]].data)
+        units.append(f.variables[variablelist[i]].units)
+        dim.append(f.variables[variablelist[i]].dimensions)
 
     os.chdir(wkdir)
         
