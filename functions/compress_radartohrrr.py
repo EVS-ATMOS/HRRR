@@ -4,7 +4,7 @@ Created on Wed Jul  2 16:00:55 2014
 
 @author: mattjohnson
 """
-print 'function added to pyhrrr'
+
 
 import numpy as np
 
@@ -13,28 +13,23 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory, sou
     converts high resolution copol reflectivity into a matrix of reflectivities that correspond to the set of hrrr times
     and pressures for fair comparison
     """
-    print 'made to first function'
-    copol = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
-                                ['reflectivity_copol'])
-    print 'get_netcdf finished'
-    copol = copol[0][0]
-    print 'got copol'
-    ran = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
-                                ['range'])
-    ran = ran[0][0]
-    print 'got ran'
-    times = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
-                                ['time'])
-    times = times[0][0]
+    x = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
+                                ['reflectivity_copol','range','time'])
+    copol = x[0][0][0]    
+
+    ran = ran[0][0][0]
+
+    times = times[0][0][0]
     
-    print 'finished file1'              
+    x = None
+             
     [[sdata,sdim,sunits],sdate] = get_netcdf_variables(filename=sounding_filename,directory=sounding_directory,variablelist=['pres','alt'])
     
-    print 'finished files'      
+     
                       
     pres = np.interp(ran,sdata[1],sdata[0])
     
-    print 'finished interp'
+    sdata = None
     
     
     if tsinds == None and psinds == None:
@@ -56,11 +51,12 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory, sou
 def calc_radar2hrrr_inds(times,pres):
     """
     works out indicies closest to each pressure level and hour and thus the matrices that need to be compressed to one value
+    times in sec, pres in hPa
     """
-    timesf = range(0,24)
+    timesf = np.array(range(0,24))*60.*60.
     presf = np.log(HRRR_PS)
     pres = np.log(pres)
-    
+        
     hpsave = []
     for i in range(len(presf.tolist())):
         if i == 0:
