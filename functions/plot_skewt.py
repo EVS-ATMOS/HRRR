@@ -1,15 +1,14 @@
-# -*- coding: utf-8 -*-
 """
 Created on Wed Jul  2 11:49:54 2014
 
-@author: mattjohnson
+edited by mattjohnson & grantmckercher
 """
 """
 Note works with special developer python only
 """
 def plot_skewt(p,h,T,Td):
     """
-    this segment adapted from jhelmus
+    this code adapted from jhelmus
     """
     # This serves as an intensive exercise of matplotlib's transforms
     # and custom projection API. This example produces a so-called
@@ -161,7 +160,7 @@ def plot_skewt(p,h,T,Td):
         import numpy as np
         
         # Create a new figure. The dimensions here give a good aspect ratio
-        fig = plt.figure(figsize=(6.5875, 6.2125))
+        fig = plt.figure(figsize=[6.5875, 6.2125])
         ax = fig.add_subplot(111, projection='skewx')
     
         plt.grid(True)
@@ -169,17 +168,19 @@ def plot_skewt(p,h,T,Td):
         # Plot the data using normal plotting functions, in this case using
         # log scaling in Y, as dicatated by the typical meteorological plot
         ax.semilogy(T, p, 'r')
-        ax.semilogy(Td, p, 'g')
+        ax.semilogy(Td, p, 'b')
     
         # An example of a slanted line at constant X
-        l = ax.axvline(0, color='b')
+        #l = ax.axvline(0, color='b')
     
         # Disables the log-formatting that comes with semilogy
         ax.yaxis.set_major_formatter(ScalarFormatter())
         ax.set_yticks(np.linspace(100,1000,10))
         ax.set_ylim(1050,100)
-    
         ax.xaxis.set_major_locator(MultipleLocator(10))
         ax.set_xlim(-50,50)
-    
+        
+        ax.set_xlabel('Temperature (Celsius)', fontsize=18)
+        ax.set_ylabel('Pressure (hPa)', fontsize=18)
+        
         plt.show()
