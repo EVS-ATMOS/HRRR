@@ -20,6 +20,7 @@ def get_netcdf_variables(filename, variablelist = [], directory = os.getcwd()):
 
     import datetime
     from scipy.io import netcdf
+    
     f = netcdf.netcdf_file(filename, 'r')
 
     if variablelist == []:
@@ -32,9 +33,9 @@ def get_netcdf_variables(filename, variablelist = [], directory = os.getcwd()):
     dim = []
     
     for i in range(len(variablelist)):
-        data.append(f.variables[variablelist[i]].data)
-        units.append(f.variables[variablelist[i]].units)
-        dim.append(f.variables[variablelist[i]].dimensions)
+        data.append(f.variables[variablelist[i]].data[:])
+        units.append(f.variables[variablelist[i]].units[:])
+        dim.append(f.variables[variablelist[i]].dimensions[:])
         
     f.close()
     os.chdir(wkdir)
