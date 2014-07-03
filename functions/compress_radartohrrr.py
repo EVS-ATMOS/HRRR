@@ -13,14 +13,16 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory, sou
     converts high resolution copol reflectivity into a matrix of reflectivities that correspond to the set of hrrr times
     and pressures for fair comparison
     """
+    print 'made to first function'
     copol = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
                                 ['reflectivity_copol'])
+    print 'get_netcdf finished'
     copol = copol[0][0]
-    
+    print 'got copol'
     ran = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
                                 ['range'])
     ran = ran[0][0]
-    
+    print 'got ran'
     times = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
                                 ['time'])
     times = times[0][0]
