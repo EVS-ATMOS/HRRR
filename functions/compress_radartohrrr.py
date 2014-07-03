@@ -4,7 +4,7 @@ Created on Wed Jul  2 16:00:55 2014
 
 @author: mattjohnson
 """
-
+print 'function added to pyhrrr'
 
 import numpy as np
 
