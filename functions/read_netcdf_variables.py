@@ -35,7 +35,9 @@ def get_netcdf_variables(filename, variablelist = [], directory = os.getcwd()):
         data.append(f.variables[variablelist[i]].data)
         units.append(f.variables[variablelist[i]].units)
         dim.append(f.variables[variablelist[i]].dimensions)
-
+        
+    f.close()
     os.chdir(wkdir)
+    
         
     return [[data,dim,units],date]
