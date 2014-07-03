@@ -13,19 +13,28 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory, sou
     converts high resolution copol reflectivity into a matrix of reflectivities that correspond to the set of hrrr times
     and pressures for fair comparison
     """
-    [[data,dim,units],date] = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
-                                ['reflectivity_copol','range','time'])
+    copol = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
+                                ['reflectivity_copol'])
+    copol = copol[0][0]
+    
+    ran = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
+                                ['range'])
+    ran = ran[0][0]
+    
+    times = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
+                                ['time'])
+    times = times[0][0]
+    
     print 'finished file1'              
     [[sdata,sdim,sunits],sdate] = get_netcdf_variables(filename=sounding_filename,directory=sounding_directory,variablelist=['pres','alt'])
     
     print 'finished files'      
                       
-    pres = np.interp(data[1],sdata[1],sdata[0])
+    pres = np.interp(ran,sdata[1],sdata[0])
     
     print 'finished interp'
     
-    copol = data[0]
-    times = data[2]
+    
     if tsinds == None and psinds == None:
         [psinds,tsinds] = calc_radar2hrrr_inds(times,pres)
     
@@ -40,15 +49,16 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory, sou
         x.append(y)
         y = []
         
-    return [x,timesf,presf,tsinds,psinds]
+    return [x,tsinds,psinds]
         
 def calc_radar2hrrr_inds(times,pres):
     """
     works out indicies closest to each pressure level and hour and thus the matrices that need to be compressed to one value
     """
     timesf = range(0,24)
-    presf = HRRR_PS
-        
+    presf = np.log(HRRR_PS)
+    pres = np.log(pres)
+    
     hpsave = []
     for i in range(len(presf.tolist())):
         if i == 0:
