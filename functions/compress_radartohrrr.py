@@ -7,12 +7,16 @@ Created on Wed Jul  2 16:00:55 2014
 
 
 import numpy as np
+import os
 
-def compress_radartohrrr(radar_filename, sounding_filename, radar_directory, sounding_directory, tsinds = None, psinds = None):
+
+def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.getcwd(), sounding_directory=os.getcwd(), output_directory = os.getcwd(),tsinds = None, psinds = None, produce_file = False):
     """
     converts high resolution copol reflectivity into a matrix of reflectivities that correspond to the set of hrrr times
     and pressures for fair comparison, range in m, times in s, 
     """
+    wkdir = os.getcwd()
+    
     x = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
                                 ['reflectivity_copol','range','time'])
     copol = x[0][0][0]    
@@ -44,6 +48,18 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory, sou
         x.append(y)
         y = []
         
+    if produce_file:
+        os.chdir(output_directory)
+        import json
+        import datetime
+        date = datetime.datetime(int(radar_filename[15:19]),int(radar_filename[19:21]),int(radar_filename[21:23]))
+        filestring = produce_radar_txt_string(date)
+        f = open(filestring,'w')
+        json.dump([x,tsinds,psinds])
+        f.close()
+        os.chdir(wkdir)
+        return
+    
     return [x,tsinds,psinds]
         
 def calc_radar2hrrr_inds(times,pres):
