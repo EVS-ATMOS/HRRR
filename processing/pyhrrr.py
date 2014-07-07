@@ -27,8 +27,6 @@ HRRR_VARS =['Geopotential Height','Temperature','Relative humidity','Dew point t
         'Graupel (snow pellets)']
         
 
-
-
 wkdir = os.getcwd()
 
 directory = wkdir[:]
