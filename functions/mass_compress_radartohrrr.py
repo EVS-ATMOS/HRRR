@@ -34,7 +34,7 @@ def mass_compress_radartohrrr(radar_ident, sounding_ident,radar_namelength = Non
         
     sounding_date = []
     for name in sounding_dirlist:
-        sounding_date.append(datetime.datetime(int(name[radar_ident:radar_ident+4]),int(name[radar_ident+4:radar_ident+6]),int(name[radar_ident+6:radar_ident+8])))
+        sounding_date.append(datetime.datetime(int(name[sounding_ident:sounding_ident+4]),int(name[sounding_ident+4:sounding_ident+6]),int(name[sounding_ident+6:sounding_ident+8])))
         
     y = []
     for i in range(len(radar_dirlist)):
