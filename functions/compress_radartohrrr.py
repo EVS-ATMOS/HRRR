@@ -55,7 +55,8 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
         date = datetime.datetime(int(radar_filename[15:19]),int(radar_filename[19:21]),int(radar_filename[21:23]))
         filestring = produce_radar_txt_string(date)
         g = open(filestring,'w')
-        json.dump([[z,tsinds,psinds],g])
+        u = [z,tsinds,psinds]
+        json.dump(u,g)
         g.close()
         os.chdir(wkdir)
         x[-1].close()
