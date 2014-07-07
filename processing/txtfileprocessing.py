@@ -17,11 +17,11 @@ strings.append("directory = '/data/san_store/HRRR'")
 
 import datetime
 
-n = 8
+n = 4
 
 startdate = datetime.datetime(2014,3,15)
 
-enddate = datetime.datetime(2014,6,27)
+enddate = datetime.datetime(2014,7,6)
 
 t = enddate-startdate
 dt = int(t.days/n)
