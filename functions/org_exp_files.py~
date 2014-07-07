@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#! /usr/bin/env python
 
 '''
 This function takes the radar, sounding, and ceilometer directories and organizes them by date. It returns the dates with the appropriate filename in a list. 
