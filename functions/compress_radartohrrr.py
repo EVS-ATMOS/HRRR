@@ -16,7 +16,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
     and pressures for fair comparison, range in m, times in s, 
     """
     wkdir = os.getcwd()
-
+    
     x = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
                                 ['reflectivity_copol','range','time'])
 
