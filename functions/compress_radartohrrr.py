@@ -8,57 +8,33 @@ Created on Wed Jul  2 16:00:55 2014
 
 import numpy as np
 
-def compress_radartohrrr(filename, directory):
+def compress_radartohrrr(radar_filename, sounding_filename, radar_directory, sounding_directory, tsinds = None, psinds = None):
     """
-    should break into two functions...one for working out the indexes another for the actual calculations
+    converts high resolution copol reflectivity into a matrix of reflectivities that correspond to the set of hrrr times
+    and pressures for fair comparison, range in m, times in s, 
     """
-    [[data,dim,units],date] = get_netcdf_variables(filename = 'sgpkazrgeC1.a1.20140419.000001.cdf', directory = '/Users/mattjohnson/',variablelist=
+    x = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
                                 ['reflectivity_copol','range','time'])
-                                
-    #get pres from sounding
-    #remove later
-    pres = HRRR_PS
+    copol = x[0][0][0]    
+
+    ran = x[0][0][1]
+
+    times = x[0][0][2]
     
-    copol = data[0]
-    times = data[2]
+    x = None
+             
+    [[sdata,sdim,sunits],sdate] = get_netcdf_variables(filename=sounding_filename,directory=sounding_directory,variablelist=['pres','alt'])
     
-    timesf = range(0,24)
-    presf = HRRR_PS
+                      
+    pres = np.interp(ran,sdata[1],sdata[0])
     
-    hpsave = []
-    for i in range(len(presf.tolist())):
-        if i == 0:
-            hpsave.append(presf[0])
-        elif i == len(presf.tolist())-1:
-            hpsave.append(presf[-1])
-        else:
-            hpsave.append((presf[i]+presf[i+1])/2)
-            
-    pres = set(pres)
-    prestest = pres.union(hpsave)
-    prestest = list(prestest)
+    sdata = None
     
-    hpsave = list(set(hpsave))
-    psinds = []
-    for i in hpsave:
-        psinds.append(prestest.index(i))
-        
-    timesave = []
-    for i in range(len(timesf)):
-        if i == 0:
-            timesave.append(timesf[0])
-        elif i == len(timesf)-1:
-            timesave.append(timesf[-1])
-        else:
-            timesave.append((timesf[i]+timesf[i+1])/2)
-            
-    timestest = set(times)
-    timestest = timestest.union(set(timesave))
-    tsinds= []
-    for i in timesave:
-        tsinds.append(timestest.index(i))
-        
-        
+    
+    if tsinds == None and psinds == None:
+        [psinds,tsinds] = calc_radar2hrrr_inds(times,pres)
+    
+    
     copol = np.array(copol)
     x = []
     y = []
@@ -68,7 +44,48 @@ def compress_radartohrrr(filename, directory):
         x.append(y)
         y = []
         
-    return [x,timesf,presf,tsinds,psinds]
+    return [x,tsinds,psinds]
         
+def calc_radar2hrrr_inds(times,pres):
+    """
+    works out indicies closest to each pressure level and hour and thus the matrices that need to be compressed to one value
+    times in sec, pres in hPa
+    """
+    timesf = np.array(range(0,24))*60.*60.
+    presf = np.log(HRRR_PS)
+    pres = np.log(pres)
         
+    hpsave = []
+    for i in range(len(presf.tolist())):
+        if i == 0:
+                hpsave.append(presf[0])
+        elif i == len(presf.tolist())-1:
+                hpsave.append(presf[-1])
+        else:
+                hpsave.append((presf[i]+presf[i+1])/2)
+                
+    pres = set(pres)
+    prestest = pres.union(hpsave)
+    prestest = list(prestest)
         
+    hpsave = list(set(hpsave))
+    psinds = []
+    for i in hpsave:
+        psinds.append(prestest.index(i))
+            
+    timesave = []
+    for i in range(len(timesf)):
+        if i == 0:
+            timesave.append(timesf[0])
+        elif i == len(timesf)-1:
+            timesave.append(timesf[-1])
+        else:
+            timesave.append((timesf[i]+timesf[i+1])/2)
+                
+    timestest = set(times)
+    timestest = timestest.union(set(timesave))
+    tsinds= []
+    for i in timesave:
+        tsinds.append(timestest.index(i))
+        
+    return [psinds,tsinds]
