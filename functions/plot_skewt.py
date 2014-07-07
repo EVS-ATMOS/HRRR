@@ -18,7 +18,7 @@ def plot_skewt(p,h,T,Td):
     # fact that the upper and lower X-axes have different data ranges, which
     # necessitates a bunch of custom classes for ticks,spines, and the axis
     # to handle this.
-    
+    print 'to function'
     from matplotlib.axes import Axes
     import matplotlib.transforms as transforms
     import matplotlib.axis as maxis
@@ -181,7 +181,7 @@ def plot_skewt(p,h,T,Td):
         ax.set_xlabel('Temperature (Celsius)', fontsize=18)
         ax.set_ylabel('Pressure (hPa)', fontsize=18)
         
-
+        print 'made it'
         
         plt.show()
         
