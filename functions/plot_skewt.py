@@ -183,4 +183,8 @@ def plot_skewt(p,h,T,Td):
         ax.set_xlabel('Temperature (Celsius)', fontsize=18)
         ax.set_ylabel('Pressure (hPa)', fontsize=18)
         
+<<<<<<< HEAD
+        return plt.show()
+=======
         plt.show()
+>>>>>>> 44f3b16de3a27909883578095438968e270b8f8f
