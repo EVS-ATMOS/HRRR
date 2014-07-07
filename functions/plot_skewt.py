@@ -3,9 +3,7 @@ Created on Wed Jul  2 11:49:54 2014
 
 edited by mattjohnson & grantmckercher
 """
-"""
-Note works with special developer python only
-"""
+
 def plot_skewt(p,h,T,Td):
     """
     this code adapted from jhelmus
@@ -183,4 +181,6 @@ def plot_skewt(p,h,T,Td):
         ax.set_xlabel('Temperature (Celsius)', fontsize=18)
         ax.set_ylabel('Pressure (hPa)', fontsize=18)
         
+        
         plt.show()
+        
