@@ -23,7 +23,6 @@ def plot_skewt(p,h,T,Td):
     import matplotlib.transforms as transforms
     import matplotlib.axis as maxis
     import matplotlib.spines as mspines
-    import matplotlib.path as mpath
     from matplotlib.projections import register_projection
     
     # The sole purpose of this class is to look at the upper, lower, or total
@@ -149,37 +148,36 @@ def plot_skewt(p,h,T,Td):
     # it.
     register_projection(SkewXAxes)
     
-    if __name__ == '__main__':
-        # Now make a simple example using the custom projection.
-        from matplotlib.ticker import ScalarFormatter, MultipleLocator
-        from matplotlib.collections import LineCollection
-        import matplotlib.pyplot as plt
-        from StringIO import StringIO
-        import numpy as np
+    # Now make a simple example using the custom projection.
+    from matplotlib.ticker import ScalarFormatter, MultipleLocator
+    from matplotlib.collections import LineCollection
+    import matplotlib.pyplot as plt
+    from StringIO import StringIO
+    import numpy as np
         
-        # Create a new figure. The dimensions here give a good aspect ratio
-        fig = plt.figure(figsize=[6.5875, 6.2125])
-        ax = fig.add_subplot(111, projection='skewx')
+    # Create a new figure. The dimensions here give a good aspect ratio
+    fig = plt.figure(figsize=[6.5875, 6.2125])
+    ax = fig.add_subplot(111, projection='skewx')
     
-        plt.grid(True)
+    plt.grid(True)
     
-        # Plot the data using normal plotting functions, in this case using
-        # log scaling in Y, as dicatated by the typical meteorological plot
-        ax.semilogy(T, p, 'r')
-        ax.semilogy(Td, p, 'b')
+    # Plot the data using normal plotting functions, in this case using
+    # log scaling in Y, as dicatated by the typical meteorological plot
+    ax.semilogy(T, p, 'r')
+    ax.semilogy(Td, p, 'b')
     
-        # An example of a slanted line at constant X
-        #l = ax.axvline(0, color='b')
+    # An example of a slanted line at constant X
+    #l = ax.axvline(0, color='b')
     
-        # Disables the log-formatting that comes with semilogy
-        ax.yaxis.set_major_formatter(ScalarFormatter())
-        ax.set_yticks(np.linspace(100,1000,10))
-        ax.set_ylim(1050,100)
-        ax.xaxis.set_major_locator(MultipleLocator(10))
-        ax.set_xlim(-50,50)
+    # Disables the log-formatting that comes with semilogy
+    ax.yaxis.set_major_formatter(ScalarFormatter())
+    ax.set_yticks(np.linspace(100,1000,10))
+    ax.set_ylim(1050,100)
+    ax.xaxis.set_major_locator(MultipleLocator(10))
+    ax.set_xlim(-50,50)
         
-        ax.set_xlabel('Temperature (Celsius)', fontsize=18)
-        ax.set_ylabel('Pressure (hPa)', fontsize=18)
+    ax.set_xlabel('Temperature (Celsius)', fontsize=18)
+    ax.set_ylabel('Pressure (hPa)', fontsize=18)
         
-        plt.show()
+    plt.show()
         
