@@ -12,6 +12,8 @@ def get_netcdf_variables(filename, variablelist = [], directory = os.getcwd()):
     """
     Accesses a specified netCDF file and recovers specified variables (if variablelist is empty will return all variables)
     returns a list of data arrays,  dimensions and units for each variable in a list with the date of the file.  
+    
+    Note:  the data is still referenced to the file, so the return statement variables can't be accessed after the returned file identifier is closed.  
     """
     wkdir = os.getcwd()
     os.chdir(directory)
@@ -35,9 +37,6 @@ def get_netcdf_variables(filename, variablelist = [], directory = os.getcwd()):
         data.append(f.variables[variablelist[i]].data)
         units.append(f.variables[variablelist[i]].units)
         dim.append(f.variables[variablelist[i]].dimensions)
-
-    x =[[data,dim,units],date]
-    x = x[:][:][:][:][:]
 
 
     os.chdir(wkdir)
