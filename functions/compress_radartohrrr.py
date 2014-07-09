@@ -44,7 +44,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
     for i in range(len(tsinds)-1):
         for j in range(len(psinds)-1):
             if psinds[j] != psinds[j+1] and tsinds[i] != tsinds[i+1]:
-                y.append(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],psinds[j]:psinds[j+1]],axis=1),axis=0))
+                y.append(float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],psinds[j]:psinds[j+1]],axis=1),axis=0)))
         z.append(y)
         y = []
         
@@ -55,12 +55,13 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
         date = datetime.datetime(int(radar_filename[15:19]),int(radar_filename[19:21]),int(radar_filename[21:23]))
         filestring = produce_radar_txt_string(date)
         g = open(filestring,'w')
-        json.dump([z,tsinds,psinds],g)
+        u = [z,tsinds,psinds]
+        json.dump(u,g)
         g.close()
         os.chdir(wkdir)
         x[-1].close()
         f.close()
-        return
+        return [z,tsinds,psinds]
         
     x[-1].close()
     f.close()

@@ -34,14 +34,16 @@ def mass_compress_radartohrrr(radar_ident, sounding_ident,radar_namelength = Non
         
     sounding_date = []
     for name in sounding_dirlist:
-        sounding_date.append(datetime.datetime(int(name[radar_ident:radar_ident+4]),int(name[radar_ident+4:radar_ident+6]),int(name[radar_ident+6:radar_ident+8])))
+        sounding_date.append(datetime.datetime(int(name[sounding_ident:sounding_ident+4]),int(name[sounding_ident+4:sounding_ident+6]),int(name[sounding_ident+6:sounding_ident+8])))
         
     y = []
     for i in range(len(radar_dirlist)):
         if i==0 or radar_date[i] != radar_date[i-1]:
-            j = sounding_date.index(radar_date[i])
-            x = compress_radartohrrr(radar_dirlist[i], sounding_dirlist[j], radar_directory=os.getcwd(), sounding_directory=os.getcwd(), output_directory = output_directory,tsinds = None, psinds = None, produce_file = True)
-            y.append(x[0])
+            filestring = produce_radar_txt_string(radar_date[i])
+            if not filestring in os.listdir(output_directory):
+                j = sounding_date.index(radar_date[i])
+                compress_radartohrrr(radar_dirlist[i], sounding_dirlist[j], radar_directory=radar_directory, sounding_directory=sounding_directory, output_directory = output_directory,tsinds = None, psinds = None, produce_file = True)
+                
     
-    return y
+    return
        
