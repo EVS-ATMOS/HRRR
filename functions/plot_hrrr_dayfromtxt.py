@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 def plot_hrrr_dayfromtxt(matrix,final_unit,date = None,loc = None,ps = HRRR_PS, hour=0, scaling = 1,figsize = [15,8]):
     
     
-    times = np.array(range(25))
+    times = np.array(range(matrix.shape[0]+1))
     
     from matplotlib.ticker import MultipleLocator, FormatStrFormatter
         
