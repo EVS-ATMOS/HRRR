@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,ps = HRRR_PS, hour=0, scaling = 1,figsize = [15,8]):
     
-    if timedata != None:
+    if numdates != None:
         datetimes = matplotlib.dates.num2date(numdates)
         timeshift = datetime.timedelta(hours=hour)
         hrrr_hours = [(c+timeshift).hour for c in datetimes]
