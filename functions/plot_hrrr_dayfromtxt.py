@@ -12,15 +12,20 @@ import matplotlib.pyplot as plt
 
 
 
-def plot_hrrr_dayfromtxt(matrix,final_unit,date = None,loc = None,ps = HRRR_PS, hour=1, scaling = 1,figsize = [15,8]):
+def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,ps = HRRR_PS, hour=0, scaling = 1,figsize = [15,8]):
     
-    
-    times = range(25)
-    
-
+    if numdates != None:
+        datetimes = matplotlib.dates.num2date(numdates)
+        timeshift = datetime.timedelta(hours=hour)
+        hrrr_hours = [(c+timeshift).hour for c in datetimes]
+        hrrr_hours.append(hrrr_hours[-1]+1)
+        times = np.array(hrrr_hours)
+    else:
+        times = np.array(range(matrix.shape[0]+1))
+        
     from matplotlib.ticker import MultipleLocator, FormatStrFormatter
         
-    values = np.array(data)
+    values = np.array(matrix)
         
     if date != None and loc != None:
         dateset = [date-datetime.timedelta(days=1),date,date+datetime.timedelta(days=1)]
@@ -51,8 +56,8 @@ def plot_hrrr_dayfromtxt(matrix,final_unit,date = None,loc = None,ps = HRRR_PS, 
     ax.yaxis.set_major_formatter(ymajorFormatter)
         
     pc = plt.pcolormesh(times,ps,np.transpose(values))
-    ax.set_ylim([0,max(ps)])
-    ax.set_xlim([min(times),max(times)])
+    ax.set_ylim([200,max(HRRR_PS)])
+    ax.set_xlim([0,24])
     ax.invert_yaxis()
     plt.colorbar(mappable = pc,label=final_unit)    
     plt.xlabel('Time in hrs')
