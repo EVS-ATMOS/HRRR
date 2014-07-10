@@ -18,7 +18,7 @@ def plot_hrrr_dayfromtxt(matrix,final_unit,timedata,date = None,loc = None,ps = 
         datetimes = matplotlib.dates.num2date(timedata)
         timeshift = datetime.timedelta(hours=hour)
         hrrr_hours = [(c+timeshift).hour for c in datetimes]
-        times = hrrr_hours
+        times = np.array(hrrr_hours)
     else:
         times = np.array(range(matrix.shape[0]+1))
         
