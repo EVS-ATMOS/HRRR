@@ -12,15 +12,14 @@ import matplotlib.pyplot as plt
 
 
 
-def plot_hrrr_dayfromtxt(matrix,final_unit,date = None,loc = None,ps = HRRR_PS, hour=1, scaling = 1,figsize = [15,8]):
+def plot_hrrr_dayfromtxt(matrix,final_unit,date = None,loc = None,ps = HRRR_PS, hour=0, scaling = 1,figsize = [15,8]):
     
     
-    times = range(25)
+    times = np.array(range(25))
     
-
     from matplotlib.ticker import MultipleLocator, FormatStrFormatter
         
-    values = np.array(data)
+    values = np.array(matrix)
         
     if date != None and loc != None:
         dateset = [date-datetime.timedelta(days=1),date,date+datetime.timedelta(days=1)]
