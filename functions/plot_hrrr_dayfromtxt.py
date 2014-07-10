@@ -12,13 +12,13 @@ import matplotlib.pyplot as plt
 
 
 
-def plot_hrrr_dayfromtxt(matrix,final_unit,timedata,date = None,loc = None,ps = HRRR_PS, hour=0, scaling = 1,figsize = [15,8]):
+def plot_hrrr_dayfromtxt(matrix,final_unit,timedata=None,date = None,loc = None,ps = HRRR_PS, hour=0, scaling = 1,figsize = [15,8]):
     
     if timedata != None:
         datetimes = matplotlib.dates.num2date(timedata)
         timeshift = datetime.timedelta(hours=hour)
         hrrr_hours = [(c+timeshift).hour for c in datetimes]
-        times = np.array(hrrr_hours)
+        times = np.array(hrrr_hours.append(hrrr_hours[-1]+1))
     else:
         times = np.array(range(matrix.shape[0]+1))
         
