@@ -23,9 +23,9 @@ def plot_hrrr_sgp(filename,parameter,hinp = '', scaling = 1, final_unit = '', ma
     """
     
     if hinp != '':
-        [data,parameterlist,datah,dataloc,units] = read_Hrrr(filename,[parameter])
+        [data,parameterlist,datah,dataloc,units] = read_hrrr(filename,[parameter])
     else:
-        [data,parameterlist,datah,dataloc,units] = read_Hrrr(filename,[parameter],max=True)
+        [data,parameterlist,datah,dataloc,units] = read_hrrr(filename,[parameter],max=True)
         
     if hinp !='':
         datah = datah.tolist()
