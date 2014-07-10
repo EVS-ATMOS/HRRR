@@ -56,8 +56,8 @@ def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,
     ax.yaxis.set_major_formatter(ymajorFormatter)
         
     pc = plt.pcolormesh(times,ps,np.transpose(values))
-    ax.set_ylim([0,max(ps)])
-    ax.set_xlim([min(times),max(times)])
+    ax.set_ylim([0,max(HRRR_PS)])
+    ax.set_xlim([0,24])
     ax.invert_yaxis()
     plt.colorbar(mappable = pc,label=final_unit)    
     plt.xlabel('Time in hrs')
