@@ -18,10 +18,9 @@ def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,
         datetimes = matplotlib.dates.num2date(numdates)
         timeshift = datetime.timedelta(hours=hour)
         hrrr_hours = [(c+timeshift).hour for c in datetimes]
-        hrrr_hours.append(hrrr_hours[-1]+1)
         times = np.array(hrrr_hours)
     else:
-        times = np.array(range(matrix.shape[0]+1))
+        times = np.array(range(matrix.shape[0]))
         
     from matplotlib.ticker import MultipleLocator, FormatStrFormatter
         
