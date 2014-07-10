@@ -18,9 +18,10 @@ def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,
         datetimes = matplotlib.dates.num2date(numdates)
         timeshift = datetime.timedelta(hours=hour)
         hrrr_hours = [(c+timeshift).hour for c in datetimes]
+        hrrr_hours.append(hrrr_hours[-1]+1)
         times = np.array(hrrr_hours)
     else:
-        times = np.array(range(matrix.shape[0]))
+        times = np.array(range(matrix.shape[0]+1))
         
     from matplotlib.ticker import MultipleLocator, FormatStrFormatter
         
@@ -56,7 +57,7 @@ def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,
         
     pc = plt.pcolormesh(times,ps,np.transpose(values))
     ax.set_ylim([0,max(ps)])
-    ax.set_xlim([min(times),max(times)+1])
+    ax.set_xlim([min(times),max(times)])
     ax.invert_yaxis()
     plt.colorbar(mappable = pc,label=final_unit)    
     plt.xlabel('Time in hrs')
