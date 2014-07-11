@@ -33,14 +33,15 @@ def read_hrrr(filename, parameters = None,directory = os.getcwd(),max = False):
     in a list.  
     """
     
-    if directory != None:
-        wkdir = os.getcwd()
-        os.chdir(directory)
+
+    wkdir = os.getcwd()
+    os.chdir(directory)
         
     try:
         myfile = pygrib.open(filename) 
     except IOError:
         print 'file access error in pygrib.open'
+        print os.getcwd()
         print filename
         return None
        
