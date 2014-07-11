@@ -31,7 +31,7 @@ def plot_hrrr_sgp(filename,parameter,directory = os.getcwd(),hinp = '', scaling 
         [data,parameterlist,units] = read_hrrr(filename,[parameter],directory = directory,max=True)
         
     if hinp !='':
-        datah = datah.tolist()
+        datah = HRRR_PS.tolist()
         hindex = datah.index(hinp)
         
     if final_unit == '':
@@ -49,7 +49,7 @@ def plot_hrrr_sgp(filename,parameter,directory = os.getcwd(),hinp = '', scaling 
     m.plot(sgpx,sgpy,'bo')
     plt.text(sgpx+50000,sgpy+50000,'SGP site')
         
-    x, y = m(dataloc[1],dataloc[0])
+    x, y = m(HRRR_DATALOC[1],HRRR_DATALOC[0])
     data = np.array(data)
     
     
