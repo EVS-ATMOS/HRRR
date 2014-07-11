@@ -63,7 +63,7 @@ def read_hrrr(filename, parameters = None,directory = os.getcwd(),max = False):
         
         if p == 'Total mixing ratio':
             params = ['Cloud mixing ratio','Rain mixing ratio','Cloud Ice','Snow mixing ratio', 'Graupel (snow pellets)']
-            mixdata = np.zeros(40)
+            mixdata = np.zeros((40,1059,1799))
             for j in params:
                 grb = myfile.select(name = j)
                 grb_cube = grb_to_grid(grb)
