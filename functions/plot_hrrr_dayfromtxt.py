@@ -5,7 +5,7 @@ Created on Thu Jun 26 09:48:54 2014
 @author: mattjohnson
 """
 
-import os
+
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt

@@ -5,13 +5,14 @@ Created on Thu Jun  5 08:32:23 2014
 @author: mattjohnson
 """
 
-import pygrib
+
 from matplotlib import pyplot as plt
 from matplotlib import colors
 import numpy as np
-from mpl_toolkits.basemap import Basemap, addcyclic
+from mpl_toolkits.basemap import Basemap
+import os
 
-def plot_hrrr_sgp(filename,parameter,hinp = '', scaling = 1, final_unit = '', margin = 10, vmax = None, vmin = None):
+def plot_hrrr_sgp(filename,parameter,directory = os.getcwd(),hinp = '', scaling = 1, final_unit = '', margin = 10, vmax = None, vmin = None):
 
     """
     Plots an hrrr file focused on the SGP site for a given hrrr filename, parameter and height in hPa. 
@@ -21,11 +22,13 @@ def plot_hrrr_sgp(filename,parameter,hinp = '', scaling = 1, final_unit = '', ma
     the plot area in degrees latitude and longitude.  Scaling and final_unit can be used to tweak the data in order to 
     make it more visible on the graph.  vmax and vmin function the same as in pcolormesh from Basemap.  
     """
+    wkdir = os.getcwd()
+    os.chdir(directory)
     
     if hinp != '':
-        [data,parameterlist,datah,dataloc,units] = read_hrrr(filename,[parameter])
+        [data,parameterlist,units] = read_hrrr(filename,[parameter])
     else:
-        [data,parameterlist,datah,dataloc,units] = read_hrrr(filename,[parameter],max=True)
+        [data,parameterlist,units] = read_hrrr(filename,[parameter],max=True)
         
     if hinp !='':
         datah = datah.tolist()
@@ -63,4 +66,6 @@ def plot_hrrr_sgp(filename,parameter,hinp = '', scaling = 1, final_unit = '', ma
         
     plt.colorbar(label=final_unit)
     plt.show()
-    return 0
+    
+    os.chdir(wkdir)
+    return

@@ -42,14 +42,11 @@ def read_hrrr(filename, parameters = [''],directory = os.getcwd(),max = False):
     except IOError:
         return None
         
-    parameterlist = ['Geopotential Height','Temperature','Relative humidity','Dew point temperature',
-        'Specific humidity','Vertical velocity','U component of wind','V component of wind',
-        'Absolute vorticity','Cloud mixing ratio','Cloud Ice','Rain mixing ratio','Snow mixing ratio',
-        'Graupel (snow pellets)']    
+  
        
     if parameters != ['']:
         for i in range(len(parameters)):
-            x = parameterlist.count(parameters[i])
+            x = HRRR_VARS.count(parameters[i])
             if x == 0:                    
                 print 'requested parameter not in list'
                 print parameters[i]  
@@ -79,7 +76,7 @@ def read_hrrr(filename, parameters = [''],directory = os.getcwd(),max = False):
     if directory != None:
         os.chdir(wkdir)
     
-    return [data,parameterlist,datah,dataloc,units]
+    return [data,parameterlist,units]
     
 
     
