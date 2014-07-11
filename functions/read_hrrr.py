@@ -24,7 +24,7 @@ def grb_to_grid(grb_obj):
                  'levels' : levels[indexes]}
     return cube_dict
     
-def read_hrrr(filename, parameters = [''],directory = os.getcwd(),max = False):
+def read_hrrr(filename, parameters = None,directory = os.getcwd(),max = False):
     
     """
     With an option for returning just the maximum values of a given list of parameters at each location, this function 
@@ -40,19 +40,20 @@ def read_hrrr(filename, parameters = [''],directory = os.getcwd(),max = False):
     try:
         myfile = pygrib.open(filename) 
     except IOError:
+        print 'file access error in pygrib.open'
+        print filename
         return None
-        
-  
        
-    if parameters != ['']:
+    if parameters != None:
         for i in range(len(parameters)):
             x = HRRR_VARS.count(parameters[i])
             if x == 0:                    
                 print 'requested parameter not in list'
                 print parameters[i]  
-                return 0
+                parameters.remove(parameters[i])
         parameterlist = parameters[:]
-            
+    else:
+        parameterlist = HRRR_VARS
                 
     data = []
     units = []
@@ -65,16 +66,14 @@ def read_hrrr(filename, parameters = [''],directory = os.getcwd(),max = False):
         else:
             data.append(grb_cube['data'].max(axis=0))
         units.append(grb_cube['units'])
-        
-
-    dataloc =  np.array(grb[0].latlons())
-    datah = grb_cube['levels']
-    
     
     myfile.close()
 
     if directory != None:
         os.chdir(wkdir)
+        
+    if data == None:
+        print 'Warning data == None'
     
     return [data,parameterlist,units]
     
