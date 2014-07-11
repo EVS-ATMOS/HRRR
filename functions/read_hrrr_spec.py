@@ -64,6 +64,8 @@ def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [36.605,-9
                 
     if parameters != ['']:
         for i in range(len(parameters)):
+            if parameters[i] == 'Total mixing ratio':
+                continue
             x = parameterlist.count(parameters[i])
             if x == 0:                    
                 print 'requested parameter not in list'
@@ -71,14 +73,6 @@ def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [36.605,-9
         parameterlist = parameters[:]
             
     data = []
-        
-#        removed for speed purposes
-#        grb = myfile.select(name = parameterlist[0]) 
-#        grb_cube = grb_to_grid(grb)
-#        dataloc =  np.array(grb[0].latlons())
-#        datah = grb_cube['levels']
-        
-        
     units = []
         
     if coords == None:
@@ -89,6 +83,27 @@ def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [36.605,-9
         loc = convert_coords2latlon(xyindex)
     
     for p in parameterlist:
+        if p == 'Total mixing ratio':
+            
+            params = ['Cloud mixing ratio','Rain mixing ratio','Cloud Ice','Snow mixing ratio', 'Graupel (snow pellets)']
+            mixdata = np.zeros(40)
+            
+            for j in params:
+                
+                grb = myfile.select(name = p)
+                grb_cube = grb_to_grid(grb)
+                
+                if not max:
+                    q = grb_cube['data'].T[xyindex[1]][xyindex[0]][:] 
+                else:
+                    q = grb_cube['data'].T[xyindex[1]][xyindex[0]][:].max(axis=0)
+            
+                mixdata = mixdata + q
+                
+            data.append(mixdata)
+            units.append(grb_cube['units'])
+            continue
+        
         try:
             grb = myfile.select(name = p)
         except ValueError:
@@ -97,7 +112,6 @@ def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [36.605,-9
         grb_cube = grb_to_grid(grb)
         if not max:
             data.append(grb_cube['data'].T[xyindex[1]][xyindex[0]][:])
-            
         else:
             data.append(grb_cube['data'].T[xyindex[1]][xyindex[0]][:].max(axis=0))
         units.append(grb_cube['units'])

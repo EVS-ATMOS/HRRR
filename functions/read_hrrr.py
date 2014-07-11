@@ -32,8 +32,6 @@ def read_hrrr(filename, parameters = None,directory = os.getcwd(),max = False):
     of parameters, list of heights in hPa, ndarray of locations and the list of units corresponding to each parameter
     in a list.  
     """
-    
-
     wkdir = os.getcwd()
     os.chdir(directory)
         
@@ -74,7 +72,7 @@ def read_hrrr(filename, parameters = None,directory = os.getcwd(),max = False):
                 data.append(mixdata)
             else:
                 data.append(mixdata.max(axis=0))
-            units.append('kg kg**-1')
+            units.append(grb_cube['units'])
             continue
 
         grb = myfile.select(name = p)
