@@ -72,9 +72,6 @@ def read_hrrr(filename, parameters = None,directory = os.getcwd(),max = False):
 
     if directory != None:
         os.chdir(wkdir)
-        
-    if data == None:
-        print 'Warning data == None'
     
     return [data,parameterlist,units]
     

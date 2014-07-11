@@ -28,7 +28,7 @@ def plot_hrrr_sgp(filename,parameter,directory = os.getcwd(),hinp = '', scaling 
     if hinp != '':
         [data,parameterlist,units] = read_hrrr(filename,[parameter])
     else:
-        [data,parameterlist,units] = read_hrrr(filename,[parameter],max=True)
+        [data,parameterlist,units] = read_hrrr(filename,[parameter],directory = directory,max=True)
         
     if hinp !='':
         datah = datah.tolist()
