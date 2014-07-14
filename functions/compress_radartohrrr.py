@@ -36,6 +36,8 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
     
     
     copol = np.array(copol)
+    copol = 10**(copol/10)
+    
     z = []
     y = []
     
@@ -46,6 +48,9 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
                 y.append(float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],psinds[j]:psinds[j+1]],axis=1),axis=0)))
         z.append(y)
         y = []
+        
+    z = np.array(z)
+    z = 10*np.log10(z)
     
     hrrr_heights = np.interp(HRRR_PS[::-1],sdata[0][::-1],sdata[1][::-1])
     hrrr_heights = hrrr_heights[::-1]
