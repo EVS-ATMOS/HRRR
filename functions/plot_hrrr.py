@@ -24,9 +24,9 @@ def plot_hrrr(filename,parameter,directory=None,hinp='',scaling=1,final_unit = '
     
 
     if hinp != '':
-        [data,parameterlist,datah,dataloc,units] = read_hrrr(filename,[parameter],directory = directory)
+        [data,parameterlist,units] = read_hrrr(filename,[parameter],directory = directory)
     else:
-        [data,parameterlist,datah,dataloc,units] = read_hrrr(filename,[parameter],directory = directory,max=True)
+        [data,parameterlist,units] = read_hrrr(filename,[parameter],directory = directory,max=True)
     
     if hinp !='':
         datah = datah.tolist()

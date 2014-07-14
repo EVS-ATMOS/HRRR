@@ -24,7 +24,7 @@ def grb_to_grid(grb_obj):
                  'levels' : levels[indexes]}
     return cube_dict
     
-def read_hrrr(filename, parameters = [''],directory = os.getcwd(),max = False):
+def read_hrrr(filename, parameters = None,directory = os.getcwd(),max = False):
     
     """
     With an option for returning just the maximum values of a given list of parameters at each location, this function 
@@ -32,35 +32,49 @@ def read_hrrr(filename, parameters = [''],directory = os.getcwd(),max = False):
     of parameters, list of heights in hPa, ndarray of locations and the list of units corresponding to each parameter
     in a list.  
     """
-    
-    if directory != None:
-        wkdir = os.getcwd()
-        os.chdir(directory)
+    wkdir = os.getcwd()
+    os.chdir(directory)
         
     try:
         myfile = pygrib.open(filename) 
     except IOError:
+        print 'file access error in pygrib.open'
+        print os.getcwd()
+        print filename
         return None
-        
-    parameterlist = ['Geopotential Height','Temperature','Relative humidity','Dew point temperature',
-        'Specific humidity','Vertical velocity','U component of wind','V component of wind',
-        'Absolute vorticity','Cloud mixing ratio','Cloud Ice','Rain mixing ratio','Snow mixing ratio',
-        'Graupel (snow pellets)']    
        
-    if parameters != ['']:
+    if parameters != None:
         for i in range(len(parameters)):
-            x = parameterlist.count(parameters[i])
+            if parameters[i] == 'Total mixing ratio':
+                continue
+            x = HRRR_VARS.count(parameters[i])
             if x == 0:                    
                 print 'requested parameter not in list'
                 print parameters[i]  
-                return 0
+                parameters.remove(parameters[i])
         parameterlist = parameters[:]
-            
+    else:
+        parameterlist = HRRR_VARS
                 
     data = []
     units = []
     
     for p in parameterlist:
+        
+        if p == 'Total mixing ratio':
+            params = ['Cloud mixing ratio','Rain mixing ratio','Cloud Ice','Snow mixing ratio', 'Graupel (snow pellets)']
+            mixdata = np.zeros((40,1059,1799))
+            for j in params:
+                grb = myfile.select(name = j)
+                grb_cube = grb_to_grid(grb)
+                mixdata = mixdata + grb_cube['data']
+            if not max:
+                data.append(mixdata)
+            else:
+                data.append(mixdata.max(axis=0))
+            units.append(grb_cube['units'])
+            continue
+
         grb = myfile.select(name = p)
         grb_cube = grb_to_grid(grb)
         if not max:
@@ -68,18 +82,13 @@ def read_hrrr(filename, parameters = [''],directory = os.getcwd(),max = False):
         else:
             data.append(grb_cube['data'].max(axis=0))
         units.append(grb_cube['units'])
-        
-
-    dataloc =  np.array(grb[0].latlons())
-    datah = grb_cube['levels']
-    
     
     myfile.close()
 
     if directory != None:
         os.chdir(wkdir)
     
-    return [data,parameterlist,datah,dataloc,units]
+    return [data,parameterlist,units]
     
 
     

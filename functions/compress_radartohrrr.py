@@ -28,9 +28,8 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
              
     [[sdata,sdim,sunits],sdate,f] = get_netcdf_variables(filename=sounding_filename,directory=sounding_directory,variablelist=['pres','alt'])
     
-                      
+
     pres = np.interp(ran,sdata[1],sdata[0])
-    
     
     if tsinds == None and psinds == None:
         [psinds,tsinds] = calc_radar2hrrr_inds(times,np.array(pres.tolist()[::-1]))
