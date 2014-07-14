@@ -13,8 +13,7 @@ from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy.ma as ma
 
 def plot_disdrometer(filename):
-    filename = disdrometer
-    d = netcdf.netcdf_file(disdrometer, 'r')
+    d = netcdf.netcdf_file(filename, 'r')
     
     #Read in data
     dref = d.variables['radar_reflectivity'].data
@@ -23,7 +22,7 @@ def plot_disdrometer(filename):
     dpcp = d.variables['precip_dis'].data
     dt = d.variables['time'].data
 
-    fig = plt.figure(figsize = [20,16])
+    fig = plt.figure(figsize = [16,16])
 
     # Figure 1
     ax1 = fig.add_subplot(3,1,1)
@@ -72,13 +71,17 @@ def plot_disdrometer(filename):
     ax3.xaxis.set_major_locator(majorLocator)
     majorFormatter = FormatStrFormatter('%d')
     ax3.xaxis.set_major_formatter(majorFormatter)
-
-    fig.tight_layout()
+    
     plt.grid()
     plt.show()
 
 
     # Precipitation Info
+    
+    print '--------------------------------------------------------------'
+    print '-----------------PRECIPITATION INFORMATION--------------------'
+    print '--------------------------------------------------------------\n'    
+    
     count = 0
     for i,j in enumerate(dpcp):
         if (j!=0.):
@@ -89,7 +92,7 @@ def plot_disdrometer(filename):
     rainmm = np.sum(dpcp)
     print 'Total Precipitation Duration:',float(rainhr),'hours,',float(rainmin),'minutes,',float(rainsec),'seconds'
     rainin = (rainmm/100)*0.393701
-    print 'Total Precipitation Amount:',rainmm,'mm,',rainin,'in\n'
+    print 'Total Precipitation Amount:',rainmm,'mm,',rainin,'in'
 
     # Rain Rate info
     # Total Recording Duration (Greater than 0)
@@ -100,7 +103,7 @@ def plot_disdrometer(filename):
     rainsec = count*60.
     rainmin = count
     rainhr = count/60.
-    print 'Rain Rate Above Zero Duration:',float(rainhr),'hours,',float(rainmin),'minutes,',float(rainsec),'seconds'
+    print 'Total Rain Rate Recording Duration:',float(rainhr),'hours,',float(rainmin),'minutes,',float(rainsec),'seconds'
 
     # Light Rain Duration (Less than 2.5mm/hr)
     count = 0
