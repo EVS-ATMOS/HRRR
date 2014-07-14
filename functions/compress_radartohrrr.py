@@ -46,7 +46,9 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
                 y.append(float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],psinds[j]:psinds[j+1]],axis=1),axis=0)))
         z.append(y)
         y = []
-        
+    
+    hrrr_heights = np.interp(HRRR_PS[::-1],sdata[0][::-1],sdata[1][::-1])
+    hrrr_heights = hrrr_heights[::-1]
     if produce_file:
         os.chdir(output_directory)
         import json
@@ -60,12 +62,12 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
         os.chdir(wkdir)
         x[-1].close()
         f.close()
-        return [z,tsinds,psinds]
+        return [z,hrrr_heights,tsinds,psinds]
         
     x[-1].close()
     f.close()
-    
-    return [z,tsinds,psinds]
+
+    return [z,hrrr_heights,tsinds,psinds]
         
 def calc_radar2hrrr_inds(times,pres):
     """
