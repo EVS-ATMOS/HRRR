@@ -15,8 +15,8 @@ def mass_compress_radartohrrr(radar_ident, sounding_ident,radar_namelength = Non
     radar_dirlist = os.listdir(radar_directory)
     if radar_namelength != None:
         
-        def suf_len(l,namelength):
-            return len(l) == namelength
+        def suf_len(namelength):
+            return radar_namelength == namelength
         
         radar_dirlist = filter(suf_len,radar_dirlist)
     radar_date = []
@@ -27,8 +27,8 @@ def mass_compress_radartohrrr(radar_ident, sounding_ident,radar_namelength = Non
     sounding_dirlist = os.listdir(sounding_directory)
     if sounding_namelength != None:
         
-        def suf_len(l,namelength):
-            return len(l) == namelength
+        def suf_len(namelength):
+            return sounding_namelength == namelength
         
         sounding_dirlist = filter(suf_len,sounding_dirlist)
         
