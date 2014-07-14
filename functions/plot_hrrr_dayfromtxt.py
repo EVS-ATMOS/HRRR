@@ -57,7 +57,7 @@ def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,
     ax.yaxis.set_major_formatter(ymajorFormatter)
         
     pc = plt.pcolormesh(times,ps,np.transpose(values))
-    ax.set_ylim([100,max(HRRR_PS)])
+    ax.set_ylim([min(ps),max(ps)])
     ax.set_xlim([0,24])
     
     if invert:
