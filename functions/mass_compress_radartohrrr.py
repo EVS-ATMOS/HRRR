@@ -43,7 +43,7 @@ def mass_compress_radartohrrr(radar_ident, sounding_ident,radar_namelength = Non
             if not filestring in os.listdir(output_directory):
                 j = sounding_date.index(radar_date[i])
                 compress_radartohrrr(radar_dirlist[i], sounding_dirlist[j], radar_directory=radar_directory, sounding_directory=sounding_directory, output_directory = output_directory,tsinds = None, psinds = None, produce_file = True)
-                
+                print produce_radar_txt_string(radar_date[i])
     
     return
        
