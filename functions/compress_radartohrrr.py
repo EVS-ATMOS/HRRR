@@ -54,8 +54,11 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
         return
         
     z = np.array(z)
-    z = 10*np.log10(z)
-    
+    try:
+        z = 10*np.log10(z)
+    except AttributeError:
+        print z
+        
     hrrr_heights = np.interp(HRRR_PS[::-1],sdata[0][::-1],sdata[1][::-1])
     hrrr_heights = hrrr_heights[::-1]
     if produce_file:
