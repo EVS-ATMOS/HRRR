@@ -45,7 +45,10 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
     for i in range(len(tsinds)-1):
         for j in range(len(psinds)-1):
             if psinds[j] != psinds[j+1] and tsinds[i] != tsinds[i+1]:
-                y.append(float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],psinds[j]:psinds[j+1]],axis=1),axis=0)))
+                temp = float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],psinds[j]:psinds[j+1]],axis=1),axis=0))
+                if temp == None:
+                    temp = np.nan
+                y.append(temp)
         z.append(y)
         y = []
         
@@ -54,11 +57,14 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
         return
         
     z = np.array(z)
-    try:
-        z = 10*np.log10(z)
-    except AttributeError:
-        print z
-        
+    z = 10*np.log10(z)
+    indexes = np.where(z==np.nan)
+    indexes = np.array(indexes)
+    z = z.tolist()
+    
+    for i in range(indexes.shape[1]):
+        z[indexes[0][i]][indexes[1][i]] = None
+    
     hrrr_heights = np.interp(HRRR_PS[::-1],sdata[0][::-1],sdata[1][::-1])
     hrrr_heights = hrrr_heights[::-1]
     if produce_file:
