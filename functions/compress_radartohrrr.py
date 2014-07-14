@@ -93,8 +93,8 @@ def calc_radar2hrrr_inds(times,pres):
     times in sec, pres in hPa
     """
     timesf = np.array(range(0,24))*60.*60.
-    presf = np.log(HRRR_PS)
-    pres = np.log(pres)
+    presf = HRRR_PS
+    pres = pres
         
     hpsave = []
     for i in range(len(presf.tolist())+1):
