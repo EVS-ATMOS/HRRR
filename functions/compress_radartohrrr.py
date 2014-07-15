@@ -55,9 +55,9 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
         z.append(y)
         y = []
         
-    if z == None:
-        print 'z is None out of averaging'
-        return
+    while [] in z:
+        ind = z.index(None)
+        z.insert(ind,np.nan)
         
     z = np.array(z)
     
