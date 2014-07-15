@@ -64,7 +64,7 @@ def plot_hrrr_sgp(filename,parameter,directory = os.getcwd(),hinp = '', scaling 
 #    my_p = m.drawparallels(np.arange(20,80,4),labels=[1,1,0,0])
 #    my_m = m.drawmeridians(np.arange(-140,-60,4),labels=[0,0,0,1])
         
-    plt.colorbar(label=final_unit)
+    plt.colorbar(label=parameter+' '+final_unit)
     plt.show()
     
     os.chdir(wkdir)
