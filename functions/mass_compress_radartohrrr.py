@@ -15,8 +15,8 @@ def mass_compress_radartohrrr(radar_ident, sounding_ident,radar_namelength = Non
     radar_dirlist = os.listdir(radar_directory)
     if radar_namelength != None:
         
-        def suf_len(l,namelength):
-            return len(l) == namelength
+        def suf_len(namelength):
+            return radar_namelength == namelength
         
         radar_dirlist = filter(suf_len,radar_dirlist)
     radar_date = []
@@ -27,8 +27,8 @@ def mass_compress_radartohrrr(radar_ident, sounding_ident,radar_namelength = Non
     sounding_dirlist = os.listdir(sounding_directory)
     if sounding_namelength != None:
         
-        def suf_len(l,namelength):
-            return len(l) == namelength
+        def suf_len(namelength):
+            return sounding_namelength == namelength
         
         sounding_dirlist = filter(suf_len,sounding_dirlist)
         
@@ -40,10 +40,13 @@ def mass_compress_radartohrrr(radar_ident, sounding_ident,radar_namelength = Non
     for i in range(len(radar_dirlist)):
         if i==0 or radar_date[i] != radar_date[i-1]:
             filestring = produce_radar_txt_string(radar_date[i])
+            print 'making:'
+            print filestring
             if not filestring in os.listdir(output_directory):
                 j = sounding_date.index(radar_date[i])
-                compress_radartohrrr(radar_dirlist[i], sounding_dirlist[j], radar_directory=radar_directory, sounding_directory=sounding_directory, output_directory = output_directory,tsinds = None, psinds = None, produce_file = True)
-                
+                compress_radartohrrr(radar_dirlist[i], sounding_dirlist[j], radar_directory=radar_directory, sounding_directory=sounding_directory, output_directory = output_directory,tsinds = None, hsinds = None, produce_file = True)
+                print 'finished:'
+                print produce_radar_txt_string(radar_date[i])
     
     return
        

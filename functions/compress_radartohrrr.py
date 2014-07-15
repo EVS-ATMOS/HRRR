@@ -10,7 +10,7 @@ import numpy as np
 import os
 from scipy.io import netcdf
 
-def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.getcwd(), sounding_directory=os.getcwd(), output_directory = os.getcwd(),tsinds = None, psinds = None, produce_file = False):
+def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.getcwd(), sounding_directory=os.getcwd(), output_directory = os.getcwd(),tsinds = None, hsinds = None, produce_file = False):
     """
     converts high resolution copol reflectivity into a matrix of reflectivities that correspond to the set of hrrr times
     and pressures for fair comparison, range in m, times in s, 
@@ -18,37 +18,79 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
     wkdir = os.getcwd()
 
     x = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
-                                ['reflectivity_copol','range','time'])
+                                ['reflectivity_copol','range','time','signal_to_noise_ratio_copol'])
 
     copol = x[0][0][0]    
 
     ran = x[0][0][1]
 
     times = x[0][0][2]
-             
+    
+    snr = x[0][0][3]
+    
     [[sdata,sdim,sunits],sdate,f] = get_netcdf_variables(filename=sounding_filename,directory=sounding_directory,variablelist=['pres','alt'])
     
 
-    pres = np.interp(ran,sdata[1],sdata[0])
-    
-    if tsinds == None and psinds == None:
-        [psinds,tsinds] = calc_radar2hrrr_inds(times,np.array(pres.tolist()[::-1]))
-    
-    
-    copol = np.array(copol)
-    z = []
-    y = []
-    
-
-    for i in range(len(tsinds)-1):
-        for j in range(len(psinds)-1):
-            if psinds[j] != psinds[j+1] and tsinds[i] != tsinds[i+1]:
-                y.append(float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],psinds[j]:psinds[j+1]],axis=1),axis=0)))
-        z.append(y)
-        y = []
+    #pres = np.interp(ran,sdata[1],sdata[0])
     
     hrrr_heights = np.interp(HRRR_PS[::-1],sdata[0][::-1],sdata[1][::-1])
     hrrr_heights = hrrr_heights[::-1]
+    
+    if tsinds == None and hsinds == None:
+        [hsinds,tsinds] = calc_radar2hrrr_inds(times,ran,hrrr_heights)
+    
+    
+    copol = np.array(copol)
+    snr = np.array(snr)
+    copol = 10**(copol/10)
+    snr = 10**(snr/10)
+    
+    z = []
+    zsnr = []
+    y = []
+    y2 = []
+    
+    q = max(hsinds.count(hsinds[-1]),hsinds.count(hsinds[0]))
+    q = len(hsinds)-q
+
+    for i in range(len(tsinds)-1):
+        for j in range(len(hsinds)-1):
+            if hsinds[j] != hsinds[j+1] and tsinds[i] != tsinds[i+1]:
+                temp = float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
+                temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
+                if temp == None or temp == []:
+                    temp = np.nan
+                if temp2 == None or temp2 == []:
+                    temp2 = np.nan
+                y.append(temp)
+                y2.append(temp2)
+        if y == [] or y == None:
+            y = np.nan*np.ones(q)
+        if y2 == [] or y2 == None:
+            y2 = np.nan*np.ones(q)
+        z.append(y)
+        zsnr.append(y2)
+        y = []
+        y2 = []
+        
+
+    z = np.array(z)
+    zsnr = np.array(zsnr)
+    z = 10*np.log10(z)
+    zsnr = 10*np.log10(zsnr)
+    
+    indexes = np.where(z==np.nan)
+    indexes2 = np.where(zsnr==np.nan)
+    indexes = np.array(indexes)
+    indexes2 = np.array(indexes2)
+    z = z.tolist()
+    zsnr = zsnr.tolist()
+    
+    for i in range(indexes.shape[1]):
+        z[indexes[0][i]][indexes[1][i]] = None
+    for i in range(indexes2.shape[1]):
+        zsnr[indexes[0][i]][indexes[1][i]] = None
+    
     if produce_file:
         os.chdir(output_directory)
         import json
@@ -56,46 +98,44 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
         date = datetime.datetime(int(radar_filename[15:19]),int(radar_filename[19:21]),int(radar_filename[21:23]))
         filestring = produce_radar_txt_string(date)
         g = open(filestring,'w')
-        u = [z,tsinds,psinds]
+        u = [z,zsnr,hrrr_heights.tolist(),tsinds,hsinds]
         json.dump(u,g)
         g.close()
         os.chdir(wkdir)
         x[-1].close()
         f.close()
-        return [z,hrrr_heights,tsinds,psinds]
+        return [z,zsnr,hrrr_heights,tsinds,hsinds]
         
     x[-1].close()
     f.close()
 
-    return [z,hrrr_heights,tsinds,psinds]
+    return [z,zsnr,hrrr_heights,tsinds,hsinds]
         
-def calc_radar2hrrr_inds(times,pres):
+def calc_radar2hrrr_inds(times,radarh,hrrrhf):
     """
     works out indicies closest to each pressure level and hour and thus the matrices that need to be compressed to one value
     times in sec, pres in hPa
     """
     timesf = np.array(range(0,24))*60.*60.
-    presf = np.log(HRRR_PS)
-    pres = np.log(pres)
-        
-    hpsave = []
-    for i in range(len(presf.tolist())+1):
-        if i == 0:
-            hpsave.append(presf[0])
-        elif i == len(presf.tolist()):
-            hpsave.append(presf[-1])
-        else:
-            hpsave.append((presf[i-1]+presf[i])/2)
-
-    hpsave = set(hpsave)
-    pres = set(pres)
-    prestest = pres.union(hpsave)
-    prestest = sorted(list(prestest))
-    hpsave = sorted(list(hpsave))
     
-    psinds = []
-    for i in range(len(hpsave)):
-        psinds.append(prestest.index(hpsave[i])-i)
+    hhsave = []
+    for i in range(len(hrrrhf.tolist())+1):
+        if i == 0:
+            hhsave.append(hrrrhf[0])
+        elif i == len(hrrrhf.tolist()):
+            hhsave.append(hrrrhf[-1])
+        else:
+            hhsave.append((hrrrhf[i-1]+hrrrhf[i])/2)
+
+    hhsave = set(hhsave)
+    radarset = set(radarh)
+    hhtest = radarset.union(hhsave)
+    hhtest = sorted(list(hhtest))
+    hhsave = sorted(list(hhsave))
+    
+    hsinds = []
+    for i in range(len(hhsave)):
+        hsinds.append(hhtest.index(hhsave[i])-i)
             
     timesave = []
     for i in range(len(timesf)+1):
@@ -117,4 +157,4 @@ def calc_radar2hrrr_inds(times,pres):
     for i in range(len(timesave)):
         tsinds.append(timestest.index(timesave[i])-i)
         
-    return [psinds,tsinds]
+    return [hsinds,tsinds]
