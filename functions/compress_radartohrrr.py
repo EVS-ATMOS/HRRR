@@ -60,19 +60,15 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
         q = q+1
     while [] in z:
         ind = z.index([])
-        z[ind] = np.nan *np.ones(len(z[q]))
+        z[ind] = np.nan * np.ones(len(z[q]))
         
         
     z = np.array(z)
-    print z
-    print ([] in z)
-    print z.shape
-    print z[12] == []
-    print z[10:16]
+
     z = 10*np.log10(z)
     
-   
-    indexes = np.where(z==np.nan)
+    
+    indexes = np.where(z==np.nan*np.ones(len(z[q])) or z==np.nan)
     indexes = np.array(indexes)
     z = z.tolist()
     
