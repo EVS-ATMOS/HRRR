@@ -51,7 +51,7 @@ def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,
     ax.xaxis.set_major_formatter(xmajorFormatter)
 
     # y axis
-    ymajorLocator = MultipleLocator(10**(int(np.log10(max(ps)))-1))
+    ymajorLocator = MultipleLocator(10**(int(np.log10(max(ps)))))
     ax.yaxis.set_major_locator(ymajorLocator)
     ymajorFormatter = FormatStrFormatter('%d')
     ax.yaxis.set_major_formatter(ymajorFormatter)
