@@ -44,6 +44,8 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
     z = []
     y = []
     
+    q = max(hsinds.count(hsinds[-1]),hsinds.count(hsinds[0]))
+    q = len(hsinds)-q
 
     for i in range(len(tsinds)-1):
         for j in range(len(hsinds)-1):
@@ -62,6 +64,8 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
     z = np.array(z)
     print z.shape
     print len(z[0])
+    print len(hsinds)-1
+    print q
     z = 10*np.log10(z)
     
     
