@@ -18,14 +18,16 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
     wkdir = os.getcwd()
 
     x = get_netcdf_variables(filename = radar_filename, directory = radar_directory,variablelist=
-                                ['reflectivity_copol','range','time'])
+                                ['reflectivity_copol','range','time','signal_to_noise_ratio_copol'])
 
     copol = x[0][0][0]    
 
     ran = x[0][0][1]
 
     times = x[0][0][2]
-             
+    
+    snr = x[0][0][3]
+    
     [[sdata,sdim,sunits],sdate,f] = get_netcdf_variables(filename=sounding_filename,directory=sounding_directory,variablelist=['pres','alt'])
     
 
@@ -39,10 +41,14 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
     
     
     copol = np.array(copol)
+    snr = np.array(snr)
     copol = 10**(copol/10)
+    snr = 10**(snr/10)
     
     z = []
+    zsnr = []
     y = []
+    y2 = []
     
     q = max(hsinds.count(hsinds[-1]),hsinds.count(hsinds[0]))
     q = len(hsinds)-q
@@ -51,27 +57,39 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
         for j in range(len(hsinds)-1):
             if hsinds[j] != hsinds[j+1] and tsinds[i] != tsinds[i+1]:
                 temp = float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
+                temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
                 if temp == None or temp == []:
                     temp = np.nan
+                if temp2 == None or temp2 == []:
+                    temp2 = np.nan
                 y.append(temp)
+                y2.append(temp2)
         if y == [] or y == None:
             y = np.nan*np.ones(q)
+        if y2 == [] or y2 == None:
+            y2 = np.nan*np.ones(q)
         z.append(y)
+        zsnr.append(y2)
         y = []
+        y2 = []
         
 
     z = np.array(z)
-    
+    zsnr = np.array(zsnr)
     z = 10*np.log10(z)
-    
+    zsnr = 10*np.log10(zsnr)
     
     indexes = np.where(z==np.nan)
+    indexes2 = np.where(zsnr==np.nan)
     indexes = np.array(indexes)
+    indexes2 = np.array(indexes2)
     z = z.tolist()
+    zsnr = zsnr.tolist()
     
     for i in range(indexes.shape[1]):
         z[indexes[0][i]][indexes[1][i]] = None
-    
+    for i in range(indexes2.shape[1]):
+        zsnr[indexes[0][i]][indexes[1][i]] = None
     
     if produce_file:
         os.chdir(output_directory)
@@ -80,18 +98,18 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
         date = datetime.datetime(int(radar_filename[15:19]),int(radar_filename[19:21]),int(radar_filename[21:23]))
         filestring = produce_radar_txt_string(date)
         g = open(filestring,'w')
-        u = [z,hrrr_heights.tolist(),tsinds,hsinds]
+        u = [z,zsnr,hrrr_heights.tolist(),tsinds,hsinds]
         json.dump(u,g)
         g.close()
         os.chdir(wkdir)
         x[-1].close()
         f.close()
-        return [z,hrrr_heights,tsinds,hsinds]
+        return [z,zsnr,hrrr_heights,tsinds,hsinds]
         
     x[-1].close()
     f.close()
 
-    return [z,hrrr_heights,tsinds,hsinds]
+    return [z,zsnr,hrrr_heights,tsinds,hsinds]
         
 def calc_radar2hrrr_inds(times,radarh,hrrrhf):
     """
