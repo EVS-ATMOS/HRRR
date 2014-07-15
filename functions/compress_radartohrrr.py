@@ -60,7 +60,12 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
         return
         
     z = np.array(z)
-    z = 10*np.log10(z)
+    
+    try:
+        z = 10*np.log10(z)
+    except AttributeError:
+        print z
+        
     indexes = np.where(z==np.nan)
     indexes = np.array(indexes)
     z = z.tolist()
