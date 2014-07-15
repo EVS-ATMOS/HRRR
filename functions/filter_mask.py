@@ -11,7 +11,7 @@ import numpy.ma as ma
 
 def filter_mask(ref,snr,margin):
 
-    m_ref = ma.masked_where((snr >= margin),ref) #-snr,margin=-14 for snr
+    m_ref = ma.masked_where((snr <= margin),ref) #-snr,margin=-14 for snr
 
     return m_ref
 
