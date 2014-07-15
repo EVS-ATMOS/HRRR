@@ -49,15 +49,11 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
         for j in range(len(hsinds)-1):
             if hsinds[j] != hsinds[j+1] and tsinds[i] != tsinds[i+1]:
                 temp = float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
-                if temp == None:
+                if temp == None or temp == []:
                     temp = np.nan
                 y.append(temp)
         z.append(y)
         y = []
-        
-    while [] in z:
-        ind = z.index(None)
-        z[ind] = np.nan
         
     z = np.array(z)
     
