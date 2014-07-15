@@ -28,9 +28,8 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
              
     [[sdata,sdim,sunits],sdate,f] = get_netcdf_variables(filename=sounding_filename,directory=sounding_directory,variablelist=['pres','alt'])
     
-                      
+
     pres = np.interp(ran,sdata[1],sdata[0])
-    
     
     if tsinds == None and psinds == None:
         [psinds,tsinds] = calc_radar2hrrr_inds(times,np.array(pres.tolist()[::-1]))
@@ -44,10 +43,12 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
     for i in range(len(tsinds)-1):
         for j in range(len(psinds)-1):
             if psinds[j] != psinds[j+1] and tsinds[i] != tsinds[i+1]:
-                y.append(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],psinds[j]:psinds[j+1]],axis=1),axis=0))
+                y.append(float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],psinds[j]:psinds[j+1]],axis=1),axis=0)))
         z.append(y)
         y = []
-        
+    
+    hrrr_heights = np.interp(HRRR_PS[::-1],sdata[0][::-1],sdata[1][::-1])
+    hrrr_heights = hrrr_heights[::-1]
     if produce_file:
         os.chdir(output_directory)
         import json
@@ -55,17 +56,18 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
         date = datetime.datetime(int(radar_filename[15:19]),int(radar_filename[19:21]),int(radar_filename[21:23]))
         filestring = produce_radar_txt_string(date)
         g = open(filestring,'w')
-        json.dump([z,tsinds,psinds],g)
+        u = [z,tsinds,psinds]
+        json.dump(u,g)
         g.close()
         os.chdir(wkdir)
         x[-1].close()
         f.close()
-        return
+        return [z,hrrr_heights,tsinds,psinds]
         
     x[-1].close()
     f.close()
-    
-    return [z,tsinds,psinds]
+
+    return [z,hrrr_heights,tsinds,psinds]
         
 def calc_radar2hrrr_inds(times,pres):
     """
