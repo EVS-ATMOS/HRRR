@@ -47,7 +47,7 @@ def plot_hrrr_sgp(filename,parameter,directory = os.getcwd(),hinp = '', scaling 
     cities = ['Lamont,OK']
     sgpx,sgpy = m(latlonsgp[0],latlonsgp[1])
     m.plot(sgpx,sgpy,'bo')
-    plt.text(sgpx+50000,sgpy+50000,'SGP site')
+    #plt.text(sgpx+50000,sgpy+50000,'SGP site')
         
     x, y = m(HRRR_DATALOC[1],HRRR_DATALOC[0])
     data = np.array(data)
@@ -58,11 +58,11 @@ def plot_hrrr_sgp(filename,parameter,directory = os.getcwd(),hinp = '', scaling 
     else:
         newdata = data[0]
         
-    my_mesh = m.pcolormesh(x, y, newdata, vmax = .05, norm = colors.LogNorm())
-    my_coast = m.drawcoastlines(linewidth=1.25)
-    my_states = m.drawstates()
-    my_p = m.drawparallels(np.arange(20,80,4),labels=[1,1,0,0])
-    my_m = m.drawmeridians(np.arange(-140,-60,4),labels=[0,0,0,1])
+    my_mesh = m.pcolor(x, y, newdata, vmax = .05, norm = colors.LogNorm())
+#    my_coast = m.drawcoastlines(linewidth=1.25)
+#    my_states = m.drawstates()
+#    my_p = m.drawparallels(np.arange(20,80,4),labels=[1,1,0,0])
+#    my_m = m.drawmeridians(np.arange(-140,-60,4),labels=[0,0,0,1])
         
     plt.colorbar(label=final_unit)
     plt.show()
