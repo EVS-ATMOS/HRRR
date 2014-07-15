@@ -58,8 +58,8 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
     z = np.array(z)
     print z
     print z.shape
-    print type(z[12])
-    print z[12:16]
+    print z[12] == []
+    print z[10:16]
     z = 10*np.log10(z)
     
    
