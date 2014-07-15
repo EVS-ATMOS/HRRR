@@ -58,7 +58,10 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
     z = np.array(z)
     print z
     print z.shape
+    print z[12]
+    print z[17]
     z = 10*np.log10(z)
+    
    
     indexes = np.where(z==np.nan)
     indexes = np.array(indexes)
