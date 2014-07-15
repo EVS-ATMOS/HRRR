@@ -54,10 +54,14 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
                 y.append(temp)
         z.append(y)
         y = []
-    
+        
+    q = 0    
+    while len(z[q]) == 0:
+        q = q+1
     while [] in z:
         ind = z.index([])
-        z[ind] = np.nan
+        z[ind] = np.nan *np.ones(len(z[q]))
+        
         
     z = np.array(z)
     print z
