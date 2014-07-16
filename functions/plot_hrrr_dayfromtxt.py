@@ -25,7 +25,10 @@ def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,
         
     from matplotlib.ticker import MultipleLocator, FormatStrFormatter
         
-    values = np.array(matrix)
+    if type(matrix) == list:
+        values = np.array(matrix)
+    else:
+        values = matrix
         
     if date != None and loc != None:
         dateset = [date-datetime.timedelta(days=1),date,date+datetime.timedelta(days=1)]
@@ -56,7 +59,7 @@ def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,
     ymajorFormatter = FormatStrFormatter('%d')
     ax.yaxis.set_major_formatter(ymajorFormatter)
         
-    pc = plt.pcolormesh(times,ps,np.transpose(values))
+    pc = plt.pcolor(times,ps,np.transpose(values))
     ax.set_ylim([min(ps),max(ps)])
     ax.set_xlim([0,24])
     
