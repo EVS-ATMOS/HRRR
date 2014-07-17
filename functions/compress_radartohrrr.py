@@ -50,7 +50,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         for i in range(len(tsinds)-1):
             temp = cdata[j,tsinds[i]:tsinds[i-1]]
             temp = sorted(temp.tolist())
-            if temp[4] == None or temp[4]*0 == temp[4]:
+            if len(temp)<5 or temp[4] == None or temp[4]*0 == temp[4]:
                 temp = 0
             else:
                 temp = temp[4]
