@@ -83,6 +83,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
                      print hsinds[j+1]-q
                      temp_array = np.zeros((tsinds[i+1]-tsinds[i],hsinds[j+1]-hsinds[j]))
                      print temp_array.shape
+                     print q-hsinds[j]
                      print temp_array[:,hsinds[j]:q].shape
                      temp_array[:,q:hsinds[j+1]] = temp_array1
                      temp_array[:,hsinds[j]:q] = temp_array2
@@ -90,7 +91,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
                      sh = temp_array.shape
                      temp = float(np.ma.sum(np.ma.sum(temp_array,axis=1)/float(sh[1]),axis=0)/float(sh[0]))
                      temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
-                elif ran[hsinds[j+1]] < ceil_presence[0,i]:
+                elif ran[hsinds[j+1]] <= ceil_presence[0,i]:
                     temp_array = filter_mask(copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],-15)
                     temp_array = ma.masked_where(temp_array==np.nan,temp_array)
                     sh = temp_array.shape
