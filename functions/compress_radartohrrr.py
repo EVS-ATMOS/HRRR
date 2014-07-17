@@ -45,16 +45,15 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         
     cdata = filter_mask(cdata,cdata,0)
     
-    ceil_presence = np.zeros((3,24))
-    for j in range(2):
+    ceil_presence = np.ones((3,24))*2000
+    for j in range(3):
         for i in range(len(tsinds)-1):
-            temp = cdata[j,tsinds[i]:tsinds[i-1]]
+            temp = cdata[j,tsinds[i]:tsinds[i+1]]
             temp = sorted(temp.tolist())
-            if len(temp)<5 or temp[4] == None or temp[4]*0 == temp[4]:
-                temp = 2000 #highest bugs in radar height
-            else:
-                temp = temp[4]
-            ceil_presence[j,i] = temp      
+            while 0 in temp:
+                temp.remove(0)
+            if len(temp)>=5 and temp[4] != None and temp[4]*0 != temp[4]:
+                ceil_presence[j,i] = temp[4]    
             
     copol = np.array(copol)
     snr = np.array(snr)
