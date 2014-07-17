@@ -34,28 +34,6 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     [[cdata,cdim,cunits],cdate,f_c] = get_netcdf_variables(filename=ceil_filename,directory=ceil_directory,variablelist=['first_cbh','second_cbh','third_cbh'])
     
     cdata = np.array(cdata)
-    cpres = np.zeros(cdata.shape)
-    cpres_levels = np.zeros(cdata.shape)
-    cdata = filter_mask(cdata,cdata,0)
-    
-#    for w in range(cpres.shape[0]):
-#        cpres[w] = np.interp(cdata[w],sdata[1],sdata[0])
-#    
-#    for e in range(cpres.shape[0]):
-#        for d in range(cpres.shape[1]):
-#            temp = cpres[e,d]
-#            q = bisect.bisect_left(HRRR_PS[::-1],temp)
-#            if q!=0:
-#                p = (HRRR_PS[::-1][q]+HRRR_PS[::-1][q-1])/2
-#            else:
-#                p = q/2.
-#            if temp>p:
-#                cpres_levels[e,d] = HRRR_PS[::-1][q]
-#            else:
-#                cpres_levels[e,d] = HRRR_PS[::-1][q-1]
-                
-    
-    
     
     hrrr_heights = np.interp(HRRR_PS[::-1],sdata[0][::-1],sdata[1][::-1])
     hrrr_heights = hrrr_heights[::-1]
@@ -63,12 +41,13 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     if tsinds == None and hsinds == None:
         [hsinds,tsinds] = calc_radar2hrrr_inds(times,ran,hrrr_heights)
     
+    cdata = filter_mask(cdata,cdata,0)
     
     ceil_presence = np.zeros((3,24))
     for j in range(2):
         for i in range(len(tsinds)-1):
             temp = cdata[j,tsinds[i]:tsinds[i-1]]
-            temp = sort(temp.tolist())
+            temp = sorted(temp.tolist())
             if temp == None or temp == np.nan or temp == []:
                 temp = 0
             else:
