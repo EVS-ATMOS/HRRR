@@ -10,6 +10,7 @@ import numpy as np
 import os
 from scipy.io import netcdf
 import bisect
+import numpy.ma as ma
 
 def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_directory=os.getcwd(), sounding_directory=os.getcwd(), ceil_directory=os.getcwd(), output_directory = os.getcwd(), tsinds = None, hsinds = None, produce_file = False):
     """
@@ -75,11 +76,19 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
             if hsinds[j] != hsinds[j+1] and tsinds[i] != tsinds[i+1]:
                 if ran[hsinds[j+1]] > ceil_presence[0,i] and ran[hsinds[j]] < ceil_presence[0,i]:
                      q = bisect.bisect_left(ran,ceil_presence[0,i])
-                     temp = float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],hsinds[j]:q],axis=1),axis=0))
-                     temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
+                     temp_array1 = copol[tsinds[i]:tsinds[i+1],q:hsinds[j+1]]
+                     temp_array2 = filter_mask(copol[tsinds[i]:tsinds[i+1],hsinds[j]:q],-15)
+                     temp_array = np.zeros((tsinds[i+1]-tsinds[i],hsinds[j+1]-hsinds[j]))
+                     temp_array[:,q:hsinds[j+1]] = temp_array1
+                     temp_array[:,hsinds[j]:q] = temp_array2
+                     temp_array = ma.masked_where(temp_array==np.nan,temp_array)
+                     temp = float(np.ma.mean(np.nanmean(temp_array,axis=1),axis=0))
+                     temp2 = float(np.ma.mean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
                 elif ran[hsinds[j+1]] < ceil_presence[0,i]:
-                    temp = np.nan
-                    temp2 = temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
+                    temp_array = filter_mask(copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],-15)
+                    temp_array = ma.masked_where(temp_array==np.nan,temp_array)
+                    temp = float(np.ma.mean(np.ma.mean(temp_array,axis=1),axis=0))
+                    temp2 = temp2 = float(np.ma.mean(np.ma.mean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
                 else:
                     temp = float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
                     temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
@@ -123,7 +132,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         date = datetime.datetime(int(radar_filename[15:19]),int(radar_filename[19:21]),int(radar_filename[21:23]))
         filestring = produce_radar_txt_string(date)
         g = open(filestring,'w')
-        u = [z,zsnr,cpres_levels,hrrr_heights.tolist(),tsinds,hsinds]
+        u = [z,zsnr,ceil_presence,hrrr_heights.tolist(),tsinds,hsinds]
         json.dump(u,g)
         g.close()
         os.chdir(wkdir)
@@ -136,7 +145,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     f.close()
     f_c.close()
     os.chdir(wkdir)
-    return [z,zsnr,cpres_levels,hrrr_heights,tsinds,hsinds]
+    return [z,zsnr,ceil_presence,hrrr_heights,tsinds,hsinds]
         
 def calc_radar2hrrr_inds(times,radarh,hrrrhf):
     """
