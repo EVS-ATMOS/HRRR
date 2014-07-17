@@ -133,7 +133,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         date = datetime.datetime(int(radar_filename[15:19]),int(radar_filename[19:21]),int(radar_filename[21:23]))
         filestring = produce_radar_txt_string(date)
         g = open(filestring,'w')
-        u = [z,zsnr,ceil_presence,hrrr_heights.tolist(),tsinds,hsinds]
+        u = [z,zsnr,ceil_presence.tolist(),hrrr_heights.tolist(),tsinds,hsinds]
         json.dump(u,g)
         g.close()
         os.chdir(wkdir)
@@ -146,7 +146,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     f.close()
     f_c.close()
     os.chdir(wkdir)
-    return [z,zsnr,ceil_presence,hrrr_heights,tsinds,hsinds]
+    return [z,zsnr,ceil_presence.tolist(),hrrr_heights,tsinds,hsinds]
         
 def calc_radar2hrrr_inds(times,radarh,hrrrhf):
     """
