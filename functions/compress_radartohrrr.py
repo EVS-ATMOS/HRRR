@@ -50,12 +50,11 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         for i in range(len(tsinds)-1):
             temp = cdata[j,tsinds[i]:tsinds[i-1]]
             temp = sorted(temp.tolist())
-            if temp == None or temp*0 == temp:
+            if temp[4] == None or temp[4]*0 == temp[4]:
                 temp = 0
             else:
                 temp = temp[4]
-            ceil_presence[j,i] = temp
-            
+            ceil_presence[j,i] = temp      
             
     copol = np.array(copol)
     snr = np.array(snr)
@@ -124,6 +123,8 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         z[indexes[0][i]][indexes[1][i]] = None
     for i in range(indexes2.shape[1]):
         zsnr[indexes[0][i]][indexes[1][i]] = None
+    
+    
     
     if produce_file:
         os.chdir(output_directory)
