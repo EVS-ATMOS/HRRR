@@ -9,8 +9,9 @@ Created on Wed Jul  2 16:00:55 2014
 import numpy as np
 import os
 from scipy.io import netcdf
+import bisect
 
-def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.getcwd(), sounding_directory=os.getcwd(), output_directory = os.getcwd(),tsinds = None, hsinds = None, produce_file = False):
+def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_directory=os.getcwd(), sounding_directory=os.getcwd(), ceil_directory,output_directory = os.getcwd(),tsinds = None, hsinds = None, produce_file = False):
     """
     converts high resolution copol reflectivity into a matrix of reflectivities that correspond to the set of hrrr times
     and pressures for fair comparison, range in m, times in s, 
@@ -30,8 +31,29 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
     
     [[sdata,sdim,sunits],sdate,f] = get_netcdf_variables(filename=sounding_filename,directory=sounding_directory,variablelist=['pres','alt'])
     
-
-    #pres = np.interp(ran,sdata[1],sdata[0])
+    [[cdata,cdim,cunits],cdate,f] = get_netcdf_variables(filename=sounding_filename,directory=sounding_directory,variablelist=['first_cbh','second_cbh','third_cbh'])
+    
+    cpres = np.array(cdata)
+    cpres_levels = np.array(cdata)
+    cdata = filter_mask(cdata,cdata,0)
+    
+    for w in range(cpres.shape[0]):
+        cpres[w] = np.interp(cdata[w],sdata[1],sdata[0])
+    
+    for e in range(cpres.shape[0]):
+        for d in range(cpres.shape[1]):
+            temp = cpres[e,d]
+            q = bisect.bisect_left(HRRR_PS[::-1],temp)
+            if q!=0:
+                p = (HRRR_PS[::-1][q]+HRRR_PS[::-1][q-1])/2
+            else:
+                p = q/2.
+            if temp>p:
+                cpres_levels[e,d] = HRRR_PS[::-1][q]
+            else:
+                cpres_levels[e,d] = HRRR_PS[::-1][q-1]
+    
+    
     
     hrrr_heights = np.interp(HRRR_PS[::-1],sdata[0][::-1],sdata[1][::-1])
     hrrr_heights = hrrr_heights[::-1]
@@ -109,7 +131,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, radar_directory=os.g
     x[-1].close()
     f.close()
 
-    return [z,zsnr,hrrr_heights,tsinds,hsinds]
+    return [z,zsnr,cpres_levels,hrrr_heights,tsinds,hsinds]
         
 def calc_radar2hrrr_inds(times,radarh,hrrrhf):
     """
