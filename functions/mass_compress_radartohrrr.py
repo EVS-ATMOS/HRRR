@@ -48,7 +48,7 @@ def mass_compress_radartohrrr(radar_ident, sounding_ident, ceil_ident, radar_nam
     for name in ceil_dirlist:
         ceil_date.append(datetime.datetime(int(name[ceil_ident:ceil_ident+4]),int(name[ceil_ident+4:ceil_ident+6]),int(name[ceil_ident+6:ceil_ident+8])))
         
-    y = []
+
     for i in range(len(radar_dirlist)):
         if i==0 or radar_date[i] != radar_date[i-1]:
             filestring = produce_radar_txt_string(radar_date[i])
@@ -59,7 +59,7 @@ def mass_compress_radartohrrr(radar_ident, sounding_ident, ceil_ident, radar_nam
                 k = ceil_date.index(radar_date[i])
                 compress_radartohrrr(radar_dirlist[i], sounding_dirlist[j], ceil_dirlist[k],radar_directory=radar_directory, sounding_directory=sounding_directory, ceil_directory=ceil_directory, output_directory = output_directory,tsinds = None, hsinds = None, produce_file = True)
                 print 'finished:'
-                print produce_radar_txt_string(radar_date[i])
+                print filestring
     
     return
        

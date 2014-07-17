@@ -81,13 +81,15 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
                      temp_array[:,q:hsinds[j+1]] = temp_array1
                      temp_array[:,hsinds[j]:q] = temp_array2
                      temp_array = ma.masked_where(temp_array==np.nan,temp_array)
-                     temp = float(np.ma.mean(np.nanmean(temp_array,axis=1),axis=0))
-                     temp2 = float(np.ma.mean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
+                     sh = temp_array.shape
+                     temp = float(np.ma.sum(np.ma.sum(temp_array,axis=1)/float(sh[1]),axis=0)/float(sh[0]))
+                     temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
                 elif ran[hsinds[j+1]] < ceil_presence[0,i]:
                     temp_array = filter_mask(copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],-15)
                     temp_array = ma.masked_where(temp_array==np.nan,temp_array)
-                    temp = float(np.ma.mean(np.ma.mean(temp_array,axis=1),axis=0))
-                    temp2 = temp2 = float(np.ma.mean(np.ma.mean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
+                    sh = temp_array.shape
+                    temp = float(np.ma.sum(np.ma.sum(temp_array,axis=1)/float(sh[1]),axis=0)/float(sh[0]))
+                    temp2 = temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
                 else:
                     temp = float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
                     temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
