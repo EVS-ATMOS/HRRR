@@ -33,6 +33,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     
     [[cdata,cdim,cunits],cdate,f] = get_netcdf_variables(filename=ceil_filename,directory=ceil_directory,variablelist=['first_cbh','second_cbh','third_cbh'])
     
+    cdata = np.array(cdata)
     cpres = np.zeros(cdata.shape)
     cpres_levels = np.zeros(cdata.shape)
     cdata = filter_mask(cdata,cdata,0)
