@@ -45,7 +45,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     
 
     
-
+    print tsinds
     ceil_presence = []
 
     for i in range(len(tsinds)-1):
