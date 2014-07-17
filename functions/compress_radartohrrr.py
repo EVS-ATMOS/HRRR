@@ -64,11 +64,12 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
             ceil_real.append(2000)
         else:
             tempnew = filter_mask(temp,temp,0)
-            ceil_real.append(tempnew.mean(axis=0))
+            ceil_real.append(float(tempnew.mean(axis=0))
+            
             if tempnew.mean(axis=0)<2000:
                 ceil_presence.append(ceil_real[-1])
             else:
-                ceil_presence.append(2000)
+                ceil_presence.append(2000.)
     
     ceil_presence = np.array(ceil_presence)
 
@@ -77,8 +78,6 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     snr = np.array(snr)
     copol = 10**(copol/10)
     snr = 10**(snr/10)
-    
-    print ceil_presence
     
     z = []
     zsnr = []
