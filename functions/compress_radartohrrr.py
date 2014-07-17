@@ -67,8 +67,8 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     y = []
     y2 = []
     
-#    q = max(hsinds.count(hsinds[-1]),hsinds.count(hsinds[0]))
-#    q = len(hsinds)-q
+    q = max(hsinds.count(hsinds[-1]),hsinds.count(hsinds[0]))
+    q = len(hsinds)-q
 
     for i in range(len(tsinds)-1):
         for j in range(len(hsinds)-1):
