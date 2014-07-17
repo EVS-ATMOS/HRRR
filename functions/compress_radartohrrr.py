@@ -93,7 +93,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
                      temp_array = np.concatenate((temp_array1,temp_array2),axis=1)
                      temp = float(np.nanmean(np.nanmean(temp_array,axis=1),axis=0))
                      temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
-                elif ran[hsinds[j+1]] <= ceil_presence[0,i]:
+                elif ran[hsinds[j+1]] <= ceil_presence[i]:
                     temp_array = filter_mask(copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],-15)
                     temp_array = ma.filled(temp_array,0)
                     temp = float(np.nanmean(np.nanmean(temp_array,axis=1),axis=0))
