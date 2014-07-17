@@ -45,7 +45,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     
 
     
-    print tsinds
+
     ceil_presence = []
 
     for i in range(len(tsinds)-1):
@@ -55,8 +55,9 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         if max(temp.tolist())<0:
             ceil_presence.append(2000)
         else:
-            temp = filter_mask(temp,temp,0)
-            ceil_presence.append(temp.mean(axis=0))
+            tempnew = filter_mask(temp,temp,0)
+            print tempnew
+            ceil_presence.append(tempnew.mean(axis=0))
     
     ceil_presence = np.array(ceil_presence)
             
