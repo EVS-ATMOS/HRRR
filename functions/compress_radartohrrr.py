@@ -32,7 +32,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     
     [[sdata,sdim,sunits],sdate,f] = get_netcdf_variables(filename=sounding_filename,directory=sounding_directory,variablelist=['pres','alt'])
     
-    [[cdata,cdim,cunits],cdate,f_c] = get_netcdf_variables(filename=ceil_filename,directory=ceil_directory,variablelist=['first_cbh','second_cbh','third_cbh'])
+    [[cdata,cdim,cunits],cdate,f_c] = get_netcdf_variables(filename=ceil_filename,directory=ceil_directory,variablelist=['first_cbh'])
     
     cdata = np.array(cdata)
     
@@ -44,15 +44,16 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         hsinds[-1] = hsinds[-1]-1
     
     cdata = filter_mask(cdata,cdata,0)
+    
 
-    ceil_presence = np.ones((3,24))*2000
-    for j in range(3):
-        for i in range(len(tsinds)-1):
-            temp = cdata[j,tsinds[i]:tsinds[i+1]]
-            if temp.sum(axis=0) == None or temp.sum(axis=0)*0 != temp.sum(axis=0):
-                ceil_presence[j,i] = temp.mean(axis=0)
+    ceil_presence = np.ones((24))*2000
+
+    for i in range(len(tsinds)-1):
+        temp = cdata[tsinds[i]:tsinds[i+1]]
+            if temp.sum(axis=0) != None and temp.sum(axis=0)*0 != temp.sum(axis=0) and temp.mean(axis=0)<2000:
+                ceil_presence[i] = temp.mean(axis=0)
             else:
-                ceil_presence[j,i] = 2000
+                ceil_presence[i] = 2000
             
     copol = np.array(copol)
     snr = np.array(snr)
@@ -72,8 +73,8 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     for i in range(len(tsinds)-1):
         for j in range(len(hsinds)-1):
             if hsinds[j] != hsinds[j+1] and tsinds[i] != tsinds[i+1]:
-                if ran[hsinds[j+1]] > ceil_presence[0,i] and ran[hsinds[j]] < ceil_presence[0,i]:
-                     q = bisect.bisect_left(ran,ceil_presence[0,i])
+                if ran[hsinds[j+1]] > ceil_presence[i] and ran[hsinds[j]] < ceil_presence[i]:
+                     q = bisect.bisect_left(ran,ceil_presence[i])
                      temp_array1 = copol[tsinds[i]:tsinds[i+1],q:hsinds[j+1]]
                      temp_array2 = filter_mask(copol[tsinds[i]:tsinds[i+1],hsinds[j]:q],copol[tsinds[i]:tsinds[i+1],hsinds[j]:q],-15)
                      temp_array2 = ma.filled(temp_array2,0)
@@ -138,7 +139,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         x[-1].close()
         f.close()
         f_c.close()
-        return [z,zsnr,hrrr_heights,tsinds,hsinds]
+        return [z,zsnr,ceil_presence.tolist(),hrrr_heights,tsinds,hsinds]
         
     x[-1].close()
     f.close()
