@@ -78,7 +78,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
                      temp_array1 = copol[tsinds[i]:tsinds[i+1],q:hsinds[j+1]]
                      temp_array2 = filter_mask(copol[tsinds[i]:tsinds[i+1],hsinds[j]:q],copol[tsinds[i]:tsinds[i+1],hsinds[j]:q],-15)
                      temp_array = np.zeros((tsinds[i+1]-tsinds[i],hsinds[j+1]-hsinds[j]))
-                     temp_array = np.concatenate(temp_array1,temp_array2,axis=1)
+                     temp_array = np.concatenate((temp_array1,temp_array2),axis=1)
                      temp_array = ma.masked_where(temp_array==np.nan,temp_array)
                      sh = temp_array.shape
                      temp = float(np.ma.sum(np.ma.sum(temp_array,axis=1)/float(sh[1]),axis=0)/float(sh[0]))
