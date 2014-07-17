@@ -76,10 +76,13 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
                 if ran[hsinds[j+1]] > ceil_presence[0,i] and ran[hsinds[j]] < ceil_presence[0,i]:
                      q = bisect.bisect_left(ran,ceil_presence[0,i])
                      temp_array1 = copol[tsinds[i]:tsinds[i+1],q:hsinds[j+1]]
+                     print temp_array1.shape
                      temp_array2 = filter_mask(copol[tsinds[i]:tsinds[i+1],hsinds[j]:q],copol[tsinds[i]:tsinds[i+1],hsinds[j]:q],-15)
+                     print temp_array2.shape
                      print (tsinds[i+1]-tsinds[i],hsinds[j+1]-hsinds[j])
                      print hsinds[j+1]-q
                      temp_array = np.zeros((tsinds[i+1]-tsinds[i],hsinds[j+1]-hsinds[j]))
+                     print temp_array.shape
                      temp_array[:,q:hsinds[j+1]] = temp_array1
                      temp_array[:,hsinds[j]:q] = temp_array2
                      temp_array = ma.masked_where(temp_array==np.nan,temp_array)
