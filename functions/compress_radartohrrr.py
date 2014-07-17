@@ -47,6 +47,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     
     cdata = cdata[0,:].T
     ceil_presence = []
+    ceil_real = []
     c_time = np.array(cdata.shape).max(axis=0)
     c_time_h = c_time/24
     ctsinds = set(range(0,c_time,c_time_h/2))
@@ -60,11 +61,17 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         temp = cdata[ctsinds[i]:ctsinds[i+1]]
         if max(temp.tolist())<0:
             ceil_presence.append(2000)
+            ceil_real.append(2000)
         else:
             tempnew = filter_mask(temp,temp,0)
-            ceil_presence.append(tempnew.mean(axis=0))
+            ceil_real.append(tempnew.mean(axis=0))
+            if tempnew.mean(axis=0)<2000:
+                ceil_presence.append(ceil_real[-1])
+            else:
+                ceil_presence.append(2000)
     
     ceil_presence = np.array(ceil_presence)
+
             
     copol = np.array(copol)
     snr = np.array(snr)
@@ -143,20 +150,20 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         date = datetime.datetime(int(radar_filename[15:19]),int(radar_filename[19:21]),int(radar_filename[21:23]))
         filestring = produce_radar_txt_string(date)
         g = open(filestring,'w')
-        u = [z,zsnr,ceil_presence.tolist(),hrrr_heights.tolist(),tsinds,hsinds]
+        u = [z,zsnr,ceil_real,hrrr_heights.tolist(),tsinds,hsinds]
         json.dump(u,g)
         g.close()
         os.chdir(wkdir)
         x[-1].close()
         f.close()
         f_c.close()
-        return [z,zsnr,ceil_presence.tolist(),hrrr_heights,tsinds,hsinds]
+        return [z,zsnr,ceil_real,hrrr_heights,tsinds,hsinds]
         
     x[-1].close()
     f.close()
     f_c.close()
     os.chdir(wkdir)
-    return [z,zsnr,ceil_presence.tolist(),hrrr_heights,tsinds,hsinds]
+    return [z,zsnr,ceil_real,hrrr_heights,tsinds,hsinds]
         
 def calc_radar2hrrr_inds(times,radarh,hrrrhf):
     """
