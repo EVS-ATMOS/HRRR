@@ -51,7 +51,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
             temp = cdata[j,tsinds[i]:tsinds[i-1]]
             temp = sorted(temp.tolist())
             if len(temp)<5 or temp[4] == None or temp[4]*0 == temp[4]:
-                temp = 20000 #highest radar height
+                temp = 2000 #highest radar height
             else:
                 temp = temp[4]
             ceil_presence[j,i] = temp      
