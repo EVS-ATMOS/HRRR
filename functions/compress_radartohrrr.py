@@ -49,7 +49,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     for j in range(3):
         for i in range(len(tsinds)-1):
             temp = cdata[j,tsinds[i]:tsinds[i+1]]
-            if (temp is ma.masked).any():
+            if temp.sum(axis=0) == None or temp.sum(axis=0)*0 != temp.sum(axis=0):
                 ceil_presence[j,i] = temp.mean(axis=0)
             else:
                 ceil_presence[j,i] = 2000
