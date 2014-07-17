@@ -11,7 +11,7 @@ import os
 from scipy.io import netcdf
 import bisect
 
-def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_directory=os.getcwd(), sounding_directory=os.getcwd(), ceil_directory,output_directory = os.getcwd(),tsinds = None, hsinds = None, produce_file = False):
+def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_directory=os.getcwd(), sounding_directory=os.getcwd(), ceil_directory=os.getcwd(),output_directory = os.getcwd(),tsinds = None, hsinds = None, produce_file = False):
     """
     converts high resolution copol reflectivity into a matrix of reflectivities that correspond to the set of hrrr times
     and pressures for fair comparison, range in m, times in s, 
