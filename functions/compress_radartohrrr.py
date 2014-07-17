@@ -45,8 +45,8 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         
     cdata = filter_mask(cdata,cdata,0)
     print cdata
-    print max(cdata)
-    print min(cdata)
+    print cdata.max(axis=0).max(axis=0)
+    print cdata.min(axis=0).min(axis=0)
     ceil_presence = np.ones((3,24))*2000
     for j in range(3):
         for i in range(len(tsinds)-1):
