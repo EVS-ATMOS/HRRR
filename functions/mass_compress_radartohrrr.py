@@ -7,7 +7,7 @@ Created on Mon Jul  7 15:50:02 2014
 import os
 import datetime
 
-def mass_compress_radartohrrr(radar_ident, sounding_ident,ceil_ident,radar_namelength = None, sounding_namelength = None,ceil_namelength = None,radar_directory = os.getcwd(),sounding_directory = os.getcwd(),ceil_directory = os.getcwd(),output_directory = os.getcwd()):
+def mass_compress_radartohrrr(radar_ident, sounding_ident, ceil_ident, radar_namelength = None, sounding_namelength = None,ceil_namelength = None,radar_directory = os.getcwd(),sounding_directory = os.getcwd(),ceil_directory = os.getcwd(),output_directory = os.getcwd()):
     """
     converts radar and soundings into HRRR model format (minus the lowest two pressure levels) ident is the characters before the date in the filename
     """
