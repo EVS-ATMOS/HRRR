@@ -53,6 +53,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         print tsinds[i+1]
         temp = cdata[tsinds[i]:tsinds[i+1]]
         print temp
+        print cdata[tsinds[i+1]]
         print temp.shape
         if max(temp.tolist())<0:
             ceil_presence.append(2000)
