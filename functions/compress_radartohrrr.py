@@ -31,7 +31,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     
     [[sdata,sdim,sunits],sdate,f] = get_netcdf_variables(filename=sounding_filename,directory=sounding_directory,variablelist=['pres','alt'])
     
-    [[cdata,cdim,cunits],cdate,f] = get_netcdf_variables(filename=ceil_filename,directory=ceil_directory,variablelist=['first_cbh','second_cbh','third_cbh'])
+    [[cdata,cdim,cunits],cdate,f_c] = get_netcdf_variables(filename=ceil_filename,directory=ceil_directory,variablelist=['first_cbh','second_cbh','third_cbh'])
     
     cdata = np.array(cdata)
     cpres = np.zeros(cdata.shape)
@@ -158,7 +158,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         
     x[-1].close()
     f.close()
-    os.chdir(wkdir)
+    f_c.close()
     
     return [z,zsnr,cpres_levels,hrrr_heights,tsinds,hsinds]
         
