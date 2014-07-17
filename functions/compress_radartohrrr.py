@@ -42,20 +42,17 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     if tsinds == None and hsinds == None:
         [hsinds,tsinds] = calc_radar2hrrr_inds(times,ran,hrrr_heights)
         hsinds[-1] = hsinds[-1]-1
-        
+    
     cdata = filter_mask(cdata,cdata,0)
-    print cdata
-    print cdata.max(axis=0).max(axis=0)
-    print cdata.min(axis=0).min(axis=0)
+
     ceil_presence = np.ones((3,24))*2000
     for j in range(3):
         for i in range(len(tsinds)-1):
             temp = cdata[j,tsinds[i]:tsinds[i+1]]
-            temp = sorted(temp.tolist())
-            while 0 in temp:
-                temp.remove(0)
-            if len(temp)>=5 and temp[4] != None and temp[4]*0 != temp[4]:
-                ceil_presence[j,i] = temp[4]    
+            if (temp is ma.masked).any():
+                ceil_presence[j,i] = temp.mean(axis=0)
+            else:
+                ceil_presence[j,i] = 2000
             
     copol = np.array(copol)
     snr = np.array(snr)
