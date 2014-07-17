@@ -72,6 +72,10 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     for i in range(len(tsinds)-1):
         for j in range(len(hsinds)-1):
             if hsinds[j] != hsinds[j+1] and tsinds[i] != tsinds[i+1]:
+                print ran
+                print hsinds
+                print ceil_presence
+                print ran[hsinds]
                 if ran[hsinds[j+1]] > ceil_presence[0,i] and ran[hsinds[j]] < ceil_presence[0,i]:
                      q = bisect.bisect_left(ran,ceil_presence[0,i])
                      temp = float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],hsinds[j]:q],axis=1),axis=0))
