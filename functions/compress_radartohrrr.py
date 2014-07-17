@@ -49,6 +49,8 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     ceil_presence = []
 
     for i in range(len(tsinds)-1):
+        print tsinds[i]
+        print tsinds[i+1]
         temp = cdata[tsinds[i]:tsinds[i+1]]
         print temp
         print temp.shape
