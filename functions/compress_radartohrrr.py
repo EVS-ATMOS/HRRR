@@ -33,25 +33,26 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     
     [[cdata,cdim,cunits],cdate,f] = get_netcdf_variables(filename=sounding_filename,directory=sounding_directory,variablelist=['first_cbh','second_cbh','third_cbh'])
     
-    cpres = np.array(cdata)
-    cpres_levels = np.array(cdata)
+    cpres = np.zeros(cdata.shape)
+    cpres_levels = np.zeros(cdata.shape)
     cdata = filter_mask(cdata,cdata,0)
     
-    for w in range(cpres.shape[0]):
-        cpres[w] = np.interp(cdata[w],sdata[1],sdata[0])
-    
-    for e in range(cpres.shape[0]):
-        for d in range(cpres.shape[1]):
-            temp = cpres[e,d]
-            q = bisect.bisect_left(HRRR_PS[::-1],temp)
-            if q!=0:
-                p = (HRRR_PS[::-1][q]+HRRR_PS[::-1][q-1])/2
-            else:
-                p = q/2.
-            if temp>p:
-                cpres_levels[e,d] = HRRR_PS[::-1][q]
-            else:
-                cpres_levels[e,d] = HRRR_PS[::-1][q-1]
+#    for w in range(cpres.shape[0]):
+#        cpres[w] = np.interp(cdata[w],sdata[1],sdata[0])
+#    
+#    for e in range(cpres.shape[0]):
+#        for d in range(cpres.shape[1]):
+#            temp = cpres[e,d]
+#            q = bisect.bisect_left(HRRR_PS[::-1],temp)
+#            if q!=0:
+#                p = (HRRR_PS[::-1][q]+HRRR_PS[::-1][q-1])/2
+#            else:
+#                p = q/2.
+#            if temp>p:
+#                cpres_levels[e,d] = HRRR_PS[::-1][q]
+#            else:
+#                cpres_levels[e,d] = HRRR_PS[::-1][q-1]
+                
     
     
     
@@ -62,11 +63,24 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         [hsinds,tsinds] = calc_radar2hrrr_inds(times,ran,hrrr_heights)
     
     
+    ceil_presence = np.zeros((3,24))
+    for j in range(2):
+        for i in range(len(tsinds)-1):
+            temp = cdata[j,tsinds[i]:tsinds[i-1]]
+            temp = sort(temp.tolist())
+            if temp == None or temp == np.nan or temp == []:
+                temp = 0
+            else:
+                temp = temp[4]
+            ceil_presence[j,i] = temp
+            
+            
     copol = np.array(copol)
     snr = np.array(snr)
     copol = 10**(copol/10)
     snr = 10**(snr/10)
     
+
     z = []
     zsnr = []
     y = []
@@ -78,8 +92,16 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     for i in range(len(tsinds)-1):
         for j in range(len(hsinds)-1):
             if hsinds[j] != hsinds[j+1] and tsinds[i] != tsinds[i+1]:
-                temp = float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
-                temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
+                if ran[hsinds[j+1]] > ceil_presence[0,i] and ran[hsinds[j]] < ceil_presence[0,i]:
+                     q = bisect.bisect_left(ran,ceil_presence[0,i])
+                     temp = float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],hsinds[j]:q],axis=1),axis=0))
+                     temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
+                elif ran[hsinds[j+1]] < ceil_presence[0,i]:
+                    temp = np.nan
+                    temp2 = temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
+                else:
+                    temp = float(np.nanmean(np.nanmean(copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
+                    temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
                 if temp == None or temp == []:
                     temp = np.nan
                 if temp2 == None or temp2 == []:
@@ -112,6 +134,11 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         z[indexes[0][i]][indexes[1][i]] = None
     for i in range(indexes2.shape[1]):
         zsnr[indexes[0][i]][indexes[1][i]] = None
+    
+   
+            
+    
+    
     
     if produce_file:
         os.chdir(output_directory)
