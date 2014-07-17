@@ -8,7 +8,7 @@ It does not calculate thermodynamic variables, but is used for quick glimpse at 
 edited by mattjohnson & grantmckercher
 """
 
-def plot_skewt(p,h,T,Td,u,v):
+def plot_skewt_wind(p,h,T,Td,u,v):
     """
     this code adapted from jhelmus
     """
