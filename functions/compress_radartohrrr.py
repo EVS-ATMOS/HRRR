@@ -47,12 +47,12 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     
     cdata = cdata[0,:]
     ceil_presence = []
-    print cdata.shape
+    c_time = np.array(cdata.shape).max(axis=0)
+    c_time_h = c_time/24
+    ctsinds = range(0,c_time,c_time_h)
     
     for i in range(len(tsinds)-1):
-        print cdata[tsinds[i]:tsinds[i+1]].shape
-        temp = cdata[tsinds[i]:tsinds[i+1]]
-        print temp.shape
+        temp = cdata[ctsinds[i]:ctsinds[i+1]]
         if max(temp.tolist())<0:
             ceil_presence.append(2000)
         else:
