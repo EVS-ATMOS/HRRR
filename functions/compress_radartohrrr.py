@@ -45,7 +45,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     
 
     
-    cdata = cdata[0,:]
+    cdata = cdata[0,:].T
     ceil_presence = []
     c_time = np.array(cdata.shape).max(axis=0)
     c_time_h = c_time/24
