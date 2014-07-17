@@ -51,7 +51,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
             temp = cdata[j,tsinds[i]:tsinds[i-1]]
             temp = sorted(temp.tolist())
             if len(temp)<5 or temp[4] == None or temp[4]*0 == temp[4]:
-                temp = 2000 #highest radar height
+                temp = 2000 #highest bugs in radar height
             else:
                 temp = temp[4]
             ceil_presence[j,i] = temp      
@@ -85,7 +85,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
                      temp = float(np.ma.sum(np.ma.sum(temp_array,axis=1)/float(sh[1]),axis=0)/float(sh[0]))
                      temp2 = float(np.nanmean(np.nanmean(snr[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],axis=1),axis=0))
                 elif ran[hsinds[j+1]] < ceil_presence[0,i]:
-                    temp_array = filter_mask(copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],-15)
+                    temp_array = filter_mask(copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],copol[tsinds[i]:tsinds[i+1],hsinds[j]:hsinds[j+1]],-15)
                     temp_array = ma.masked_where(temp_array==np.nan,temp_array)
                     sh = temp_array.shape
                     temp = float(np.ma.sum(np.ma.sum(temp_array,axis=1)/float(sh[1]),axis=0)/float(sh[0]))
