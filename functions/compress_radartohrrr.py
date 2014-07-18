@@ -129,10 +129,10 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     zsnr = np.array(zsnr)
     z = 10*np.log10(z)
     zsnr = 10*np.log10(zsnr)
-    z = ma.masked_where(z==-np.inf,z)
+
     
-    indexes = np.where(z==np.nan)
-    indexes2 = np.where(zsnr==np.nan)
+    indexes = np.where(z*0==z)
+    indexes2 = np.where(zsnr*0 ==zsnr)
     indexes = np.array(indexes)
     indexes2 = np.array(indexes2)
     z = z.tolist()
