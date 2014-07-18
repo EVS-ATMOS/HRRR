@@ -50,9 +50,10 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
     ceil_real = []
     c_time = np.array(cdata.shape).max(axis=0)
     c_time_h = c_time/24
-    ctsinds = set(range(0,c_time,c_time_h/2))
-    ctsinds-=set(range(0,c_time_h,c_time_h))
+    ctsinds = set(range(c_time_h/2,c_time-c_time_h/2,c_time_h))
     ctsinds = list(ctsinds)
+    if len(ctsinds) == 24:
+        ctsinds.remove(ctsinds[-1])
     ctsinds.append(0)
     ctsinds.append(c_time)
     ctsinds = sorted(ctsinds)
