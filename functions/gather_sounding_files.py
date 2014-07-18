@@ -8,14 +8,16 @@ author: gmckercher
 '''
 import datetime
 
-def gather_sounding_files(date,sound_dir):
+def gather_sounding_files(date,sound_dir,sound_num):
 
 
-    [dates_sound,filename_sound] = org_sounding_files(sound_dir)
+    [(dates_sound),(filename_sound)] = org_sounding_files(sound_dir)
+    dates = [i.date() for i in dates_sound]
+    index_sound = dates.index(date.date())
     
-    dates = [i.date for i in dates_sound]
-    for i in dates:
-        print str(i)
-    index_sound = dates.index(date)
-
-    return filename_sound[index_sound]
+    index_sound_num = index_sound+(sound_num-1)
+    
+    
+    print 'Reading',filename_sound[index_sound_num]    
+    
+    return filename_sound[index_sound_num]

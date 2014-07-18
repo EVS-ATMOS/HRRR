@@ -23,3 +23,4 @@ def plot_kazr_date(date,radar_dir):
     # Make Plot
     plot_kazr(radar)
     
+    os.chdir(path)
