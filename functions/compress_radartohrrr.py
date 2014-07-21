@@ -128,6 +128,11 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
 
     z = np.array(z)
     zsnr = np.array(zsnr)
+    if z == None or zsnr == None:
+        print 'z or zsnr is None'
+        print produce_radar_txt_string(date)
+        print 'was not produced'
+        return
     z = 10*np.log10(z)
     zsnr = 10*np.log10(zsnr)
 
