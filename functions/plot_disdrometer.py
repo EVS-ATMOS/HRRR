@@ -38,7 +38,7 @@ def plot_disdrometer(date,dis_dir):
     dt = d.variables['time'][:]
     day = [dt[i]/3600 for i in range(len(dt))]
     plt.plot(day,drr,lw=2,c='r')
-    plt.title( 'Disdrometer Rain Rate 5/23/2014' )
+    plt.title( 'Disdrometer Rain Rate' )
     plt.xlabel('UTC Time (Hours)')
     plt.ylabel('Rain Rate (mm/hr)')
     ax1 = plt.gca()
@@ -54,7 +54,7 @@ def plot_disdrometer(date,dis_dir):
     ax2 = fig.add_subplot(3,1,2)
     dref = ma.masked_where((dref == -9999),dref)
     plt.scatter(day,dref,c=dref,s=50,lw=0,cmap='jet')
-    plt.title( 'Disdrometer Radar Reflectivity 5/23/2014' )
+    plt.title( 'Disdrometer Radar Reflectivity' )
     plt.xlabel('UTC Time (Hours)')
     plt.ylabel(r'Reflectivity factor, $Z_e$ (dBZ)')
     ax2 = plt.gca()
@@ -70,7 +70,7 @@ def plot_disdrometer(date,dis_dir):
     ax3 = fig.add_subplot(3,1,3)
     dlw = (dlw/(1000))
     plt.plot(day,dlw)
-    plt.title( 'Disdrometer Liquid Water Content 5/23/2014' )
+    plt.title( 'Disdrometer Liquid Water Content' )
     plt.xlabel('UTC Time (Hours)')
     plt.ylabel('Liquid Water Content (g/kg)')
     ax3 = plt.gca()
