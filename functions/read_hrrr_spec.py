@@ -93,6 +93,9 @@ def read_hrrr_spec(filename, parameters = [''],directory = None,loc = [36.605,-9
                 grb = myfile.select(name = p)
                 grb_cube = grb_to_grid(grb)
                 
+                if grb_cube == None:
+                    return None
+                    
                 if not max:
                     q = grb_cube['data'].T[xyindex[1]][xyindex[0]][:] 
                 else:

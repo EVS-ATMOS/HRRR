@@ -17,7 +17,10 @@ def grb_to_grid(grb_obj):
     n_levels = len(grb_obj)
     levels = np.array([grb_element['level'] for grb_element in grb_obj])
     indexes = np.argsort(levels)[::-1] # highest pressure first
-    cube = np.zeros([n_levels, grb_obj[0].values.shape[0], grb_obj[1].values.shape[1]])
+    try:
+        cube = np.zeros([n_levels, grb_obj[0].values.shape[0], grb_obj[1].values.shape[1]])
+    except IndexError:
+        return None
     for i in range(n_levels):
         cube[i,:,:] = grb_obj[indexes[i]].values
     cube_dict = {'data' : cube, 'units' : grb_obj[0]['units'],
@@ -67,6 +70,10 @@ def read_hrrr(filename, parameters = None,directory = os.getcwd(),max = False):
             for j in params:
                 grb = myfile.select(name = j)
                 grb_cube = grb_to_grid(grb)
+                
+                if grb_cube == None:
+                    return None
+                    
                 mixdata = mixdata + grb_cube['data']
             if not max:
                 data.append(mixdata)
@@ -77,6 +84,10 @@ def read_hrrr(filename, parameters = None,directory = os.getcwd(),max = False):
 
         grb = myfile.select(name = p)
         grb_cube = grb_to_grid(grb)
+        
+        if grb_cube == None:
+            return None
+            
         if not max:
             data.append(grb_cube['data'])
         else:
