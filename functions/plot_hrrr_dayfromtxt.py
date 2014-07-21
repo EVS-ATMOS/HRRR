@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 
 
-def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,ps = HRRR_PS, hour=0, scaling = 1,figsize = [15,8]):
+def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,ps = HRRR_PS, hour=0, scaling = 1,figsize = [15,8],log=True, invert=True,ylabel='Pressure Level in hPa'):
     
     if numdates != None:
         datetimes = matplotlib.dates.num2date(numdates)
@@ -25,7 +25,10 @@ def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,
         
     from matplotlib.ticker import MultipleLocator, FormatStrFormatter
         
-    values = np.array(matrix)
+    if type(matrix) == list:
+        values = np.array(matrix)
+    else:
+        values = matrix
         
     if date != None and loc != None:
         dateset = [date-datetime.timedelta(days=1),date,date+datetime.timedelta(days=1)]
@@ -40,8 +43,9 @@ def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,
                 
     plt.figure(figsize = figsize)
     ax = plt.gca()
-        
-    ax.set_yscale('log')
+    
+    if log:
+        ax.set_yscale('log')
         
     # x axis
     xmajorLocator = MultipleLocator(1)
@@ -50,18 +54,21 @@ def plot_hrrr_dayfromtxt(matrix,final_unit,numdates=None,date = None,loc = None,
     ax.xaxis.set_major_formatter(xmajorFormatter)
 
     # y axis
-    ymajorLocator = MultipleLocator(100)
+    ymajorLocator = MultipleLocator(10**(int(np.log10(max(ps)))-1))
     ax.yaxis.set_major_locator(ymajorLocator)
     ymajorFormatter = FormatStrFormatter('%d')
     ax.yaxis.set_major_formatter(ymajorFormatter)
         
-    pc = plt.pcolormesh(times,ps,np.transpose(values))
-    ax.set_ylim([100,max(HRRR_PS)])
+    pc = plt.pcolor(times,ps,np.transpose(values))
+    ax.set_ylim([min(ps),max(ps)])
     ax.set_xlim([0,24])
-    ax.invert_yaxis()
+    
+    if invert:
+        ax.invert_yaxis()
+        
     plt.colorbar(mappable = pc,label=final_unit)    
     plt.xlabel('Time in hrs')
-    plt.ylabel('Pressure Level in hPa')
+    plt.ylabel(ylabel)
     
         
     yval = (max(ps)+min(ps))/2

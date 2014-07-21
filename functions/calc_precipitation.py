@@ -11,8 +11,8 @@ import json
 def calc_precipitation(date,hrrr_dir=os.getcwd(),radar_dir=os.getcwd(),rain_margin = 0):
     """
     estimates the precipitation in the HRRR model, assumes all rain-mixing-ratio water reaches the ground
-    and that the rain-mixing-ratio is constant over the hour, returns the values in mm over the 3 km* 3 km grid space
-    also estimates rain duration by determing which hours have a max rain-mixing-ratio greater than the margin
+    and that the rain-mixing-ratio is constant over the hour, returns amount of rain in mm over the 3 km* 3 km grid space
+    at each hour also estimates rain duration by determing which hours have a max rain-mixing-ratio greater than the margin
     """
     radar_string = produce_radar_txt_string(date)
 
@@ -38,7 +38,7 @@ def calc_precipitation(date,hrrr_dir=os.getcwd(),radar_dir=os.getcwd(),rain_marg
     
     rainmassperarea = np.multiply(np.multiply(volboxes,rho_air),hrrr[0][:,11,:])
     
-    raininmeters = rainmassperarea/1000
+    raininmeters = (rainmassperarea/1000).sum(axis=1)
     
     raininmm = raininmeters*10**3
     

@@ -12,7 +12,16 @@ def produce_hrrr_grib2strings(dates,hourlists):
     generates hrrr grib2 file names for the corresponding dates and model hours
     returned in a one dimensional array in order of date then order of model hour
     """
+    
     filelist = []
+    
+    if type(dates) != list:
+        dates = [dates]
+    if type(hourlists) != list:
+        hourlists = [hourlists]
+    if type(hourlists[0]) != list:
+        hourlists = [hourlists]
+        
     for i in range(len(dates)):
         for j in hourlists[i]:
             date = dates[i]-datetime.timedelta(hours=j)
@@ -20,10 +29,10 @@ def produce_hrrr_grib2strings(dates,hourlists):
             if date.month<10:
                 string = string+'0'
             string = string+str(date.month)
-            if dates[i].day<10:
+            if date.day<10:
                 string = string+'0'
             string = string+str(date.day)
-            if dates[i].hour<10:
+            if date.hour<10:
                 string = string+'0'
             string = string+str(date.hour)
             string = string+'00f0'
