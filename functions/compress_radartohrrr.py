@@ -135,6 +135,7 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         return
         
     print z
+    print z.shape
     z = 10*np.log10(z)
     zsnr = 10*np.log10(zsnr)
 
