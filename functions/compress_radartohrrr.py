@@ -117,9 +117,9 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
                 y.append(temp)
                 y2.append(temp2)
         if y == [] or y == None:
-            y = np.nan*np.ones(q)
+            y = (np.nan*np.ones(q)).tolist()
         if y2 == [] or y2 == None:
-            y2 = np.nan*np.ones(q)
+            y2 = (np.nan*np.ones(q)).tolist()
         z.append(y)
         zsnr.append(y2)
         y = []
