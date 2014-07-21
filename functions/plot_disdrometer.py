@@ -2,6 +2,8 @@
 """
 Created on Mon Jul 14 15:27:53 2014
 
+Function takes in the date for analysis and directory of the disdrometer data and plots the data in three useful plots and prints precipitation information.
+
 @author: gmckercher
 """
 
@@ -12,8 +14,15 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy.ma as ma
 
-def plot_disdrometer(filename):
-    d = netcdf.netcdf_file(filename, 'r')
+def plot_disdrometer(date,dis_dir):
+    
+    path = os.getcwd()
+
+    [disdrometer] = gather_disdrometer_files(date,dis_dir)
+    
+    # Gather files
+    os.chdir(dis_dir)
+    d = netcdf.netcdf_file(disdrometer, 'r')
     
     #Read in data
     dref = d.variables['radar_reflectivity'].data
@@ -138,3 +147,5 @@ def plot_disdrometer(filename):
     # Average Rain Rate
     avgin = ((np.average(drr)/100)*0.393701)
     print 'Average Rain Rate:',np.average(drr),'mm/hr,',avgin,'in/hr'
+    
+    os.chdir(path)
