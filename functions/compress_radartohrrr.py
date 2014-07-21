@@ -133,6 +133,8 @@ def compress_radartohrrr(radar_filename, sounding_filename, ceil_filename,radar_
         print produce_radar_txt_string(date)
         print 'was not produced'
         return
+        
+    print z
     z = 10*np.log10(z)
     zsnr = 10*np.log10(zsnr)
 
