@@ -34,7 +34,9 @@ def plot_kazr(filename):
     ax.xaxis.set_major_locator(xmajorLocator)
     xmajorFormatter = FormatStrFormatter('%d')
     ax.xaxis.set_major_formatter(xmajorFormatter)
+
     ax.set_xlabel('Hours (UTC) - Grid by hour')
+
     # y axis
     ymajorLocator = MultipleLocator(2500)
     ax.yaxis.set_major_locator(ymajorLocator)

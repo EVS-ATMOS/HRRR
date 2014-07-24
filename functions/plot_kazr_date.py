@@ -22,5 +22,4 @@ def plot_kazr_date(date,radar_dir):
     f = netcdf.netcdf_file(radar, 'r')
     # Make Plot
     plot_kazr(radar)
-    
-    os.chdir(path)
+
