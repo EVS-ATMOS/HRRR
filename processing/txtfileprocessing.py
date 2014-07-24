@@ -19,7 +19,7 @@ import datetime
 
 n = 4
 
-startdate = datetime.datetime(2014,6,19)
+startdate = datetime.datetime(2014,7,2)
 
 enddate = datetime.datetime(2014,7,20)
 
@@ -43,7 +43,7 @@ for i in range(n):
     newstrings = strings[:]
     newstrings.append('startdate = '+'datetime.datetime('+str(sdatepair.year)+','+str(sdatepair.month)+','+str(sdatepair.day)+')')
     newstrings.append('enddate = '+'datetime.datetime('+str(edatepair.year)+','+str(edatepair.month)+','+str(edatepair.day)+')')
-    newstrings.append('pyhrrr.massconvert_hrrr_grib2txt(startdate=startdate,enddate=enddate,hours = [0,1,2,3,4],directory=directory,enddirectory=enddirectory)')
+    newstrings.append('pyhrrr.massconvert_hrrr_grib2txt(startdate=startdate,enddate=enddate,hours = [1],directory=directory,enddirectory=enddirectory)')
     
     f = open('process'+str(i)+'.py','w')
     
