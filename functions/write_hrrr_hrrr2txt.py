@@ -34,7 +34,7 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
         datestrings = []
     
         for i in range(filenum):
-            datestrings.append(datetime.datetime(date.year,date.month,date.day,date.hour+i)-datetime.timedelta(hours = hour))
+            datestrings.append(datetime.datetime(date.year,date.month,date.day,date.hour+i))
             
         hourslists = [[hour] for i in range(filenum)]
         
