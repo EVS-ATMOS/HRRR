@@ -89,7 +89,7 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
                     data.pop(i)
                     dates.pop(i)
                 except IndexError:
-                    
+                    pass
     try:
         json.dump([data,dates,parameterlist,loc,indexes,units],f)
     except TypeError:
