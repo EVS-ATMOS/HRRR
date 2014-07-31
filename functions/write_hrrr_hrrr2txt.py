@@ -81,22 +81,24 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
     os.chdir(enddirectory)
     
     f = open(newfilename, 'w')
-    
-    for i in range(len(data)):
+    i = 0
+    while i<len(data):
         if data[i] != None:
             for j in data[i]:
                 if type(j) == type(np.array([])):
                     try:
                         data.pop(i)
                         dates.pop(i)
+                        i = i+2
                     except IndexError:
-                        pass
+                        i = i+1
         else:
             try:
                 data.pop(i)
                 dates.pop(i)
+                i = i+2
             except IndexError:
-                pass
+                i = i+1
             
     try:
         json.dump([data,dates,parameterlist,loc,indexes,units],f)
