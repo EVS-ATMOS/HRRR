@@ -19,9 +19,9 @@ import datetime
 
 n = 4
 
-startdate = datetime.datetime(2014,7,2)
+startdate = datetime.datetime(2014,3,15)
 
-enddate = datetime.datetime(2014,7,23)
+enddate = datetime.datetime(2014,7,30)
 
 t = enddate-startdate
 dt = int(t.days/n)
