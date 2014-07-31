@@ -82,7 +82,7 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
     
     f = open(newfilename, 'w')
     
-    for i in len(data):
+    for i in range(len(data)):
         for j in data[i]:
             if type(j) == type(np.array([])):
                 data.pop(i)
