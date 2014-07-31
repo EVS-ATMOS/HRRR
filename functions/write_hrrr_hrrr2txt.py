@@ -81,10 +81,16 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
     os.chdir(enddirectory)
     
     f = open(newfilename, 'w')
+    
+    for i in len(data):
+        for j in data[i]:
+            if type(j) == type(np.array([])):
+                data.pop(i)
+                dates.pop(i)
     try:
         json.dump([data,dates,parameterlist,loc,indexes,units],f)
     except TypeError:
-        print "array found in json export error"
+        print "array found in json export error -> pressure levels missing from some hour"
         return ''
         
     
