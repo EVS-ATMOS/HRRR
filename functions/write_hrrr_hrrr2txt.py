@@ -80,7 +80,8 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
     
     os.chdir(enddirectory)
     
-    f = open(newfilename, 'w')
+    
+    #remove HRRR hours that have missing pressure levels
     i = 0
     while i<len(data):
         if data[i] != None:
@@ -98,7 +99,8 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
             except IndexError:
                 pass
         i = i+1
-            
+    
+    f = open(newfilename, 'w')     
     try:
         json.dump([data,dates,parameterlist,loc,indexes,units],f)
     except TypeError:

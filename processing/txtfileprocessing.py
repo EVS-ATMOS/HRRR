@@ -4,7 +4,11 @@ Created on Mon Jun  9 10:06:27 2014
 
 @author: mattjohnson
 """
-
+"""
+writes processing n processing scripts that will generate hrrr text files from all available data in the directory
+each script runs the mass HRRR conversion function for (approximately) 1/n of the dates
+used for multiprocessing
+"""
 
 strings = []
 strings.append('import datetime')
