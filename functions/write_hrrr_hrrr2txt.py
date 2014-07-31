@@ -85,8 +85,11 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
     for i in range(len(data)):
         for j in data[i]:
             if type(j) == type(np.array([])):
-                data.pop(i)
-                dates.pop(i)
+                try:
+                    data.pop(i)
+                    dates.pop(i)
+                except IndexError:
+                    
     try:
         json.dump([data,dates,parameterlist,loc,indexes,units],f)
     except TypeError:
