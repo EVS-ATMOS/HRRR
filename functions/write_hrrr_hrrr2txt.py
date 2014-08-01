@@ -34,7 +34,7 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
         datestrings = []
     
         for i in range(filenum):
-            datestrings.append(datetime.datetime(date.year,date.month,date.day,date.hour+i)-datetime.timedelta(hours = hour))
+            datestrings.append(datetime.datetime(date.year,date.month,date.day,date.hour+i))
             
         hourslists = [[hour] for i in range(filenum)]
         
@@ -80,13 +80,27 @@ def write_hrrr_grib2txt(date=datetime.datetime.now(),filenum = 24,hour = 0,direc
     
     os.chdir(enddirectory)
     
-    f = open(newfilename, 'w')
     
-    for i in range(len(data)):
-        for j in data[i]:
-            if type(j) == type(np.array([])):
+    #remove HRRR hours that have missing pressure levels
+    i = 0
+    while i<len(data):
+        if data[i] != None:
+            for j in data[i]:
+                if type(j) == type(np.array([])):
+                    try:
+                        data.pop(i)
+                        dates.pop(i)
+                    except IndexError:
+                        pass
+        else:
+            try:
                 data.pop(i)
                 dates.pop(i)
+            except IndexError:
+                pass
+        i = i+1
+    
+    f = open(newfilename, 'w')     
     try:
         json.dump([data,dates,parameterlist,loc,indexes,units],f)
     except TypeError:
