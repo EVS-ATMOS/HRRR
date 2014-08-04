@@ -2,21 +2,29 @@
 
 
 '''
-This function takes in a radar file from their directory and plots a simple, masked plot for visual reference.
+This function takes in radar, sounding, and ceilometer files from their directory, organizes them by date and creates a figure with three plots. The first plot is copolar reflectivity with masked backround noise, the second plot is vertical velocity, and the third plot is spectral width. 
 
 Authors: Grant McKercher & Matt Johnson
 '''
 
 from scipy.io import netcdf
+import os
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy.ma as ma
 
+def plot_kazr(date,radar_dir):
 
-def plot_kazr(filename):
+    path = os.getcwd()
 
-    f = netcdf.netcdf_file(filename, 'r')
-
+    [radar] = gather_radar_files(date,radar_dir)
+    
+    # Gather files
+    os.chdir(radar_dir)
+    f = netcdf.netcdf_file(radar, 'r')
+    
+    # Make Plot
+    
     # Read in data
     rng = f.variables['range'].data
     refc = f.variables['reflectivity_copol'].data
@@ -24,7 +32,7 @@ def plot_kazr(filename):
     # Masking Radar Attenuation
     refc = ma.masked_where((stnrc <= -14),refc)
     
-    fig = plt.figure(figsize = [20,12])
+    fig = plt.figure(figsize = [15,8])
     
     ax = fig.add_subplot(111)
     im = plt.imshow(refc.T,aspect=20,extent=[0,1000000,min(rng),max(rng)],origin='bottom')
@@ -49,4 +57,4 @@ def plot_kazr(filename):
     cb.set_label(r'Reflectivity factor, $Z_e$ (dBZ)')
 
     f.close()
-    
+
