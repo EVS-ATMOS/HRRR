@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy.ma as ma
 
-def plot_kazr(date,radar_dir):
+def plot_kazr_date(date,radar_dir):
 
     path = os.getcwd()
 
