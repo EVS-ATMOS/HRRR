@@ -13,7 +13,7 @@ def inventory_hrrr(in_dir):
     missing files, and the list of dates.
     """
     
-    x = pyhrrr.gather_hrrr_files(in_dir)
+    x = gather_hrrr_files(in_dir)
     z = x[0]
     y = [[(None == z[j][i]) for i in range(len(z[j]))] for j in range(len(z))]
     

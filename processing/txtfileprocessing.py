@@ -4,7 +4,11 @@ Created on Mon Jun  9 10:06:27 2014
 
 @author: mattjohnson
 """
-
+"""
+writes processing n processing scripts that will generate hrrr text files from all available data in the directory
+each script runs the mass HRRR conversion function for (approximately) 1/n of the dates
+used for multiprocessing
+"""
 
 strings = []
 strings.append('import datetime')
@@ -19,9 +23,9 @@ import datetime
 
 n = 4
 
-startdate = datetime.datetime(2014,7,2)
+startdate = datetime.datetime(2014,3,15)
 
-enddate = datetime.datetime(2014,7,23)
+enddate = datetime.datetime(2014,7,30)
 
 t = enddate-startdate
 dt = int(t.days/n)
