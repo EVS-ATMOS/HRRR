@@ -2,15 +2,11 @@
 
 '''
 This function takes files from a radar, sounding, ceilometer, or disdrometer directory and gives each of them a date (datetime object). 
-<<<<<<< HEAD
-It returns the files with the appropriate date in a list. 
 
-Authors: Grant McKercher & Matt Johnson
-=======
 It returns the files with the appropriate date in an appropriate list form. 
 
 Authors: Grant McKercher
->>>>>>> b4b42df7b84e5690c37f380fbb34549057eb4e4a
+
 '''
 
 import os
