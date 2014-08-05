@@ -2,11 +2,23 @@
 """
 Created on Mon Jul 14 15:27:53 2014
 
-Function takes in the date for analysis and directory of the disdrometer data and plots the data in three useful plots and prints precipitation information.
+Function takes in the date for analysis and directory of the disdrometer data.
+Plots the data in three different plots and prints precipitation information.
+(1) Rain Rate Plot
+(2) Disdrometer Reflectivity
+(3) Liquid Water Content
 
-@author: gmckercher
+Precip information includes:
+    Total Precipitation Duration
+    Total Precipitation Amount
+    Total Rain Rate Recording Duration
+    Light Rain Rate Duration
+    Medium Rain Rate Duration
+    Heavy Rain Rate Duration
+    Average Rain Rate
+
+@author: Grant McKercher
 """
-
 
 import numpy as np
 from scipy.io import netcdf
@@ -14,14 +26,14 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy.ma as ma
 
-def plot_disdrometer(date,dis_dir):
+def plot_disdrometer(date,directory):
     
     path = os.getcwd()
 
-    [disdrometer] = gather_disdrometer_files(date,dis_dir)
+    [disdrometer] = gather_netcdf_files(date,directory)
     
     # Gather files
-    os.chdir(dis_dir)
+    os.chdir(directory)
     d = netcdf.netcdf_file(disdrometer, 'r')
     
     #Read in data
@@ -38,7 +50,7 @@ def plot_disdrometer(date,dis_dir):
     dt = d.variables['time'][:]
     day = [dt[i]/3600 for i in range(len(dt))]
     plt.plot(day,drr,lw=2,c='r')
-    plt.title( 'Disdrometer Rain Rate 5/23/2014' )
+    plt.title( 'Disdrometer Rain Rate' )
     plt.xlabel('UTC Time (Hours)')
     plt.ylabel('Rain Rate (mm/hr)')
     ax1 = plt.gca()
@@ -54,7 +66,7 @@ def plot_disdrometer(date,dis_dir):
     ax2 = fig.add_subplot(3,1,2)
     dref = ma.masked_where((dref == -9999),dref)
     plt.scatter(day,dref,c=dref,s=50,lw=0,cmap='jet')
-    plt.title( 'Disdrometer Radar Reflectivity 5/23/2014' )
+    plt.title( 'Disdrometer Radar Reflectivity' )
     plt.xlabel('UTC Time (Hours)')
     plt.ylabel(r'Reflectivity factor, $Z_e$ (dBZ)')
     ax2 = plt.gca()
@@ -70,7 +82,7 @@ def plot_disdrometer(date,dis_dir):
     ax3 = fig.add_subplot(3,1,3)
     dlw = (dlw/(1000))
     plt.plot(day,dlw)
-    plt.title( 'Disdrometer Liquid Water Content 5/23/2014' )
+    plt.title( 'Disdrometer Liquid Water Content' )
     plt.xlabel('UTC Time (Hours)')
     plt.ylabel('Liquid Water Content (g/kg)')
     ax3 = plt.gca()

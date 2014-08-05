@@ -2,7 +2,13 @@
 """
 Created on Mon Jul 14 15:58:52 2014
 
-@author: gmckercher
+This function takes local netCDF filenames of an ARM KAZR and ARM CEILOMETER for a certain day. 
+It produces a figure including 3 subplots. 
+(1) SNR filtered co-polar reflectivity with ceilometer cloud base
+(2) Co-polar mean dopplar velocity
+(3) Co-polar spectral width
+
+@author: Grant McKercher
 """
 
 
@@ -12,14 +18,13 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy.ma as ma
 
-def plot_kazr_2(kazr_filename,ceilometer_filename):
+def plot_kazr_mulitplot(kazr_filename,ceilometer_filename):
     f = netcdf.netcdf_file(kazr_filename, 'r')
     c = netcdf.netcdf_file(ceilometer_filename, 'r')
     
     # Read in data
     fcbh = c.variables['first_cbh'].data
     rng = f.variables['range'].data
-    refx = f.variables['range'].data
     refc = f.variables['reflectivity_copol'].data
     mdvc = f.variables['mean_doppler_velocity_copol'].data
     swc = f.variables['spectral_width_copol'].data
@@ -48,8 +53,6 @@ def plot_kazr_2(kazr_filename,ceilometer_filename):
     # Filter signal to noise ratio
     stnrc = f.variables['signal_to_noise_ratio_copol'].data
     refc = ma.masked_where((stnrc <= -14),refc)
-    # Calculate Linear Depolarization Ratio
-    ldr = (refx-refc)
     # Plot radar reflectivity
     t = f.variables['time'][:]
     day = [t[i]/3600 for i in range(len(t))]
