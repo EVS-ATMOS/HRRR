@@ -2,11 +2,23 @@
 """
 Created on Mon Jul 14 15:27:53 2014
 
-Function takes in the date for analysis and directory of the disdrometer data and plots the data in three useful plots and prints precipitation information.
+Function takes in the date for analysis and directory of the disdrometer data.
+Plots the data in three different plots and prints precipitation information.
+(1) Rain Rate Plot
+(2) Disdrometer Reflectivity
+(3) Liquid Water Content
 
-@author: gmckercher
+Precip information includes:
+    Total Precipitation Duration
+    Total Precipitation Amount
+    Total Rain Rate Recording Duration
+    Light Rain Rate Duration
+    Medium Rain Rate Duration
+    Heavy Rain Rate Duration
+    Average Rain Rate
+
+@author: Grant McKercher
 """
-
 
 import numpy as np
 from scipy.io import netcdf
@@ -14,14 +26,14 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy.ma as ma
 
-def plot_disdrometer(date,dis_dir):
+def plot_disdrometer(date,directory):
     
     path = os.getcwd()
 
-    [disdrometer] = gather_disdrometer_files(date,dis_dir)
+    [disdrometer] = gather_netcdf_files(date,directory)
     
     # Gather files
-    os.chdir(dis_dir)
+    os.chdir(directory)
     d = netcdf.netcdf_file(disdrometer, 'r')
     
     #Read in data
