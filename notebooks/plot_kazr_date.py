@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
+
+
 '''
-This function takes in a date as a datetime object and the directory of ARM KAZR radar files.
-It plots a basic reflectivity plot for the entered date quickly without using pcolor or pcolormesh.
-(pcolor took too long to run these large files)
-The X-axis has incorrect values, but the grids are every hour for the 24 time period.
-Reflectivity is filtered (masked) by the SNR. 
+This function takes in radar, sounding, and ceilometer files from their directory, organizes them by date and creates a figure with three plots. The first plot is copolar reflectivity with masked backround noise, the second plot is vertical velocity, and the third plot is spectral width. 
 
-
-Author: Grant McKercher
+Authors: Grant McKercher & Matt Johnson
 '''
 
 from scipy.io import netcdf
@@ -16,7 +13,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 import numpy.ma as ma
 
-def plot_kazr(date,radar_dir):
+def plot_kazr_date(date,radar_dir):
 
     path = os.getcwd()
 
@@ -60,3 +57,4 @@ def plot_kazr(date,radar_dir):
     cb.set_label(r'Reflectivity factor, $Z_e$ (dBZ)')
 
     f.close()
+
