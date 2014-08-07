@@ -7,7 +7,7 @@ Function plots a balloon sounding and hrrr txt file sounding for comparison
 @author: gmckercher and mjohnson
 """
 
-def plot_skewt_compare(date,sound_dir,hrrr_hour,sound_num):
+def plot_skewt_compare(date,directory,hrrr_hour,sound_num):
     
     import numpy as np
     from scipy.io import netcdf
@@ -18,9 +18,9 @@ def plot_skewt_compare(date,sound_dir,hrrr_hour,sound_num):
     
     path = os.getcwd()
 
-    sounding = gather_sounding_files(date,sound_dir,sound_num)
+    sounding = gather_sounding_files(date,directory,sound_num)
     # Gather files
-    os.chdir(sound_dir)    
+    os.chdir(directory)    
     s = netcdf.netcdf_file(sounding, 'r')
     # Read in the balloon sounding variables
     psnd = s.variables['pres'].data
@@ -54,7 +54,7 @@ def plot_skewt_compare(date,sound_dir,hrrr_hour,sound_num):
     # Find model hour closest to entered time
     hour = hrrr_hour
 
-    [dates_sound,filename_sound] = org_sounding_files(sound_dir)
+    [dates_sound,filename_sound] = org_netcdf_files(directory)
     s_dates = [i.date() for i in dates_sound]    
     
     s_index = s_dates.index(date.date())
